@@ -2,5 +2,6 @@
 
 ## 03/06/2020
 
-- Game Engine
+- Game Engine.
   - Design?
+- Simple UI.

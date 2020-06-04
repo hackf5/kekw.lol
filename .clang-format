@@ -1,0 +1,22 @@
+BasedOnStyle: Google
+IndentWidth: 4
+UseTab: Never
+
+Language: Cpp
+
+SortIncludes: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  # Headers in <> without extension.
+  - Regex:           '<([A-Za-z0-9\/-_])+>'
+    Priority:        4
+  # Headers in <> with extension.
+  - Regex:           '<([A-Za-z0-9.\/-_])+>'
+    Priority:        2
+  # Headers in "".
+  - Regex:           '"([A-Za-z0-9.\/-_])+"'
+    Priority:        1
+
+AlignAfterOpenBracket: AlwaysBreak 
+BinPackParameters: false
+BinPackArguments: false
