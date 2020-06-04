@@ -31,5 +31,9 @@
 *.out
 *.app
 
+# Output
 build/
+bin/
+
+# Transients
 imgui.ini

@@ -14,10 +14,6 @@
 
 namespace fs = std::filesystem;
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
 int main(int argc, char *argv[]) {
     if (!glfwInit()) {
         std::cout << "Failed to initialize GLFW" << std::endl;
@@ -89,6 +85,9 @@ int main(int argc, char *argv[]) {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+
     bool show_demo_window = true;
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -99,15 +98,20 @@ int main(int argc, char *argv[]) {
 
         if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
 
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        float vertices[] = {
+            -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
     }
+
+    glDeleteBuffers(1, &VBO);
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

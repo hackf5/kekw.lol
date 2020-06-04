@@ -4,3 +4,4 @@ target_sources(${CMAKE_PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 add_subdirectory(res)
+add_subdirectory(ux)
