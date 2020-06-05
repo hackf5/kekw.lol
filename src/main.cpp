@@ -4,11 +4,16 @@
 #include <inc/imgui/imgui_impl_glfw.h>
 #include <inc/imgui/imgui_impl_opengl3.h>
 
+#include <fruit/fruit.h>
 #include <spdlog/spdlog.h>
+#include <spdlog/async.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include <inc/stb/stb_image.h>
 
 #include <src/ux/shader/shader.h>
 #include <src/util/file-utils.h>
+
+#include <iostream>
 
 void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width
@@ -18,9 +23,18 @@ void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
 }
 
 int main(int argc, char *argv[]) {
-    spdlog::info("Loading KEKW.lol... {}", "test");
-
     auto filepaths = kekw::util::AppFilepaths(std::string(argv[0]));
+
+    // TODO: there may be some perf issues here, see
+    // https://github.com/gabime/spdlog/wiki
+    auto file_logger = spdlog::basic_logger_mt<spdlog::async_factory>(
+        "basic_logger", filepaths.GetAbsolutePath("logs/log.txt").string());
+    file_logger->flush_on(spdlog::level::debug);
+    spdlog::set_default_logger(file_logger);
+
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
+    spdlog::info("Loading KEKW.lol... {}", "test");
 
     if (!glfwInit()) {
         spdlog::critical("Failed to initialize GLFW");
@@ -48,7 +62,6 @@ int main(int argc, char *argv[]) {
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
     glfwSwapInterval(1);  // Enable vsync
 
-    
     static auto icon_path = filepaths.GetAbsolutePath("app-icon.png");
     // TODO: this fails for non-ascii paths, converting from wide string to
     // string seems like a total ball ache. needs <windows.h> to be included and
@@ -131,9 +144,20 @@ int main(int argc, char *argv[]) {
     glBindVertexArray(0);
 
     auto shader = kekw::ux::Shader();
-    shader.AddStage(GL_VERTEX_SHADER, kekw::util::read_file(filepaths.GetAbsolutePath("glsl/simple.vert").string()));
-    shader.AddStage(GL_FRAGMENT_SHADER, kekw::util::read_file(filepaths.GetAbsolutePath("glsl/simple.frag").string()));
-    shader.Compile();
+
+    try {
+        shader.AddStage(
+            GL_VERTEX_SHADER,
+            kekw::util::read_file(
+                filepaths.GetAbsolutePath("glsl/simple.vert").string()));
+        shader.AddStage(
+            GL_FRAGMENT_SHADER,
+            kekw::util::read_file(
+                filepaths.GetAbsolutePath("glsl/simple.frag").string()));
+        shader.Compile();
+    } catch (std::exception ex) {
+        spdlog::critical("Failed to compile shaders.");
+    }
 
     bool show_demo_window = true;
     while (!glfwWindowShouldClose(window)) {
