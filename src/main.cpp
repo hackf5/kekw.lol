@@ -1,12 +1,10 @@
-#include <iostream>
-
 #include <inc/glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <inc/imgui/imgui.h>
 #include <inc/imgui/imgui_impl_glfw.h>
 #include <inc/imgui/imgui_impl_opengl3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
+#include <spdlog/spdlog.h>
 #include <inc/stb/stb_image.h>
 
 #include <src/ux/shader/shader.h>
@@ -20,10 +18,12 @@ void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
 }
 
 int main(int argc, char *argv[]) {
+    spdlog::info("Loading KEKW.lol... {}", "test");
+
     auto filepaths = kekw::util::AppFilepaths(std::string(argv[0]));
 
     if (!glfwInit()) {
-        std::cout << "Failed to initialize GLFW" << std::endl;
+        spdlog::critical("Failed to initialize GLFW");
         return 1;
     }
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     GLFWwindow *window =
         glfwCreateWindow(window_width, window_height, "kekw", NULL, NULL);
     if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        spdlog::critical("Failed to initialize GLFW window");
         return 1;
     }
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     stbi_image_free(images[0].pixels);
 
     if (!gladLoadGL()) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        spdlog::critical("Failed to initialize GLAD");
         return 1;
     }
 
