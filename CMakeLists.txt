@@ -21,10 +21,11 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 add_executable(${CMAKE_PROJECT_NAME} "")
-include_directories(include)
+include_directories(inc)
+include_directories(${PROJECT_SOURCE_DIR})
 
 find_package(glfw3 3.3 REQUIRED)
 target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
 
 add_subdirectory(src)
-add_subdirectory(include/imgui)
+add_subdirectory(inc)

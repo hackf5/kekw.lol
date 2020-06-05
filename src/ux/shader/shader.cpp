@@ -1,5 +1,7 @@
 #include "shader.h"
 
+#include <src/util/file-utils.h>
+
 #include <stdexcept>
 
 kekw::ux::Shader::Shader() : id_(0), shaders_(new std::vector<stage_t>()) {}
@@ -11,15 +13,16 @@ kekw::ux::Shader::~Shader() {
 
 GLuint kekw::ux::Shader::ProgramId() const { return this->id_; }
 
-void kekw::ux::Shader::AddStage(GLenum stage, const char *source) {
+void kekw::ux::Shader::AddStage(GLenum stage, std::string const &source) {
     if (this->id_) {
-        throw std::domain_error("Cannot add stages to a compiled program.");
+        throw std::runtime_error("Cannot add stages to a compiled program.");
     }
 
     auto shader = glCreateShader(stage);
     this->shaders_->push_back({stage, shader});
 
-    glShaderSource(shader, 1, &source, NULL);
+    auto source_cstr = source.c_str();
+    glShaderSource(shader, 1, &source_cstr, NULL);
     glCompileShader(shader);
 
     int success;
@@ -29,17 +32,17 @@ void kekw::ux::Shader::AddStage(GLenum stage, const char *source) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         auto message =
             "Failed to compile shader. Error: " + std::string(infoLog);
-        throw std::domain_error(message);
+        throw std::runtime_error(message);
     };
 }
 
 void kekw::ux::Shader::Compile() {
     if (this->id_) {
-        throw std::domain_error("Program is already compiled.");
+        throw std::runtime_error("Program is already compiled.");
     }
 
     if (!this->shaders_->size()) {
-        throw std::domain_error("Cannot compile program with no stages.");
+        throw std::runtime_error("Cannot compile program with no stages.");
     }
 
     this->id_ = glCreateProgram();
@@ -62,13 +65,13 @@ void kekw::ux::Shader::Compile() {
     };
 }
 
-void kekw::ux::Shader::Use() const { 
-     if (!this->id_) {
-        throw std::domain_error("Program is already compiled.");
+void kekw::ux::Shader::Use() const {
+    if (!this->id_) {
+        throw std::runtime_error("Program is already compiled.");
     }
-    
+
     glUseProgram(this->id_);
- }
+}
 
 void kekw::ux::Shader::Set(const std::string &name, bool value) const {
     glUniform1i(glGetUniformLocation(this->id_, name.c_str()), (int)value);

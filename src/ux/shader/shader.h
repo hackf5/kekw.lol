@@ -1,7 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
+#include <inc/glad/glad.h>
 
+#include <fstream>
 #include <memory>
 #include <string>
 #include <tuple>
@@ -16,13 +17,13 @@ class Shader {
     virtual ~Shader();
 
     GLuint ProgramId() const;
-    void AddStage(GLenum stage, const char *source);
+    void AddStage(GLenum stage, std::string const &source);
     void Compile();
     void Use() const;
 
-    void Set(const std::string &name, bool value) const;
-    void Set(const std::string &name, int value) const;
-    void Set(const std::string &name, float value) const;
+    void Set(std::string const &name, bool value) const;
+    void Set(std::string const &name, int value) const;
+    void Set(std::string const &name, float value) const;
 
    private:
     typedef std::tuple<GLenum, GLuint> stage_t;

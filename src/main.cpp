@@ -1,42 +1,27 @@
-#include "ux/shader/shader.h"
-
-#include <glad/glad.h>
-// must be included before glfw
-
-#include <GLFW/glfw3.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
-
-#include <filesystem>
 #include <iostream>
 
+#include <inc/glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <inc/imgui/imgui.h>
+#include <inc/imgui/imgui_impl_glfw.h>
+#include <inc/imgui/imgui_impl_opengl3.h>
+
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
+#include <inc/stb/stb_image.h>
 
-namespace fs = std::filesystem;
+#include <src/ux/shader/shader.h>
+#include <src/util/file-utils.h>
 
-const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
-
-void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
+void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
+    // make sure the viewport matches the new window dimensions; note that width
+    // and height will be significantly larger than specified on retina
+    // displays.
     glViewport(0, 0, width, height);
 }
 
 int main(int argc, char *argv[]) {
+    auto filepaths = kekw::util::AppFilepaths(std::string(argv[0]));
+
     if (!glfwInit()) {
         std::cout << "Failed to initialize GLFW" << std::endl;
         return 1;
@@ -63,14 +48,12 @@ int main(int argc, char *argv[]) {
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
     glfwSwapInterval(1);  // Enable vsync
 
-    GLFWimage images[1];
-
-    static auto exe_path = argv[0];
-    static auto icon_path = fs::path(exe_path).parent_path() / "app-icon.png";
-
+    
+    static auto icon_path = filepaths.GetAbsolutePath("app-icon.png");
     // TODO: this fails for non-ascii paths, converting from wide string to
     // string seems like a total ball ache. needs <windows.h> to be included and
     // the WideCharToMultiByte should be called.
+    GLFWimage images[1];
     images[0].pixels = stbi_load(
         icon_path.string().c_str(),
         &images[0].width,
@@ -90,8 +73,10 @@ int main(int argc, char *argv[]) {
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls 
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+    io.ConfigFlags |=
+        ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+    io.ConfigFlags |=
+        ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui::StyleColorsDark();
@@ -109,35 +94,46 @@ int main(int argc, char *argv[]) {
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f, // left  
-         0.5f, -0.5f, 0.0f, // right 
-         0.0f,  0.5f, 0.0f  // top   
-    }; 
+        -0.5f,
+        -0.5f,
+        0.0f,  // left
+        0.5f,
+        -0.5f,
+        0.0f,  // right
+        0.0f,
+        0.5f,
+        0.0f  // top
+    };
 
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s),
+    // and then configure vertex attributes(s).
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(
+        0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    // note that this is allowed, the call to glVertexAttribPointer registered
+    // VBO as the vertex attribute's bound vertex buffer object so afterwards we
+    // can safely unbind
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+    // You can unbind the VAO afterwards so other VAO calls won't accidentally
+    // modify this VAO, but this rarely happens. Modifying other VAOs requires a
+    // call to glBindVertexArray anyways so we generally don't unbind VAOs (nor
+    // VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
     auto shader = kekw::ux::Shader();
-    shader.AddStage(GL_VERTEX_SHADER, vertexShaderSource);
-    shader.AddStage(GL_FRAGMENT_SHADER, fragmentShaderSource);
+    shader.AddStage(GL_VERTEX_SHADER, kekw::util::read_file(filepaths.GetAbsolutePath("glsl/simple.vert").string()));
+    shader.AddStage(GL_FRAGMENT_SHADER, kekw::util::read_file(filepaths.GetAbsolutePath("glsl/simple.frag").string()));
     shader.Compile();
-
 
     bool show_demo_window = true;
     while (!glfwWindowShouldClose(window)) {
@@ -153,7 +149,9 @@ int main(int argc, char *argv[]) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.Use();
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        glBindVertexArray(VAO);  // seeing as we only have a single VAO there's
+                                 // no need to bind it every time, but we'll do
+                                 // so to keep things a bit more organized
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         ImGui::Render();

@@ -1,6 +1,7 @@
 target_sources(${CMAKE_PROJECT_NAME}
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/shader.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/shader.cpp
+)
 
 add_custom_target(
     copy-files-51a6 ALL
