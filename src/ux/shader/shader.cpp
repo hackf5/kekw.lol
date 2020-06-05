@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 
-kekw::ux::Shader::Shader() : id_(0), shaders_(new std::vector<stage_t>()) {}
+kekw::ux::Shader::Shader() : id_(0), shaders_() {}
 
 kekw::ux::Shader::~Shader() {
     this->DeleteShaders();
@@ -19,7 +19,7 @@ void kekw::ux::Shader::AddStage(GLenum stage, std::string const &source) {
     }
 
     auto shader = glCreateShader(stage);
-    this->shaders_->push_back({stage, shader});
+    this->shaders_.push_back({stage, shader});
 
     auto source_cstr = source.c_str();
     glShaderSource(shader, 1, &source_cstr, NULL);
@@ -41,13 +41,13 @@ void kekw::ux::Shader::Compile() {
         throw std::runtime_error("Program is already compiled.");
     }
 
-    if (!this->shaders_->size()) {
+    if (!this->shaders_.size()) {
         throw std::runtime_error("Cannot compile program with no stages.");
     }
 
     this->id_ = glCreateProgram();
 
-    for (auto it = this->shaders_->begin(); it != this->shaders_->end(); ++it) {
+    for (auto it = this->shaders_.begin(); it != this->shaders_.end(); ++it) {
         glAttachShader(this->id_, std::get<1>(*it));
     }
 
@@ -86,7 +86,7 @@ void kekw::ux::Shader::Set(const std::string &name, float value) const {
 }
 
 void kekw::ux::Shader::DeleteShaders() {
-    for (auto it = this->shaders_->begin(); it != this->shaders_->end(); ++it) {
+    for (auto it = this->shaders_.begin(); it != this->shaders_.end(); ++it) {
         glDeleteShader(std::get<1>(*it));
     }
 }

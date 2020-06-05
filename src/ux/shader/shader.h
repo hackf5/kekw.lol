@@ -29,7 +29,7 @@ class Shader {
     typedef std::tuple<GLenum, GLuint> stage_t;
 
     GLuint id_;
-    const std::unique_ptr<std::vector<stage_t>> shaders_;
+    std::vector<stage_t> shaders_;
 
     void DeleteShaders();
 };

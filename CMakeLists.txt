@@ -34,7 +34,6 @@ link_directories(C:/dev/cpplibs/usr/lib)
 
 # main executable
 add_executable(${CMAKE_PROJECT_NAME} "")
-add_compile_definitions(STB_IMAGE_IMPLEMENTATION)
 
 # add external libraries
 find_package(glfw3 3.3 REQUIRED)
@@ -42,9 +41,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
 
 find_package(spdlog REQUIRED)
 target_link_libraries(${CMAKE_PROJECT_NAME} spdlog::spdlog)
-
-find_library(FRUIT_LIBRARY REQUIRED NAMES fruit libfruit)
-target_link_libraries(${CMAKE_PROJECT_NAME} ${FRUIT_LIBRARY})
 
 # look for more CMake files.
 add_subdirectory(src)
