@@ -4,9 +4,9 @@ target_sources(
         ${CMAKE_CURRENT_SOURCE_DIR}/app.rc)
 
 add_custom_target(
-    copy-files-56ec ALL
-    COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_CURRENT_SOURCE_DIR}/app-icon.png 
-            ${OUTPUT_DIRECTORY}/app-icon.png)
+    copy-dir-56ec ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/img 
+            ${OUTPUT_DIRECTORY}/res/img)
 
-add_dependencies(${CMAKE_PROJECT_NAME} copy-files-56ec)
+add_dependencies(${CMAKE_PROJECT_NAME} copy-dir-56ec)

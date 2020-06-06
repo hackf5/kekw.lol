@@ -5,9 +5,6 @@
 #include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <inc/stb/stb_image.h>
-
 #include <src/util/file-utils.h>
 
 #include <src/ux/view/window-manager.h>

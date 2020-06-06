@@ -18,7 +18,7 @@ class GlWindowLayer : public WindowLayer {
 
    private:
     kekw::ux::Shader shader_;
-    GLuint VBO, VAO, EBO;
+    GLuint VBO, VAO, EBO, texture;
 };
 
 }  // namespace view

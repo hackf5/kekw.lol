@@ -55,7 +55,7 @@ kekw::ux::view::WindowManager::WindowManager() : window_(0), layers_() {
     // TODO: this fails for non-ascii paths, converting from wide string to
     // string seems like a total ball ache. needs <windows.h> to be included and
     // the WideCharToMultiByte should be called.
-    static auto icon_path = kekw::util::get_absolute_path("app-icon.png");
+    auto icon_path = kekw::util::get_absolute_path("res/img/app-icon.png");
 
     GLFWimage images[1];
     images[0].pixels = stbi_load(
