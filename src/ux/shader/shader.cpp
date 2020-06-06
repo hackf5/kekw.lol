@@ -13,6 +13,14 @@ kekw::ux::Shader::~Shader() {
 
 GLuint kekw::ux::Shader::ProgramId() const { return this->id_; }
 
+void kekw::ux::Shader::AddStageFile(GLenum stage, std::string const &path) {
+    if (this->id_) {
+        throw std::runtime_error("Cannot add stages to a compiled program.");
+    }
+
+    this->AddStage(stage, kekw::util::read_file(kekw::util::get_absolute_path(path).string()));
+}
+
 void kekw::ux::Shader::AddStage(GLenum stage, std::string const &source) {
     if (this->id_) {
         throw std::runtime_error("Cannot add stages to a compiled program.");
@@ -30,8 +38,7 @@ void kekw::ux::Shader::AddStage(GLenum stage, std::string const &source) {
     if (!success) {
         char infoLog[512];
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        auto message =
-            "Failed to compile shader. Error: " + std::string(infoLog);
+        auto message = "Failed to compile shader. Error: " + std::string(infoLog);
         throw std::runtime_error(message);
     };
 }
@@ -59,8 +66,7 @@ void kekw::ux::Shader::Compile() {
     if (!success) {
         char infoLog[512];
         glGetProgramInfoLog(this->id_, 512, NULL, infoLog);
-        auto message =
-            "Failed to compile program. Error: " + std::string(infoLog);
+        auto message = "Failed to compile program. Error: " + std::string(infoLog);
         throw std::runtime_error(message);
     };
 }

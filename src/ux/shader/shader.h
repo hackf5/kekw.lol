@@ -18,6 +18,7 @@ class Shader {
 
     GLuint ProgramId() const;
     void AddStage(GLenum stage, std::string const &source);
+    void AddStageFile(GLenum stage, std::string const &path);
     void Compile();
     void Use() const;
 
