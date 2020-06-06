@@ -3,6 +3,19 @@
 #include <iterator>
 #include <stdexcept>
 
+namespace kekw {
+namespace util {
+class AppFilepaths {
+   public:
+    AppFilepaths(std::string const& exe_path);
+    fs::path GetAbsolutePath(std::string const& relative_path) const;
+
+   private:
+    std::unique_ptr<fs::path> exe_path_;
+};
+}  // namespace util
+} 
+
 kekw::util::AppFilepaths::AppFilepaths(std::string const& exe_path) : exe_path_(new fs::path(exe_path)) {
 }
 
