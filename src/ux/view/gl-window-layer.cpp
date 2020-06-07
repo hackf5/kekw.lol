@@ -5,16 +5,17 @@ kekw::ux::view::GlWindowLayer::~GlWindowLayer() {
     glDeleteVertexArrays(1, &(this->VAO));
     glDeleteBuffers(1, &(this->VBO));
     glDeleteBuffers(1, &(this->EBO));
+    glDeleteTextures(1, &(this->texture));
 }
 
 void kekw::ux::view::GlWindowLayer::Initialize(WindowInfo *info) {
     // clang-format off
     float vertices[] = {
-        // positions          // colors           // texture coords
+        // positions         // colors           // texture coords (relative to mesh)
         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+        -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
     };
     unsigned int indices[] = {
         0, 1, 3, // first triangle
@@ -22,27 +23,30 @@ void kekw::ux::view::GlWindowLayer::Initialize(WindowInfo *info) {
     };
     // clang-format on
 
+    // allocate vertex array
     glGenVertexArrays(1, &(this->VAO));
     glGenBuffers(1, &(this->VBO));
     glGenBuffers(1, &this->EBO);
 
+    // bind vertex array
     glBindVertexArray(this->VAO);
-
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+    // set attributes
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);  // position
     glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));  // color
     glEnableVertexAttribArray(1);
-    // texture attribure
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float))); // texture
     glEnableVertexAttribArray(2);
+
+    // unbind vertex array
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     // bind texture
     glGenTextures(1, &this->texture);
@@ -62,9 +66,8 @@ void kekw::ux::view::GlWindowLayer::Initialize(WindowInfo *info) {
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
 
-    // Unbind
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // unbind texture
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     this->shader_.AddStageFile(GL_VERTEX_SHADER, "glsl/simple.vert");
     this->shader_.AddStageFile(GL_FRAGMENT_SHADER, "glsl/simple.frag");
@@ -79,4 +82,5 @@ void kekw::ux::view::GlWindowLayer::Render(WindowInfo *info) {
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
