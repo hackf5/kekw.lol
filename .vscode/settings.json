@@ -89,6 +89,10 @@
         "future": "cpp",
         "typeindex": "cpp",
         "variant": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "xtree": "cpp",
+        "any": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp"
     },
 }

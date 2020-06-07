@@ -18,7 +18,7 @@ endmacro()
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/extern/googletest" "extern/googletest")
 
-package_add_test(${MAIN_LIB_TEST_TARGET} test1.cpp)
+package_add_test(${MAIN_LIB_TEST_TARGET} "")
 set_target_properties(${MAIN_LIB_TEST_TARGET} PROPERTIES OUTPUT_NAME "kekwtest")
 target_link_libraries(${MAIN_LIB_TEST_TARGET} glfw)
 target_link_libraries(${MAIN_LIB_TEST_TARGET} spdlog::spdlog)
@@ -29,3 +29,5 @@ set_target_properties(gtest PROPERTIES FOLDER extern)
 set_target_properties(gtest_main PROPERTIES FOLDER extern)
 set_target_properties(gmock PROPERTIES FOLDER extern)
 set_target_properties(gmock_main PROPERTIES FOLDER extern)
+
+add_subdirectory(mod)

@@ -1,11 +1,12 @@
 #include "card-collection.h"
 #include "card.h"
 
+#include <fmt/format.h>
 #include <src/util/tools.h>
 #include <cassert>
 #include <algorithm>
 
-kekw::mod::card_collection::card_collection(size_t max_size) : cards_(), max_size_(max_size) {}
+kekw::mod::card_collection::card_collection(size_t max_size) : cards_(), max_size_(max_size), card_ids_() {}
 
 kekw::mod::card_collection::~card_collection() {}
 
@@ -13,14 +14,25 @@ size_t kekw::mod::card_collection::size() const { return this->cards_.size(); }
 
 size_t kekw::mod::card_collection::max_size() const { return this->max_size_; }
 
-void kekw::mod::card_collection::add_card(std::unique_ptr<card> card) {
-    assert(this->size() < this->max_size());
+void kekw::mod::card_collection::add_card(card_ptr_t card) { this->insert_card(std::move(card), this->size()); }
 
-    this->cards_.push_back(std::move(card));
-}
+void kekw::mod::card_collection::insert_card(card_ptr_t card, size_t index) {
+    if (this->size() >= this->max_size()) {
+        throw std::out_of_range(fmt::format("collection is at max size ({0})", this->max_size()));
+    }
 
-void kekw::mod::card_collection::insert_card(std::unique_ptr<card> card, size_t index) {
-    assert(this->size() < this->max_size());
+    if (this->size() < index) {
+        throw std::out_of_range(fmt::format("index ({0}) is larger than size ({1})", index, this->size()));
+    }
+
+    if (index < 0) {
+        throw std::out_of_range(fmt::format("index ({0}) cannot be less than zero", index, this->size()));
+    }
+
+    auto insert = this->card_ids_.insert(card->id());
+    if (!insert.second) {
+        throw std::runtime_error(fmt::format("collection already contains card ({0})", card->id()));
+    }
 
     this->cards_.insert(this->cards_.begin() + index, std::move(card));
 }
