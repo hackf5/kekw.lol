@@ -1,4 +1,6 @@
 {
+    "editor.formatOnSave": true,
+    "testMate.cpp.test.executables": "bin/**/*{test,Test,TEST}*",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
         "cmath": "cpp",
@@ -88,5 +90,5 @@
         "typeindex": "cpp",
         "variant": "cpp",
         "*.rh": "cpp"
-    }
+    },
 }

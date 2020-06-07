@@ -1,4 +1,5 @@
-target_sources(${CMAKE_PROJECT_NAME}
+target_sources(${MAIN_LIB_TARGET}
+
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/card-collection.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/card.cpp

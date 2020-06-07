@@ -2,19 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "(gdb) Launch Exe",
             "type": "cppdbg",
             "request": "launch",
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${command:cmake.launchTargetDirectory}",
-            "environment": [
-                {
-                    "name": "PATH",
-                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}"
-                }
-            ],
             "externalConsole": true,
             "miDebuggerPath": "C:/dev/msys64/mingw64/bin/gdb.exe",
             "MIMode": "gdb",

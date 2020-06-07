@@ -1,4 +1,4 @@
-target_sources(${CMAKE_PROJECT_NAME}
+target_sources("${MAIN_EXE_TARGET}"
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
