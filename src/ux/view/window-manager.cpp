@@ -7,15 +7,15 @@
 
 #include <stdexcept>
 
-kekw::ux::view::WindowInfo::WindowInfo(GLFWwindow *window) : window_(window) {}
+kekw::ux::view::window_info::window_info(GLFWwindow *window) : window_(window) {}
 
-GLFWwindow *kekw::ux::view::WindowInfo::getWindow() const {
+GLFWwindow *kekw::ux::view::window_info::get_window() const {
     return this->window_;
 }
 
-kekw::ux::view::WindowLayer::~WindowLayer() {}
+kekw::ux::view::window_layer::~window_layer() {}
 
-kekw::ux::view::WindowManager::WindowManager() : window_(0), layers_() {
+kekw::ux::view::window_manager::window_manager() : window_(0), layers_() {
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW.");
     }
@@ -45,8 +45,8 @@ kekw::ux::view::WindowManager::WindowManager() : window_(0), layers_() {
 
     glfwSetFramebufferSizeCallback(
         this->window_, +[](GLFWwindow *window, int width, int height) {
-            static_cast<WindowManager *>(glfwGetWindowUserPointer(window))
-                ->FramebufferSizeCallback(window, width, height);
+            static_cast<window_manager *>(glfwGetWindowUserPointer(window))
+                ->framebuffer_size_callback(window, width, height);
         });
 
     glfwSwapInterval(1);  // Enable vsync
@@ -77,12 +77,12 @@ kekw::ux::view::WindowManager::WindowManager() : window_(0), layers_() {
     spdlog::debug("GL loaded.");
 }
 
-kekw::ux::view::WindowManager::~WindowManager() {
+kekw::ux::view::window_manager::~window_manager() {
     glfwDestroyWindow(this->window_);
     glfwTerminate();
 }
 
-void kekw::ux::view::WindowManager::FramebufferSizeCallback(
+void kekw::ux::view::window_manager::framebuffer_size_callback(
     GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width
     // and height will be significantly larger than specified on retina
@@ -90,16 +90,16 @@ void kekw::ux::view::WindowManager::FramebufferSizeCallback(
     glViewport(0, 0, width, height);
 }
 
-void kekw::ux::view::WindowManager::AddLayer(
-    std::unique_ptr<WindowLayer> layer) {
+void kekw::ux::view::window_manager::add_layer(
+    std::unique_ptr<window_layer> layer) {
     this->layers_.push_back(std::move(layer));
 }
 
-void kekw::ux::view::WindowManager::Start() {
-    WindowInfo info(this->window_);
+void kekw::ux::view::window_manager::Start() {
+    window_info info(this->window_);
 
     for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
-        (**it).Initialize(&info);
+        (**it).initialize(&info);
     }
 
     while (!glfwWindowShouldClose(this->window_)) {
@@ -107,7 +107,7 @@ void kekw::ux::view::WindowManager::Start() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
-            (**it).Render(&info);
+            (**it).render(&info);
         }
 
         glfwSwapBuffers(this->window_);

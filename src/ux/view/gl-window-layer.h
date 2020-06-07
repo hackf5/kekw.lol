@@ -10,15 +10,15 @@ namespace kekw {
 namespace ux {
 namespace view {
 
-class GlWindowLayer : public WindowLayer {
+class gl_window_layer : public window_layer {
    public:
-    ~GlWindowLayer();
-    void Initialize(WindowInfo *manager) override;
-    void Render(WindowInfo *manager) override;
+    ~gl_window_layer();
+    void initialize(window_info *manager) override;
+    void render(window_info *manager) override;
 
    private:
-    kekw::ux::Shader shader_;
-    GLuint VBO, VAO, EBO, texture;
+    kekw::ux::shader shader_;
+    GLuint vbo_, vao_, ebo_, texture_;
 };
 
 }  // namespace view

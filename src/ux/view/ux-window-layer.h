@@ -10,11 +10,11 @@ namespace kekw {
 namespace ux {
 namespace view {
 
-class UxWindowLayer : public WindowLayer {
+class UxWindowLayer : public window_layer {
    public:
     ~UxWindowLayer();
-    void Initialize(WindowInfo *info) override;
-    void Render(WindowInfo *info) override;
+    void initialize(window_info *info) override;
+    void render(window_info *info) override;
 };
 
 }  // namespace view

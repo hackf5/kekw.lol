@@ -29,9 +29,9 @@ int main(int argc, char *argv[]) {
     spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
     spdlog::info("Loading KEKW.lol... {}", "test");
 
-    vw::WindowManager manager;
-    manager.AddLayer(std::unique_ptr<vw::WindowLayer>(new vw::GlWindowLayer()));
-    manager.AddLayer(std::unique_ptr<vw::WindowLayer>(new vw::UxWindowLayer()));
+    vw::window_manager manager;
+    manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::gl_window_layer()));
+    manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::UxWindowLayer()));
     manager.Start();
     
     return 0;

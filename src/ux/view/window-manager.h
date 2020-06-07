@@ -10,38 +10,38 @@ namespace kekw {
 namespace ux {
 namespace view {
 
-class WindowInfo {
+class window_info {
    public:
-    WindowInfo(GLFWwindow *window);
+    window_info(GLFWwindow *window);
 
-    GLFWwindow *getWindow() const;
+    GLFWwindow *get_window() const;
 
    private:
     GLFWwindow *window_;
 };
 
-class WindowLayer {
+class window_layer {
    public:
-    virtual ~WindowLayer() = 0;
+    virtual ~window_layer() = 0;
 
-    virtual void Initialize(WindowInfo *info) = 0;
-    virtual void Render(WindowInfo *info) = 0;
+    virtual void initialize(window_info *info) = 0;
+    virtual void render(window_info *info) = 0;
 };
 
-class WindowManager {
+class window_manager {
    public:
-    WindowManager();
-    ~WindowManager();
+    window_manager();
+    ~window_manager();
 
-    void AddLayer(std::unique_ptr<WindowLayer> layer);
+    void add_layer(std::unique_ptr<window_layer> layer);
     void Start();
 
    private:
     GLFWwindow *window_;
 
-    std::vector<std::unique_ptr<WindowLayer>> layers_;
+    std::vector<std::unique_ptr<window_layer>> layers_;
 
-    void FramebufferSizeCallback(GLFWwindow *window, int width, int height);
+    void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 };
 
 }  // namespace view

@@ -6,7 +6,7 @@ kekw::ux::view::UxWindowLayer::~UxWindowLayer() {
     ImGui::DestroyContext();
 }
 
-void kekw::ux::view::UxWindowLayer::Initialize(WindowInfo *info) {
+void kekw::ux::view::UxWindowLayer::initialize(window_info *info) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
@@ -28,11 +28,11 @@ void kekw::ux::view::UxWindowLayer::Initialize(WindowInfo *info) {
     ImGui::GetIO().FontGlobalScale = SCALE / 2;
 
     // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(info->getWindow(), true);
+    ImGui_ImplGlfw_InitForOpenGL(info->get_window(), true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 }
 
-void kekw::ux::view::UxWindowLayer::Render(WindowInfo *info) {
+void kekw::ux::view::UxWindowLayer::render(window_info *info) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();

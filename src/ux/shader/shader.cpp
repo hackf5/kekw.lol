@@ -4,24 +4,24 @@
 
 #include <stdexcept>
 
-kekw::ux::Shader::Shader() : id_(0), shaders_() {}
+kekw::ux::shader::shader() : id_(0), shaders_() {}
 
-kekw::ux::Shader::~Shader() {
-    this->DeleteShaders();
+kekw::ux::shader::~shader() {
+    this->delete_shaders();
     glDeleteProgram(this->id_);
 }
 
-GLuint kekw::ux::Shader::ProgramId() const { return this->id_; }
+GLuint kekw::ux::shader::program_id() const { return this->id_; }
 
-void kekw::ux::Shader::AddStageFile(GLenum stage, std::string const &path) {
+void kekw::ux::shader::add_stage_file(GLenum stage, std::string const &path) {
     if (this->id_) {
         throw std::runtime_error("Cannot add stages to a compiled program.");
     }
 
-    this->AddStage(stage, kekw::util::read_file(kekw::util::get_absolute_path(path).string()));
+    this->add_stage(stage, kekw::util::read_file(kekw::util::get_absolute_path(path).string()));
 }
 
-void kekw::ux::Shader::AddStage(GLenum stage, std::string const &source) {
+void kekw::ux::shader::add_stage(GLenum stage, std::string const &source) {
     if (this->id_) {
         throw std::runtime_error("Cannot add stages to a compiled program.");
     }
@@ -43,7 +43,7 @@ void kekw::ux::Shader::AddStage(GLenum stage, std::string const &source) {
     };
 }
 
-void kekw::ux::Shader::Compile() {
+void kekw::ux::shader::compile() {
     if (this->id_) {
         throw std::runtime_error("Program is already compiled.");
     }
@@ -60,7 +60,7 @@ void kekw::ux::Shader::Compile() {
 
     int success;
     glLinkProgram(this->id_);
-    this->DeleteShaders();
+    this->delete_shaders();
 
     glGetProgramiv(this->id_, GL_LINK_STATUS, &success);
     if (!success) {
@@ -71,7 +71,7 @@ void kekw::ux::Shader::Compile() {
     };
 }
 
-void kekw::ux::Shader::Use() const {
+void kekw::ux::shader::use() const {
     if (!this->id_) {
         throw std::runtime_error("Program is already compiled.");
     }
@@ -79,19 +79,19 @@ void kekw::ux::Shader::Use() const {
     glUseProgram(this->id_);
 }
 
-void kekw::ux::Shader::Set(const std::string &name, bool value) const {
+void kekw::ux::shader::set(const std::string &name, bool value) const {
     glUniform1i(glGetUniformLocation(this->id_, name.c_str()), (int)value);
 }
 
-void kekw::ux::Shader::Set(const std::string &name, int value) const {
+void kekw::ux::shader::set(const std::string &name, int value) const {
     glUniform1i(glGetUniformLocation(this->id_, name.c_str()), (int)value);
 }
 
-void kekw::ux::Shader::Set(const std::string &name, float value) const {
+void kekw::ux::shader::set(const std::string &name, float value) const {
     glUniform1f(glGetUniformLocation(this->id_, name.c_str()), value);
 }
 
-void kekw::ux::Shader::DeleteShaders() {
+void kekw::ux::shader::delete_shaders() {
     for (auto it = this->shaders_.begin(); it != this->shaders_.end(); ++it) {
         glDeleteShader(std::get<1>(*it));
     }
