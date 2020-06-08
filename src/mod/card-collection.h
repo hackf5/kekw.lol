@@ -24,7 +24,7 @@ class card_collection {
     // https://baptiste-wicht.com/posts/2012/12/cpp-benchmark-vector-list-deque.html
     typedef std::vector<card_ptr_t> cards_t;
 
-   protected:
+   public:
     typedef cards_t::iterator cards_iterator_t;
     typedef cards_t::const_iterator const_cards_iterator_t;
     typedef cards_t::reverse_iterator cards_reverse_iterator_t;
@@ -49,6 +49,8 @@ class card_collection {
     void move_card(card_id_param_t id, size_t index);
     card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card);
 
+    void clear();
+
     cards_iterator_t find_card(card_id_param_t id);
     const_cards_iterator_t find_card(card_id_param_t id) const;
 
@@ -71,7 +73,7 @@ class card_collection {
     // the maximum number of elements that can be stored in the collection.
     size_t max_size_;
 
-    //
+    // the ids of the cards in the collection.
     std::unordered_set<card_id_t> card_ids_;
 };
 

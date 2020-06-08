@@ -174,3 +174,8 @@ kekw::mod::card_collection::cards_t::const_reverse_iterator
 kekw::mod::card_collection::rend() const {
     return this->cards_.rend();
 }
+
+void kekw::mod::card_collection::clear() {
+    this->card_ids_.clear();
+    this->cards_.clear();
+}

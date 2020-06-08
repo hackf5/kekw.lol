@@ -35,6 +35,8 @@ class mock_card_collection : public card_collection {
         return card_collection::replace_card(id, std::move(new_card));
     }
 
+    void clear() { card_collection::clear(); }
+
     cards_iterator_t begin() { return card_collection::begin(); }
     cards_iterator_t end() { return card_collection::end(); }
 };
@@ -290,4 +292,13 @@ TEST(card_collection, replace_card_with_new_card) {
     EXPECT_FALSE(target->contains_card(3));
     EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(1, 2, 7, 4, 5));
     EXPECT_EQ(old_card->id(), 3);
+}
+
+TEST(card_collection, clear_removes_all_cards) {
+    auto target = create_full_target(5);
+
+    target->clear();
+    EXPECT_EQ(target->size(), 0);
+    EXPECT_EQ(target->begin(), target->end());
+    EXPECT_FALSE(target->contains_card(1));
 }
