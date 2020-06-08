@@ -9,7 +9,6 @@ namespace mod {
 class card {
    public:
     card() = delete;
-    card(card const&) = delete;
     card(card_id_param_t id, card_type_id_param_t type_id, std::string const& name);
     virtual ~card() = 0;
 
