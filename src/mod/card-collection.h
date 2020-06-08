@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mod_types.h"
+#include "card.h"
 
 #include <memory>
 #include <string>
@@ -9,8 +10,6 @@
 
 namespace kekw {
 namespace mod {
-
-class card;
 
 class card_collection {
    public:
@@ -48,6 +47,8 @@ class card_collection {
     void insert_card(card_ptr_t card, size_t index);
     void remove_card(card_id_param_t id);
     void move_card(card_id_param_t id, size_t index);
+    card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card);
+
     cards_iterator_t find_card(card_id_param_t id);
     const_cards_iterator_t find_card(card_id_param_t id) const;
 

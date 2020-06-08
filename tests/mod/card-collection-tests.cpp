@@ -27,12 +27,15 @@ class mock_card_collection : public card_collection {
     }
     void remove_card(card_id_t id) { card_collection::remove_card(id); }
     void move_card(card_id_t id, size_t index) { card_collection::move_card(id, index); }
+    card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card) {
+        return card_collection::replace_card(id, std::move(new_card));
+    }
 
     cards_iterator_t begin() { return card_collection::begin(); }
     cards_iterator_t end() { return card_collection::end(); }
 };
 
-std::unique_ptr<mock_card_collection> create_move_target(size_t size) {
+std::unique_ptr<mock_card_collection> create_full_target(size_t size) {
     auto target = std::unique_ptr<mock_card_collection>(new mock_card_collection(size));
 
     for (int i = 0; i != size; ++i) {
@@ -210,43 +213,75 @@ TEST(card_collection, cannot_move_card_that_is_not_in_collection) {
 }
 
 TEST(card_collection, move_card_move_backwards_moves_and_preserves_order_1) {
-    auto target = create_move_target(5);
+    auto target = create_full_target(5);
 
     target->move_card(4, 1);
     EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(1, 4, 2, 3, 5));
 }
 
 TEST(card_collection, move_card_move_backwards_moves_and_preserves_order_2) {
-    auto target = create_move_target(5);
+    auto target = create_full_target(5);
 
     target->move_card(5, 1);
     EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(1, 5, 2, 3, 4));
 }
 
 TEST(card_collection, move_card_move_backwards_moves_and_preserves_order_3) {
-    auto target = create_move_target(5);
+    auto target = create_full_target(5);
 
     target->move_card(5, 0);
     EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(5, 1, 2, 3, 4));
 }
 
 TEST(card_collection, move_card_move_forwards_moves_and_preserves_order_1) {
-    auto target = create_move_target(5);
+    auto target = create_full_target(5);
 
     target->move_card(1, 3);
     EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(2, 3, 4, 1, 5));
 }
 
 TEST(card_collection, move_card_move_forwards_moves_and_preserves_order_2) {
-    auto target = create_move_target(5);
+    auto target = create_full_target(5);
 
     target->move_card(1, 4);
     EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(2, 3, 4, 5, 1));
 }
 
 TEST(card_collection, move_card_move_forwards_moves_and_preserves_order_3) {
-    auto target = create_move_target(5);
+    auto target = create_full_target(5);
 
     target->move_card(2, 3);
     EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(1, 3, 4, 2, 5));
+}
+
+TEST(card_collection, cannot_replace_nonexistent_card) {
+    auto target = create_full_target(5);
+    auto new_card = card_ptr_t(new mock_card(7));
+
+    EXPECT_THROW_MSG(
+        target->replace_card(10, std::move(new_card)),
+        std::invalid_argument,
+        "collection does not contain card (10)");
+}
+
+TEST(card_collection, cannot_replace_card_with_duplicate_card) {
+    auto target = create_full_target(5);
+    auto new_card = card_ptr_t(new mock_card(4));
+
+    EXPECT_THROW_MSG(
+        target->replace_card(3, std::move(new_card)),
+        std::invalid_argument,
+        "collection already contains card (4)");
+}
+
+TEST(card_collection, replace_card_with_new_card) {
+    auto target = create_full_target(5);
+    auto new_card = card_ptr_t(new mock_card(7));
+
+    auto old_card = target->replace_card(3, std::move(new_card));
+
+    EXPECT_TRUE(target->contains_card(7));
+    EXPECT_FALSE(target->contains_card(3));
+    EXPECT_THAT(target->get_card_ids(), testing::ElementsAre(1, 2, 7, 4, 5));
+    EXPECT_EQ(old_card->id(), 3);
 }

@@ -40,8 +40,9 @@ void kekw::mod::card_collection::insert_card(card_ptr_t card, size_t index) {
             fmt::format("index ({0}) is larger than size ({1})", index, this->size()));
     }
 
-    auto insert = this->card_ids_.insert(card->id());
-    if (!insert.second) {
+    bool inserted;
+    std::tie(std::ignore, inserted) = this->card_ids_.insert(card->id());
+    if (!inserted) {
         throw std::invalid_argument(
             fmt::format("collection already contains card ({0})", card->id()));
     }
@@ -86,6 +87,27 @@ void kekw::mod::card_collection::move_card(card_id_param_t id, size_t index) {
     } else {
         std::rotate(id_it, id_it + 1, index_it + 1);
     }
+}
+
+kekw::mod::card_collection::card_ptr_t kekw::mod::card_collection::replace_card(
+    card_id_param_t id, card_ptr_t new_card) {
+    auto card = this->find_card(id);
+    if (card == this->end()) {
+        throw std::invalid_argument(
+            fmt::format("collection does not contain card ({0})", id));
+    }
+
+    bool inserted;
+    std::tie(std::ignore, inserted) = this->card_ids_.insert(new_card->id());
+    if (!inserted) {
+        throw std::invalid_argument(
+            fmt::format("collection already contains card ({0})", new_card->id()));
+    }
+
+    this->card_ids_.erase((*card)->id());
+
+    new_card.swap(*card);
+    return new_card;
 }
 
 kekw::mod::card_collection::cards_iterator_t kekw::mod::card_collection::find_card(
