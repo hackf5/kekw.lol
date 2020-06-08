@@ -45,7 +45,7 @@ class card_collection {
 
     void add_card(card_ptr_t card);
     void insert_card(card_ptr_t card, size_t index);
-    void remove_card(card_id_param_t id);
+    card_ptr_t remove_card(card_id_param_t id);
     void move_card(card_id_param_t id, size_t index);
     card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card);
 

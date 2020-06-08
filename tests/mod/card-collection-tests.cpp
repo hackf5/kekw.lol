@@ -22,11 +22,15 @@ class mock_card_collection : public card_collection {
     virtual ~mock_card_collection() {}
 
     void add_card(card_ptr_t card) { card_collection::add_card(std::move(card)); }
+
     void insert_card(card_ptr_t card, size_t index) {
         card_collection::insert_card(std::move(card), index);
     }
-    void remove_card(card_id_t id) { card_collection::remove_card(id); }
+
+    card_ptr_t remove_card(card_id_t id) { return card_collection::remove_card(id); }
+
     void move_card(card_id_t id, size_t index) { card_collection::move_card(id, index); }
+
     card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card) {
         return card_collection::replace_card(id, std::move(new_card));
     }
@@ -176,10 +180,12 @@ TEST(card_collection, remove_card_reduces_size) {
     target.add_card(card_ptr_t(new mock_card(1)));
 
     EXPECT_TRUE(target.contains_card(1));
-    target.remove_card(1);
+    auto removed = target.remove_card(1);
+
     EXPECT_EQ(0, target.size());
     EXPECT_FALSE(target.contains_card(1));
     EXPECT_EQ(target.begin(), target.end());
+    EXPECT_EQ(1, removed->id());
 }
 
 TEST(card_collection, cannot_remove_card_that_does_not_exist) {

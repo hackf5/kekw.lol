@@ -50,7 +50,8 @@ void kekw::mod::card_collection::insert_card(card_ptr_t card, size_t index) {
     this->cards_.insert(this->cards_.begin() + index, std::move(card));
 }
 
-void kekw::mod::card_collection::remove_card(card_id_param_t id) {
+kekw::mod::card_collection::card_ptr_t kekw::mod::card_collection::remove_card(
+    card_id_param_t id) {
     if (!this->card_ids_.erase(id)) {
         throw std::invalid_argument(
             fmt::format("collection does not contain card ({0})", id));
@@ -58,7 +59,13 @@ void kekw::mod::card_collection::remove_card(card_id_param_t id) {
 
     auto it = this->find_card(id);
     assert(it != this->cards_.end());
+
+    card_ptr_t removed;
+    it->swap(removed);
+
     this->cards_.erase(it);
+
+    return removed;
 }
 
 void kekw::mod::card_collection::move_card(card_id_param_t id, size_t index) {
