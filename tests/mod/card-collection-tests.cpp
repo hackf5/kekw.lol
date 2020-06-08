@@ -9,8 +9,8 @@ typedef card_collection::card_ptr_t card_ptr_t;
 class mock_card : public card {
    public:
     mock_card(card_id_param_t id = 1) : card(id, "dummy_id", "dummy") {}
-    mock_card(card_id_param_t id, card_type_id_param_t type_id, std::string const& name)
-        : card(id, type_id, name) {}
+    mock_card(card_id_param_t id, card_defn_id_param_t defn_id, std::string const& name)
+        : card(id, defn_id, name) {}
     virtual ~mock_card(){};
     std::exception ex();
 };
@@ -47,9 +47,9 @@ TEST(card, id_returns_id) {
     EXPECT_EQ(3, target.id());
 }
 
-TEST(card, type_id_returns_type_id) {
+TEST(card, defn_id_returns_defn_id) {
     mock_card target(3, "floop", "barry");
-    EXPECT_EQ("floop", target.type_id());
+    EXPECT_EQ("floop", target.defn_id());
 }
 
 TEST(card, name_returns_name) {
