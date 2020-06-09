@@ -1,6 +1,4 @@
 #include "available-card-collection.h"
-#include <algorithm>
-#include <cassert>
 
 using namespace kekw::mod;
 typedef available_card_collection::card_ptr_t card_ptr_t;
@@ -26,4 +24,3 @@ card_ptr_t available_card_collection::replace_card(
     card_id_param_t id, card_ptr_t new_card) {
     return card_collection::replace_card(id, std::move(new_card));
 }
-// void kw::available_card_collection

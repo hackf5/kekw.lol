@@ -3,4 +3,9 @@ target_sources(${MAIN_LIB_TARGET}
         ${CMAKE_CURRENT_SOURCE_DIR}/available-card.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/available-card-collection.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/card.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/recruit-env.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/recruit-card.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/recruit-card-collection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/owned-card.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/owned-card-collection.cpp
 )

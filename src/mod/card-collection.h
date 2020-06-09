@@ -44,29 +44,43 @@ class card_collection {
 
     size_t size() const;
     size_t max_size() const;
+    bool is_empty() const;
+    bool is_full() const;
+
     bool contains_card(card_id_param_t id) const;
     std::vector<card_id_t> get_card_ids() const;
+
+    const_cards_iterator_t begin() const;
+    const_cards_iterator_t end() const;
+
+    const_cards_iterator_t find_card(card_id_param_t id) const;
 
    protected:
     card_collection(size_t max_size);
     card_collection(card_ptr_t* begin, card_ptr_t* end, size_t max_size);
 
+    // adds the card to the end of the collection
     void add_card(card_ptr_t card);
+
+    // inserts the card into the collection at position index.
     void insert_card(card_ptr_t card, size_t index);
+
+    // removes card with id and returns a pointer to it.
     card_ptr_t remove_card(card_id_param_t id);
+
+    // moves card with id to position index.
     void move_card(card_id_param_t id, size_t index);
+
+    // replaces the card with id with new_card and returns a pointer to the replaced card.
     card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card);
 
+    // clears the collection.
     void clear();
 
     cards_iterator_t find_card(card_id_param_t id);
-    const_cards_iterator_t find_card(card_id_param_t id) const;
 
     cards_iterator_t begin();
     cards_iterator_t end();
-
-    const_cards_iterator_t begin() const;
-    const_cards_iterator_t end() const;
 
     cards_reverse_iterator_t rbegin();
     cards_reverse_iterator_t rend();
@@ -305,6 +319,16 @@ template <typename TCard>
 void card_collection<TCard>::clear() {
     this->card_ids_.clear();
     this->cards_.clear();
+}
+
+template <typename TCard>
+bool card_collection<TCard>::is_empty() const {
+    return this->cards_.empty();
+}
+
+template <typename TCard>
+bool card_collection<TCard>::is_full() const {
+    return this->size() == this->max_size();
 }
 
 }  // namespace mod

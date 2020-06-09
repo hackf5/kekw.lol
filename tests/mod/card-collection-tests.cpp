@@ -38,9 +38,6 @@ class mock_card_collection : public card_collection<mock_card> {
     }
 
     void clear() { card_collection::clear(); }
-
-    cards_iterator_t begin() { return card_collection::begin(); }
-    cards_iterator_t end() { return card_collection::end(); }
 };
 
 typedef mock_card_collection::card_ptr_t card_ptr_t;
@@ -119,9 +116,10 @@ TEST(card_collection, add_card_adds_card) {
     target.add_card(card_ptr_t(new mock_card(2)));
     target.add_card(card_ptr_t(new mock_card(3)));
 
-    EXPECT_EQ((*target.begin())->id(), 1);
-    EXPECT_EQ((*(target.begin() + 1))->id(), 2);
-    EXPECT_EQ((*(target.begin() + 2))->id(), 3);
+    auto const& ctarget = target;
+    EXPECT_EQ((*ctarget.begin())->id(), 1);
+    EXPECT_EQ((*(ctarget.begin() + 1))->id(), 2);
+    EXPECT_EQ((*(ctarget.begin() + 2))->id(), 3);
 }
 
 TEST(card_collection, insert_card_increases_size) {
@@ -174,10 +172,11 @@ TEST(card_collection, insert_card_adds_card) {
     target.insert_card(card_ptr_t(new mock_card(3)), 0);
     target.insert_card(card_ptr_t(new mock_card(4)), 1);
 
-    EXPECT_EQ((*target.begin())->id(), 3);
-    EXPECT_EQ((*(target.begin() + 1))->id(), 4);
-    EXPECT_EQ((*(target.begin() + 2))->id(), 2);
-    EXPECT_EQ((*(target.begin() + 3))->id(), 1);
+    auto const& ctarget = target;
+    EXPECT_EQ((*ctarget.begin())->id(), 3);
+    EXPECT_EQ((*(ctarget.begin() + 1))->id(), 4);
+    EXPECT_EQ((*(ctarget.begin() + 2))->id(), 2);
+    EXPECT_EQ((*(ctarget.begin() + 3))->id(), 1);
 }
 
 TEST(card_collection, remove_card_reduces_size) {
@@ -190,8 +189,10 @@ TEST(card_collection, remove_card_reduces_size) {
 
     EXPECT_EQ(0, target.size());
     EXPECT_FALSE(target.contains_card(1));
-    EXPECT_EQ(target.begin(), target.end());
     EXPECT_EQ(1, removed->id());
+
+    auto const& ctarget = target;
+    EXPECT_EQ(ctarget.begin(), ctarget.end());
 }
 
 TEST(card_collection, cannot_remove_card_that_does_not_exist) {
@@ -302,8 +303,10 @@ TEST(card_collection, clear_removes_all_cards) {
     auto target = create_full_target(5);
 
     target->clear();
+
+    auto const& ctarget = *target;
     EXPECT_EQ(target->size(), 0);
-    EXPECT_EQ(target->begin(), target->end());
+    EXPECT_EQ(ctarget.begin(), ctarget.end());
     EXPECT_FALSE(target->contains_card(1));
 }
 
@@ -348,4 +351,32 @@ TEST(card_collection, cannot_add_more_duplicate_card_from_ctor) {
         mock_card_collection(cards.begin(), cards.end(), 5),
         std::invalid_argument,
         "duplicate card found (1)");
+}
+
+TEST(card_collection, is_empty_returns_true_when_contains_no_cards) {
+    auto target = mock_card_collection(5);
+
+    EXPECT_TRUE(target.is_empty());
+}
+
+TEST(card_collection, is_empty_returns_false_when_contains_a_card) {
+    auto target = mock_card_collection(5);
+
+    target.add_card(card_ptr_t(new mock_card(1)));
+    EXPECT_FALSE(target.is_empty());
+}
+
+TEST(card_collection, is_full_returns_false_until_it_contains_max_cards) {
+    auto target = mock_card_collection(3);
+
+    EXPECT_FALSE(target.is_full());
+
+    target.add_card(card_ptr_t(new mock_card(1)));
+    EXPECT_FALSE(target.is_full());
+
+    target.add_card(card_ptr_t(new mock_card(2)));
+    EXPECT_FALSE(target.is_full());
+
+    target.add_card(card_ptr_t(new mock_card(3)));
+    EXPECT_TRUE(target.is_full());
 }
