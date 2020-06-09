@@ -1,10 +1,10 @@
 #include "../extensions.h"
 
+#include <array>
 #include <src/mod/card.h>
 #include <src/mod/card-collection.h>
 
 using namespace kekw::mod;
-typedef card_collection::card_ptr_t card_ptr_t;
 
 class mock_card : public card {
    public:
@@ -15,10 +15,12 @@ class mock_card : public card {
     std::exception ex();
 };
 
-class mock_card_collection : public card_collection {
+class mock_card_collection : public card_collection<mock_card> {
    public:
     mock_card_collection() = delete;
     mock_card_collection(size_t max_size) : card_collection(max_size) {}
+    mock_card_collection(card_ptr_t* begin, card_ptr_t* end, size_t max_size)
+        : card_collection(begin, end, max_size) {}
     virtual ~mock_card_collection() {}
 
     void add_card(card_ptr_t card) { card_collection::add_card(std::move(card)); }
@@ -40,6 +42,8 @@ class mock_card_collection : public card_collection {
     cards_iterator_t begin() { return card_collection::begin(); }
     cards_iterator_t end() { return card_collection::end(); }
 };
+
+typedef mock_card_collection::card_ptr_t card_ptr_t;
 
 std::unique_ptr<mock_card_collection> create_full_target(size_t size) {
     auto target = std::unique_ptr<mock_card_collection>(new mock_card_collection(size));
@@ -301,4 +305,47 @@ TEST(card_collection, clear_removes_all_cards) {
     EXPECT_EQ(target->size(), 0);
     EXPECT_EQ(target->begin(), target->end());
     EXPECT_FALSE(target->contains_card(1));
+}
+
+TEST(card_collection, add_from_collection_adds_and_initializes) {
+    std::array<card_ptr_t, 3> cards{card_ptr_t(new mock_card(1)),
+                                    card_ptr_t(new mock_card(2)),
+                                    card_ptr_t(new mock_card(3))};
+    auto target = mock_card_collection(cards.begin(), cards.end(), 4);
+
+    EXPECT_EQ(target.size(), 3);
+    EXPECT_EQ(target.max_size(), 4);
+    EXPECT_THAT(target.get_card_ids(), testing::ElementsAre(1, 2, 3));
+    EXPECT_TRUE(target.contains_card(1));
+    EXPECT_TRUE(target.contains_card(2));
+    EXPECT_TRUE(target.contains_card(3));
+
+    target.add_card(card_ptr_t(new mock_card(4)));
+    EXPECT_EQ(target.size(), 4);
+    EXPECT_TRUE(target.contains_card(4));
+
+    EXPECT_THROW_MSG(
+        target.add_card(card_ptr_t(new mock_card(5))), std::out_of_range, "");
+}
+
+TEST(card_collection, cannot_add_more_cards_than_max_size_from_ctor) {
+    std::array<card_ptr_t, 3> cards{card_ptr_t(new mock_card(1)),
+                                    card_ptr_t(new mock_card(2)),
+                                    card_ptr_t(new mock_card(3))};
+
+    EXPECT_THROW_MSG(
+        mock_card_collection(cards.begin(), cards.end(), 2),
+        std::invalid_argument,
+        "too many cards given; size=3, max_size=2");
+}
+
+TEST(card_collection, cannot_add_more_duplicate_card_from_ctor) {
+    std::array<card_ptr_t, 3> cards{card_ptr_t(new mock_card(1)),
+                                    card_ptr_t(new mock_card(2)),
+                                    card_ptr_t(new mock_card(1))};
+
+    EXPECT_THROW_MSG(
+        mock_card_collection(cards.begin(), cards.end(), 5),
+        std::invalid_argument,
+        "duplicate card found (1)");
 }
