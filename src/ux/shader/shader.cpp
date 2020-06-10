@@ -1,6 +1,6 @@
 #include "shader.h"
 
-#include <src/util/file-utils.h>
+#include <src/ux/util/file-utils.h>
 
 #include <stdexcept>
 
@@ -18,7 +18,8 @@ void kekw::ux::shader::add_stage_file(GLenum stage, std::string const &path) {
         throw std::runtime_error("Cannot add stages to a compiled program.");
     }
 
-    this->add_stage(stage, kekw::util::read_file(kekw::util::get_absolute_path(path).string()));
+    this->add_stage(
+        stage, kekw::util::read_file(kekw::util::get_absolute_path(path).string()));
 }
 
 void kekw::ux::shader::add_stage(GLenum stage, std::string const &source) {

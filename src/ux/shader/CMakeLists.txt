@@ -1,4 +1,4 @@
-target_sources(${MAIN_LIB_TARGET}
+target_sources(${MAIN_EXE_TARGET}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/shader.cpp
 )
@@ -9,4 +9,4 @@ add_custom_target(
             ${CMAKE_CURRENT_SOURCE_DIR}/impl
             ${OUTPUT_DIRECTORY}/glsl)
 
-add_dependencies(${MAIN_LIB_TARGET} copy-files-51a6)
+add_dependencies(${MAIN_EXE_TARGET} copy-files-51a6)

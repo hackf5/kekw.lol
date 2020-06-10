@@ -4,7 +4,6 @@
 #include "card.h"
 
 #include <fmt/format.h>
-#include <src/util/tools.h>
 
 #include <memory>
 #include <string>

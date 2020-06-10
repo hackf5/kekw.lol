@@ -1,5 +1,6 @@
 #include "gl-window-layer.h"
 #include <stb/stb_image.h>
+#include <src/ux/util/file-utils.h>
 
 kekw::ux::view::gl_window_layer::~gl_window_layer() {
     glDeleteVertexArrays(1, &(this->vao_));
@@ -36,11 +37,24 @@ void kekw::ux::view::gl_window_layer::initialize(window_info *info) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // set attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);  // position
+    glVertexAttribPointer(
+        0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);  // position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));  // color
+    glVertexAttribPointer(
+        1,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        8 * sizeof(float),
+        (void *)(3 * sizeof(float)));  // color
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float))); // texture
+    glVertexAttribPointer(
+        2,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        8 * sizeof(float),
+        (void *)(6 * sizeof(float)));  // texture
     glEnableVertexAttribArray(2);
 
     // unbind vertex array
@@ -61,8 +75,10 @@ void kekw::ux::view::gl_window_layer::initialize(window_info *info) {
     // load and generate the texture
     int width, height, nrChannels;
     auto texture_path = kekw::util::get_absolute_path("res/img/container.jpg");
-    unsigned char *data = stbi_load(texture_path.string().c_str(), &width, &height, &nrChannels, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    unsigned char *data =
+        stbi_load(texture_path.string().c_str(), &width, &height, &nrChannels, 0);
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
 

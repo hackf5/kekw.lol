@@ -5,7 +5,7 @@
 #include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-#include <src/util/file-utils.h>
+#include <src/ux/util/file-utils.h>
 
 #include <src/ux/view/window-manager.h>
 #include <src/ux/view/ux-window-layer.h>
@@ -33,6 +33,6 @@ int main(int argc, char *argv[]) {
     manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::gl_window_layer()));
     manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::UxWindowLayer()));
     manager.Start();
-    
+
     return 0;
 }

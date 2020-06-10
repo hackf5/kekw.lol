@@ -3,7 +3,6 @@
 #include "window-manager.h"
 
 #include <spdlog/spdlog.h>
-#include <src/util/file-utils.h>
 #include <src/ux/shader/shader.h>
 
 namespace kekw {

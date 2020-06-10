@@ -3,15 +3,13 @@
 #include <spdlog/spdlog.h>
 #include <inc/stb/stb_image.h>
 
-#include <src/util/file-utils.h>
+#include <src/ux/util/file-utils.h>
 
 #include <stdexcept>
 
 kekw::ux::view::window_info::window_info(GLFWwindow *window) : window_(window) {}
 
-GLFWwindow *kekw::ux::view::window_info::get_window() const {
-    return this->window_;
-}
+GLFWwindow *kekw::ux::view::window_info::get_window() const { return this->window_; }
 
 kekw::ux::view::window_layer::~window_layer() {}
 
@@ -32,8 +30,7 @@ kekw::ux::view::window_manager::window_manager() : window_(0), layers_() {
 
     const auto window_width = 1280;
     const auto window_height = 720;
-    this->window_ =
-        glfwCreateWindow(window_width, window_height, "kekw", NULL, NULL);
+    this->window_ = glfwCreateWindow(window_width, window_height, "kekw", NULL, NULL);
     if (this->window_ == NULL) {
         throw std::runtime_error("Failed to create GLFW window.");
     }
@@ -90,8 +87,7 @@ void kekw::ux::view::window_manager::framebuffer_size_callback(
     glViewport(0, 0, width, height);
 }
 
-void kekw::ux::view::window_manager::add_layer(
-    std::unique_ptr<window_layer> layer) {
+void kekw::ux::view::window_manager::add_layer(std::unique_ptr<window_layer> layer) {
     this->layers_.push_back(std::move(layer));
 }
 
