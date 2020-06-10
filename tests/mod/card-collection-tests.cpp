@@ -380,3 +380,35 @@ TEST(card_collection, is_full_returns_false_until_it_contains_max_cards) {
     target.add_card(card_ptr_t(new mock_card(3)));
     EXPECT_TRUE(target.is_full());
 }
+
+TEST(card_collection, at_throws_if_index_eq_size) {
+    auto target = mock_card_collection(3);
+
+    target.add_card(card_ptr_t(new mock_card(1)));
+
+    EXPECT_THROW_MSG(
+        target.at(1),
+        std::invalid_argument,
+        "index (1) must be strictly less than size (1)");
+}
+
+TEST(card_collection, at_throws_if_index_gt_size) {
+    auto target = mock_card_collection(3);
+
+    target.add_card(card_ptr_t(new mock_card(1)));
+
+    EXPECT_THROW_MSG(
+        target.at(2),
+        std::invalid_argument,
+        "index (2) must be strictly less than size (1)");
+}
+
+TEST(card_collection, at_gets_element_at_index) {
+    auto target = create_full_target(5);
+
+    EXPECT_EQ(target->at(0)->id(), 1);
+    EXPECT_EQ(target->at(0)->id(), 1);
+    EXPECT_EQ(target->at(1)->id(), 2);
+    EXPECT_EQ(target->at(1)->id(), 2);
+    EXPECT_EQ(target->at(4)->id(), 5);
+}

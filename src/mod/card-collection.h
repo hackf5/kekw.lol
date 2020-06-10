@@ -21,6 +21,7 @@ template <typename TCard>
 class card_collection {
    public:
     typedef std::unique_ptr<TCard> card_ptr_t;
+    typedef card_collection<TCard> view_t;
 
    private:
     // prefer vector over list as although there are going to be a lot of inserts
@@ -50,8 +51,13 @@ class card_collection {
     bool contains_card(card_id_param_t id) const;
     std::vector<card_id_t> get_card_ids() const;
 
+    TCard const* at(index_t) const;
+
     const_cards_iterator_t begin() const;
     const_cards_iterator_t end() const;
+
+    const_cards_reverse_iterator_t rbegin() const;
+    const_cards_reverse_iterator_t rend() const;
 
     const_cards_iterator_t find_card(card_id_param_t id) const;
 
@@ -84,9 +90,6 @@ class card_collection {
 
     cards_reverse_iterator_t rbegin();
     cards_reverse_iterator_t rend();
-
-    const_cards_reverse_iterator_t rbegin() const;
-    const_cards_reverse_iterator_t rend() const;
 
    private:
     // cards contained in the collection in order.
@@ -329,6 +332,17 @@ bool card_collection<TCard>::is_empty() const {
 template <typename TCard>
 bool card_collection<TCard>::is_full() const {
     return this->size() == this->max_size();
+}
+
+template <typename TCard>
+TCard const* card_collection<TCard>::at(index_t index) const {
+    if (this->size() <= index) {
+        throw std::invalid_argument(fmt::format(
+            "index ({0}) must be strictly less than size ({1})", index, this->size()));
+    }
+
+    auto& ptr = this->cards_.at(index);
+    return ptr.get();
 }
 
 }  // namespace mod
