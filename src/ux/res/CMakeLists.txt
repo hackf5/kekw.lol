@@ -1,5 +1,5 @@
 target_sources(
-    ${MAIN_LIB_TARGET}
+    ${UX_LIB_TARGET}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/app.rc)
 
@@ -9,4 +9,4 @@ add_custom_target(
             ${CMAKE_CURRENT_SOURCE_DIR}/img 
             ${OUTPUT_DIRECTORY}/res/img)
 
-add_dependencies(${MAIN_LIB_TARGET} copy-dir-56ec)
+add_dependencies(${UX_LIB_TARGET} copy-dir-56ec)

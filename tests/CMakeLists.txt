@@ -1,4 +1,4 @@
-set(MAIN_LIB_TEST_TARGET main_lib_test_exe)
+set(TEST_TARGET test_exe)
 
 macro(package_add_test TESTNAME)
     # create an exectuable in which the tests will be stored
@@ -18,11 +18,10 @@ endmacro()
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/extern/googletest" "extern/googletest")
 
-package_add_test(${MAIN_LIB_TEST_TARGET} "")
-set_target_properties(${MAIN_LIB_TEST_TARGET} PROPERTIES OUTPUT_NAME "kekwtest")
-target_link_libraries(${MAIN_LIB_TEST_TARGET} glfw)
-target_link_libraries(${MAIN_LIB_TEST_TARGET} spdlog::spdlog)
-target_link_libraries(${MAIN_LIB_TEST_TARGET} ${MAIN_LIB_TARGET})
+package_add_test(${TEST_TARGET} "")
+set_target_properties(${TEST_TARGET} PROPERTIES OUTPUT_NAME "kekwtest")
+target_link_libraries(${TEST_TARGET} spdlog::spdlog)
+target_link_libraries(${TEST_TARGET} ${MOD_LIB_TARGET})
 
 
 set_target_properties(gtest PROPERTIES FOLDER extern)

@@ -8,8 +8,11 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-set(MAIN_LIB_TARGET main_lib)
+#outputs
+set(UX_LIB_TARGET ux_lib)
+set(MOD_LIB_TARGET mod_lib)
 set(MAIN_EXE_TARGET main_exe)
+
 SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.dll.a")
 SET(BUILD_SHARED_LIBS OFF)
 SET(CMAKE_EXE_LINKER_FLAGS "-static")
@@ -34,21 +37,27 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 include_directories(C:/dev/cpplibs/usr/include)
 link_directories(C:/dev/cpplibs/usr/lib)
 
-# main lib
-add_library(${MAIN_LIB_TARGET} "")
-set_target_properties(${MAIN_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekw")
+# ux lib
+add_library(${UX_LIB_TARGET} "")
+set_target_properties(${UX_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwux")
 
 # link external libraries
 find_package(glfw3 3.3 REQUIRED)
-target_link_libraries(${MAIN_LIB_TARGET} glfw)
+target_link_libraries(${UX_LIB_TARGET} glfw)
 
 find_package(spdlog REQUIRED)
-target_link_libraries(${MAIN_LIB_TARGET} spdlog::spdlog)
+target_link_libraries(${UX_LIB_TARGET} spdlog::spdlog)
+
+# mod lib
+add_library(${MOD_LIB_TARGET} "")
+set_target_properties(${MOD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwmod")
+target_link_libraries(${MOD_LIB_TARGET} spdlog::spdlog)
 
 # main executable
 add_executable(${MAIN_EXE_TARGET} "")
 set_target_properties(${MAIN_EXE_TARGET} PROPERTIES OUTPUT_NAME "kekw")
-target_link_libraries(${MAIN_EXE_TARGET} ${MAIN_LIB_TARGET})
+target_link_libraries(${MAIN_EXE_TARGET} ${UX_LIB_TARGET})
+target_link_libraries(${MAIN_EXE_TARGET} ${MOD_LIB_TARGET})
 
 # look for more CMake files.
 add_subdirectory(src)
