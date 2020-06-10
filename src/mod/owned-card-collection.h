@@ -10,8 +10,8 @@ class owned_card_collection : public card_collection<owned_card> {
    public:
     owned_card_collection(owned_card_collection const &) = delete;
 
-    owned_card_collection();
-    owned_card_collection(card_ptr_t *begin, card_ptr_t *end);
+    owned_card_collection(index_t max_size);
+    owned_card_collection(card_ptr_t *begin, card_ptr_t *end, index_t max_size);
 
     virtual ~owned_card_collection();
 

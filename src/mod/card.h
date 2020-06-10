@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mod_types.h"
+#include "mod-types.h"
 #include <string>
 
 namespace kekw {
@@ -21,8 +21,6 @@ class card {
     const card_defn_id_t defn_id_;
     const std::string name_;
 };
-
-class card_foo {};
 
 }  // namespace mod
 }  // namespace kekw

@@ -18,20 +18,20 @@ class mock_card : public card {
 class mock_card_collection : public card_collection<mock_card> {
    public:
     mock_card_collection() = delete;
-    mock_card_collection(size_t max_size) : card_collection(max_size) {}
-    mock_card_collection(card_ptr_t* begin, card_ptr_t* end, size_t max_size)
+    mock_card_collection(index_t max_size) : card_collection(max_size) {}
+    mock_card_collection(card_ptr_t* begin, card_ptr_t* end, index_t max_size)
         : card_collection(begin, end, max_size) {}
     virtual ~mock_card_collection() {}
 
     void add_card(card_ptr_t card) { card_collection::add_card(std::move(card)); }
 
-    void insert_card(card_ptr_t card, size_t index) {
+    void insert_card(card_ptr_t card, index_t index) {
         card_collection::insert_card(std::move(card), index);
     }
 
     card_ptr_t remove_card(card_id_t id) { return card_collection::remove_card(id); }
 
-    void move_card(card_id_t id, size_t index) { card_collection::move_card(id, index); }
+    void move_card(card_id_t id, index_t index) { card_collection::move_card(id, index); }
 
     card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card) {
         return card_collection::replace_card(id, std::move(new_card));
@@ -42,7 +42,7 @@ class mock_card_collection : public card_collection<mock_card> {
 
 typedef mock_card_collection::card_ptr_t card_ptr_t;
 
-std::unique_ptr<mock_card_collection> create_full_target(size_t size) {
+std::unique_ptr<mock_card_collection> create_full_target(index_t size) {
     auto target = std::unique_ptr<mock_card_collection>(new mock_card_collection(size));
 
     for (int i = 0; i != size; ++i) {

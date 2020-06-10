@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mod_types.h"
+#include "mod-types.h"
 #include "card.h"
 
 #include <fmt/format.h>
@@ -42,8 +42,8 @@ class card_collection {
     card_collection(card_collection const&) = delete;
     virtual ~card_collection() = 0;
 
-    size_t size() const;
-    size_t max_size() const;
+    index_t size() const;
+    index_t max_size() const;
     bool is_empty() const;
     bool is_full() const;
 
@@ -56,20 +56,20 @@ class card_collection {
     const_cards_iterator_t find_card(card_id_param_t id) const;
 
    protected:
-    card_collection(size_t max_size);
-    card_collection(card_ptr_t* begin, card_ptr_t* end, size_t max_size);
+    card_collection(index_t max_size);
+    card_collection(card_ptr_t* begin, card_ptr_t* end, index_t max_size);
 
     // adds the card to the end of the collection
     void add_card(card_ptr_t card);
 
     // inserts the card into the collection at position index.
-    void insert_card(card_ptr_t card, size_t index);
+    void insert_card(card_ptr_t card, index_t index);
 
     // removes card with id and returns a pointer to it.
     card_ptr_t remove_card(card_id_param_t id);
 
     // moves card with id to position index.
-    void move_card(card_id_param_t id, size_t index);
+    void move_card(card_id_param_t id, index_t index);
 
     // replaces the card with id with new_card and returns a pointer to the replaced card.
     card_ptr_t replace_card(card_id_param_t id, card_ptr_t new_card);
@@ -93,19 +93,19 @@ class card_collection {
     cards_t cards_;
 
     // the maximum number of elements that can be stored in the collection.
-    size_t max_size_;
+    index_t max_size_;
 
     // the ids of the cards in the collection.
     std::unordered_set<card_id_t> card_ids_;
 };
 
 template <typename TCard>
-card_collection<TCard>::card_collection(size_t max_size)
+card_collection<TCard>::card_collection(index_t max_size)
     : cards_(), max_size_(max_size), card_ids_() {}
 
 template <typename TCard>
 card_collection<TCard>::card_collection(
-    card_ptr_t* begin, card_ptr_t* end, size_t max_size)
+    card_ptr_t* begin, card_ptr_t* end, index_t max_size)
     : cards_(), max_size_(max_size), card_ids_() {
     for (auto it = begin; it != end; ++it) {
         bool inserted;
@@ -130,12 +130,12 @@ template <typename TCard>
 card_collection<TCard>::~card_collection() {}
 
 template <typename TCard>
-size_t card_collection<TCard>::size() const {
+index_t card_collection<TCard>::size() const {
     return this->cards_.size();
 }
 
 template <typename TCard>
-size_t card_collection<TCard>::max_size() const {
+index_t card_collection<TCard>::max_size() const {
     return this->max_size_;
 }
 
@@ -154,13 +154,13 @@ void card_collection<TCard>::add_card(card_ptr_t card) {
 }
 
 template <typename TCard>
-void card_collection<TCard>::insert_card(card_ptr_t card, size_t index) {
+void card_collection<TCard>::insert_card(card_ptr_t card, index_t index) {
     if (this->size() >= this->max_size()) {
         throw std::out_of_range(
             fmt::format("collection is at max size ({0})", this->max_size()));
     }
 
-    // note that size_t is unsigned, so no need to check index < 0
+    // note that index_t is unsigned, so no need to check index < 0
     if (this->size() < index) {
         throw std::invalid_argument(
             fmt::format("index ({0}) is larger than size ({1})", index, this->size()));
@@ -196,7 +196,7 @@ typename card_collection<TCard>::card_ptr_t card_collection<TCard>::remove_card(
 }
 
 template <typename TCard>
-void card_collection<TCard>::move_card(card_id_param_t id, size_t index) {
+void card_collection<TCard>::move_card(card_id_param_t id, index_t index) {
     if (this->size() <= index) {
         throw std::invalid_argument(fmt::format(
             "index ({0}) must be strictly less than size ({1})", index, this->size()));
