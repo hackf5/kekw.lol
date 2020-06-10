@@ -9,36 +9,35 @@ kekw::ux::view::ux_window_layer::~ux_window_layer() {
 void kekw::ux::view::ux_window_layer::initialize(window_info *info) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(info->get_window(), true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+
     ImGuiIO &io = ImGui::GetIO();
     (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    ImGui::StyleColorsDark();
-
+    // 4k monitor
     auto SCALE = 2.0f;
     ImFontConfig cfg;
     cfg.SizePixels = 13 * SCALE;
     ImGui::GetIO().Fonts->AddFontDefault(&cfg)->DisplayOffset.y = SCALE;
     ImGui::GetStyle().ScaleAllSizes(SCALE);
-
     ImGui::GetIO().FontGlobalScale = SCALE / 2;
 
-    // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(info->get_window(), true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImGui::StyleColorsDark();
+
+    auto &style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
+    style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void kekw::ux::view::ux_window_layer::render(window_info *info) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
-    auto &style = ImGui::GetStyle();
-    style.Colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
-    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
-    style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
     ImGuiViewport *viewport = ImGui::GetMainViewport();
