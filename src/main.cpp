@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
     vw::window_manager manager;
     manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::gl_window_layer()));
-    manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::UxWindowLayer()));
+    manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::ux_window_layer()));
     manager.Start();
 
     return 0;

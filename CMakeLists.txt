@@ -37,21 +37,22 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 include_directories(C:/dev/cpplibs/usr/include)
 link_directories(C:/dev/cpplibs/usr/lib)
 
-# ux lib
-add_library(${UX_LIB_TARGET} "")
-set_target_properties(${UX_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwux")
-
-# link external libraries
+# find external libs
 find_package(glfw3 3.3 REQUIRED)
-target_link_libraries(${UX_LIB_TARGET} glfw)
-
 find_package(spdlog REQUIRED)
-target_link_libraries(${UX_LIB_TARGET} spdlog::spdlog)
 
 # mod lib
 add_library(${MOD_LIB_TARGET} "")
 set_target_properties(${MOD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwmod")
 target_link_libraries(${MOD_LIB_TARGET} spdlog::spdlog)
+
+# ux lib
+add_library(${UX_LIB_TARGET} "")
+set_target_properties(${UX_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwux")
+target_link_libraries(${UX_LIB_TARGET} glfw)
+target_link_libraries(${UX_LIB_TARGET} spdlog::spdlog)
+target_link_libraries(${UX_LIB_TARGET} ${MOD_LIB_TARGET})
+
 
 # main executable
 add_executable(${MAIN_EXE_TARGET} "")
