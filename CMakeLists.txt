@@ -32,14 +32,21 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 # local input paths
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/inc)
+include_directories(${PROJECT_SOURCE_DIR}/extern/glfw/include)
 
-# external input paths - need to add to variables
+# external input paths - need converting to submodules
 include_directories(C:/dev/cpplibs/usr/include)
-link_directories(C:/dev/cpplibs/usr/lib)
 
-# find external libs
-find_package(glfw3 3.3 REQUIRED)
-find_package(spdlog REQUIRED)
+# glfw
+set(GLFW_BUILD_EXAMPLES OFF)
+set(GLFW_BUILD_TESTS OFF)
+set(GLFW_BUILD_DOCS OFF)
+set(GLFW_INSTALL OFF)
+set(GLFW_VULKAN_STATIC OFF)
+add_subdirectory("${PROJECT_SOURCE_DIR}/extern/glfw" "extern/glfw")
+
+# spdlog
+add_subdirectory("${PROJECT_SOURCE_DIR}/extern/spdlog" "extern/spdlog")
 
 # mod lib
 add_library(${MOD_LIB_TARGET} "")
