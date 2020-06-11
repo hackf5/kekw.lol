@@ -23,6 +23,10 @@ class recruit_window_layer : public window_layer {
     kekw::ux::shader shader_;
     GLuint vbo_, vao_, ebo_;
     std::shared_ptr<kekw::mod::recruit_env> recruit_env_;
+
+    const float card_width = 1.0f;
+    const float card_height = 88.0f / 62.0f;
+    const float margin = 0.25f;
 };
 
 }  // namespace view

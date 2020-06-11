@@ -40,4 +40,8 @@ TEST(spikes, spike1) {
     auto dismissed = target->dismiss(id);
     EXPECT_FALSE(target->recruit_view()->contains_card(id));
     EXPECT_EQ(dismissed->id(), id);
+
+    for (int i = 1; i <= 10; ++i) {
+        create_target(1);
+    }
 }

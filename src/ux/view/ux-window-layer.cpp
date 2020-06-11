@@ -84,20 +84,6 @@ void ux_window_layer::render(window_info *info) {
         (*it)->render(this);
     }
 
-    // if (ImGui::Begin("Test 1")) {
-    //     ImGui::Button("Clear");
-    //     ImGui::SameLine();
-    //     ImGui::Button("Copy");
-    // }
-    // ImGui::End();  // Test 1
-
-    // if (ImGui::Begin("Test 2")) {
-    //     ImGui::Button("Clear");
-    //     ImGui::SameLine();
-    //     ImGui::Button("Copy");
-    // }
-    // ImGui::End();  // Test 2
-
     ImGui::End();  // DockSpace
 
     ImGui::Render();

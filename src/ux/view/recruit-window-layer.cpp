@@ -33,17 +33,14 @@ void recruit_window_layer::initialize(window_info *info) {
     glGenBuffers(1, &this->ebo_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo_);
 
-    const float w = 1;
-    const float h = 88.0f / 62.0f;
-
     // populate buffers
     // clang-format off
     float vertices[] = {
         // positions
-         w,  h, 0.0f,  // top right
-         w, -h, 0.0f,   // bottom right
-        -w, -h, 0.0f,   // bottom left
-        -w,  h, 0.0f  // top left 
+        card_width,    card_height, 0.0f,   // top right
+        card_width,    0.0f,        0.0f,   // bottom right
+        0.0f,          0.0f,        0.0f,   // bottom left
+        0.0f,          card_height, 0.0f    // top left 
     };
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // clang-format on
@@ -71,24 +68,30 @@ void recruit_window_layer::initialize(window_info *info) {
 void recruit_window_layer::render(window_info *info) {
     this->shader_.use();
 
+    auto model = glm::mat4(1.0f);
+    this->shader_.set("model", model);
+
+    glBindVertexArray(this->vao_);
+
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     auto width = (GLfloat)viewport[2];
     auto height = (GLfloat)viewport[3];
     auto scale_factor = width / height;
 
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 projection =
-        glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
-
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -20.0f));
-
+    auto projection = glm::perspective(glm::radians(45.0f), scale_factor, 0.1f, 100.0f);
     this->shader_.set("projection", projection);
-    this->shader_.set("view", view);
-    this->shader_.set("model", model);
 
-    glBindVertexArray(this->vao_);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    auto av = this->recruit_env_->available_view();
+    float left = -(av->size() * (card_width + margin) - margin) / 2.0f;
+
+    for (auto it = av->begin(); it != av->end(); ++it, left += card_width + margin) {
+        auto view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(left, -card_width / 2.0f, -10.0f));
+        this->shader_.set("view", view);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    }
+
     glBindVertexArray(0);
 }

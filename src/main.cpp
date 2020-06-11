@@ -46,7 +46,8 @@ int main(int argc, char *argv[]) {
     spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
     spdlog::info("Loading KEKW.lol... {}", "test");
 
-    auto recruit_env = create_recruit_env(5);
+    auto recruit_env = create_recruit_env(4);
+    recruit_env->refresh();
 
     vw::window_manager manager;
     manager.add_layer(

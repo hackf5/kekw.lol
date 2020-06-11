@@ -15,7 +15,7 @@ recruit_env::recruit_env(
 
 void recruit_env::refresh() {
     this->available_cards_->clear();
-    for (int i = 0; i != 5; ++i) {
+    for (int i = 0; i != this->available_view()->max_size(); ++i) {
         this->available_cards_->add_card(this->card_factory_->create_available());
     }
 }
