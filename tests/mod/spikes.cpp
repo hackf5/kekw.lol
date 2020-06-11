@@ -19,25 +19,25 @@ TEST(spikes, spike1) {
     index_t max_size = 5;
     auto target = create_target(max_size);
 
-    EXPECT_EQ(target->available_view().size(), 0);
-    EXPECT_EQ(target->available_view().max_size(), max_size);
+    EXPECT_EQ(target->available_view()->size(), 0);
+    EXPECT_EQ(target->available_view()->max_size(), max_size);
 
     target->refresh();
-    EXPECT_EQ(target->available_view().size(), max_size);
+    EXPECT_EQ(target->available_view()->size(), max_size);
 
-    auto id = target->available_view().at(2)->id();
+    auto id = target->available_view()->at(2)->id();
 
     auto owned = target->own(id);
-    EXPECT_TRUE(target->owned_view().contains_card(id));
-    EXPECT_FALSE(target->available_view().contains_card(id));
+    EXPECT_TRUE(target->owned_view()->contains_card(id));
+    EXPECT_FALSE(target->available_view()->contains_card(id));
     EXPECT_EQ(owned->id(), id);
 
     auto recruited = target->recruit(id, 0);
-    EXPECT_TRUE(target->recruit_view().contains_card(id));
-    EXPECT_FALSE(target->owned_view().contains_card(id));
+    EXPECT_TRUE(target->recruit_view()->contains_card(id));
+    EXPECT_FALSE(target->owned_view()->contains_card(id));
     EXPECT_EQ(recruited->id(), id);
 
     auto dismissed = target->dismiss(id);
-    EXPECT_FALSE(target->recruit_view().contains_card(id));
+    EXPECT_FALSE(target->recruit_view()->contains_card(id));
     EXPECT_EQ(dismissed->id(), id);
 }

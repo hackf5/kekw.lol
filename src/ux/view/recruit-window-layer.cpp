@@ -6,11 +6,15 @@
 
 using namespace kekw::ux::view;
 
+recruit_window_layer::recruit_window_layer(
+    std::shared_ptr<kekw::mod::recruit_env> recruit_env) {
+    this->recruit_env_ = recruit_env;
+}
+
 recruit_window_layer::~recruit_window_layer() {
     glDeleteVertexArrays(1, &(this->vao_));
     glDeleteBuffers(1, &(this->vbo_));
     glDeleteBuffers(1, &(this->ebo_));
-    // glDeleteTextures(1, &(this->texture_));
 }
 
 void recruit_window_layer::initialize(window_info *info) {

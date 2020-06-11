@@ -1,21 +1,25 @@
 #include "test-widget.h"
 
-#include <inc/imgui/imgui.h>
+#include "imgui/extensions.h"
 
 using namespace kekw::ux::view::widgets;
 
-void test_widget::render(ux_window_layer *layer) {
-    if (ImGui::Begin("Test 1")) {
-        ImGui::Button("Clear");
-        ImGui::SameLine();
-        ImGui::Button("Copy");
-    }
-    ImGui::End();  // Test 1
+test_widget::test_widget(std::shared_ptr<kekw::mod::recruit_env> recruit_env) {
+    this->recruit_env_ = recruit_env;
+}
 
-    if (ImGui::Begin("Test 2")) {
-        ImGui::Button("Clear");
-        ImGui::SameLine();
-        ImGui::Button("Copy");
+void test_widget::render(ux_window_layer *layer) {
+    if (ImGui::Begin("Add Available")) {
     }
-    ImGui::End();  // Test 2
+
+    bool enabled = this->recruit_env_->available_view()->is_empty();
+
+    imgui::begin_disable_item(enabled);
+    if (ImGui::Button("Add Card")) {
+        this->recruit_env_->refresh();
+    }
+
+    imgui::end_disable_item(enabled);
+
+    ImGui::End();  // Add Available
 }

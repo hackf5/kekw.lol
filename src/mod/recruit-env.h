@@ -13,9 +13,9 @@ namespace mod {
 
 class recruit_env {
    public:
-    typedef typename available_card_collection::view_t const& available_view_t;
-    typedef typename owned_card_collection::view_t const& owned_view_t;
-    typedef typename recruit_card_collection::view_t const& recruit_view_t;
+    typedef typename available_card_collection::view_t available_view_t;
+    typedef typename owned_card_collection::view_t owned_view_t;
+    typedef typename recruit_card_collection::view_t recruit_view_t;
 
     recruit_env(
         std::unique_ptr<recruit_hero> hero,
@@ -38,9 +38,9 @@ class recruit_env {
     // dismisses a recruited card
     std::unique_ptr<recruit_card> dismiss(card_id_param_t card_id);
 
-    available_view_t available_view() const;
-    owned_view_t owned_view() const;
-    recruit_view_t recruit_view() const;
+    available_view_t const* available_view() const;
+    owned_view_t const* owned_view() const;
+    recruit_view_t const* recruit_view() const;
 
    private:
     std::unique_ptr<recruit_hero> hero_;
