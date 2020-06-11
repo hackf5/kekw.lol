@@ -12,6 +12,9 @@
             "externalConsole": true,
             "miDebuggerPath": "C:/dev/msys64/mingw64/bin/gdb.exe",
             "MIMode": "gdb",
+            "logging": {
+                "engineLogging": true
+            },
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -19,6 +22,25 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "(gdb) attach Exe",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "${command:cmake.launchTargetPath}",
+            "miDebuggerPath": "C:/dev/msys64/mingw64/bin/gdb.exe",
+            "MIMode": "gdb",
+            "logging": {
+                "engineLogging": true
+            },
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+            ],
+            "processId": "${command:pickProcess}"
         }
     ]
 }

@@ -73,6 +73,7 @@ window_manager::window_manager() : window_(0), layers_() {
         throw std::runtime_error("Failed to load GL.");
     }
 
+    // glEnable(GL_DEPTH_TEST);
     spdlog::debug("GL loaded.");
 }
 
@@ -103,7 +104,7 @@ void window_manager::Start() {
     while (!glfwWindowShouldClose(this->window_)) {
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT /** | GL_DEPTH_BUFFER_BIT **/);
 
         for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
             (**it).render(&info);

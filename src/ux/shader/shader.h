@@ -1,6 +1,7 @@
 #pragma once
 
 #include <inc/glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <fstream>
 #include <memory>
@@ -22,9 +23,10 @@ class shader {
     void compile();
     void use() const;
 
-    void set(std::string const &name, bool value) const;
-    void set(std::string const &name, int value) const;
-    void set(std::string const &name, float value) const;
+    void set(std::string const &name, GLboolean value) const;
+    void set(std::string const &name, GLint value) const;
+    void set(std::string const &name, GLfloat value) const;
+    void set(std::string const &name, glm::mat4 const &value) const;
 
    private:
     typedef std::tuple<GLenum, GLuint> stage_t;

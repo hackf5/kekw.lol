@@ -1,5 +1,6 @@
 #include "shader.h"
 
+#include <glm/ext.hpp>
 #include <src/ux/util/file-utils.h>
 
 #include <stdexcept>
@@ -82,16 +83,24 @@ void shader::use() const {
     glUseProgram(this->id_);
 }
 
-void shader::set(const std::string &name, bool value) const {
+void shader::set(const std::string &name, GLboolean value) const {
     glUniform1i(glGetUniformLocation(this->id_, name.c_str()), (int)value);
 }
 
-void shader::set(const std::string &name, int value) const {
+void shader::set(const std::string &name, GLint value) const {
     glUniform1i(glGetUniformLocation(this->id_, name.c_str()), (int)value);
 }
 
-void shader::set(const std::string &name, float value) const {
+void shader::set(const std::string &name, GLfloat value) const {
     glUniform1f(glGetUniformLocation(this->id_, name.c_str()), value);
+}
+
+void shader::set(const std::string &name, glm::mat4 const &value) const {
+    glUniformMatrix4fv(
+        glGetUniformLocation(this->id_, name.c_str()),
+        1,
+        GL_FALSE,
+        glm::value_ptr(value));
 }
 
 void shader::delete_shaders() {

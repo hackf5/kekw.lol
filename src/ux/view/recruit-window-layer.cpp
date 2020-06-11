@@ -1,6 +1,8 @@
 #include "recruit-window-layer.h"
 
-#include <algorithm>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace kekw::ux::view;
 
@@ -27,21 +29,18 @@ void recruit_window_layer::initialize(window_info *info) {
     glGenBuffers(1, &this->ebo_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo_);
 
-    const float golden = 1.61803398875f;
+    const float w = 1;
+    const float h = 88.0f / 62.0f;
 
     // populate buffers
     // clang-format off
     float vertices[] = {
         // positions
-        1.0f,  golden,    // top right
-        1.0f,  -golden,   // bottom right
-        -1.0f, -golden,   // bottom left
-        -1.0f,  golden,   // top left 
+         w,  h, 0.0f,  // top right
+         w, -h, 0.0f,   // bottom right
+        -w, -h, 0.0f,   // bottom left
+        -w,  h, 0.0f  // top left 
     };
-    std::for_each(
-        vertices, 
-        vertices + sizeof(vertices), 
-        [golden](float& value) { value /= 2.0f * golden; });
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // clang-format on
 
@@ -56,7 +55,7 @@ void recruit_window_layer::initialize(window_info *info) {
 
     // set attributes
     // position
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
     // unbind gpu memory
@@ -67,10 +66,23 @@ void recruit_window_layer::initialize(window_info *info) {
 
 void recruit_window_layer::render(window_info *info) {
     this->shader_.use();
-    info->get_window();
 
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
+    auto width = (GLfloat)viewport[2];
+    auto height = (GLfloat)viewport[3];
+    auto scale_factor = width / height;
+
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 projection =
+        glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -20.0f));
+
+    this->shader_.set("projection", projection);
+    this->shader_.set("view", view);
+    this->shader_.set("model", model);
 
     glBindVertexArray(this->vao_);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
