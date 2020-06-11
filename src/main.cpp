@@ -11,6 +11,7 @@
 #include <src/ux/view/ux-window-layer.h>
 #include <src/ux/view/gl-window-layer.h>
 #include <src/ux/view/recruit-window-layer.h>
+#include <src/ux/view/widgets/test-widget.h>
 
 #include <memory>
 
@@ -32,7 +33,12 @@ int main(int argc, char *argv[]) {
 
     vw::window_manager manager;
     manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::recruit_window_layer()));
-    // manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::ux_window_layer()));
+
+    auto ux_layer = std::unique_ptr<vw::ux_window_layer>(new vw::ux_window_layer());
+    ux_layer->add_widget(
+        std::unique_ptr<vw::ux_window_widget>(new vw::widgets::test_widget()));
+    manager.add_layer(std::move(ux_layer));
+
     manager.Start();
 
     return 0;

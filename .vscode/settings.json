@@ -96,6 +96,8 @@
         "unordered_set": "cpp",
         "strstream": "cpp",
         "cfenv": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "regex": "cpp",
+        "shared_mutex": "cpp"
     },
 }

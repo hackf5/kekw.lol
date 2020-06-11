@@ -1,12 +1,28 @@
 #include "ux-window-layer.h"
 
-kekw::ux::view::ux_window_layer::~ux_window_layer() {
+#include <inc/imgui/imgui.h>
+#include <inc/imgui/imgui_impl_glfw.h>
+#include <inc/imgui/imgui_impl_opengl3.h>
+
+using namespace kekw::ux::view;
+
+ux_window_widget::~ux_window_widget() {}
+
+void ux_window_widget::initialize(ux_window_layer *layer) {}
+
+void ux_window_widget::render(ux_window_layer *layer) {}
+
+ux_window_layer::~ux_window_layer() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void kekw::ux::view::ux_window_layer::initialize(window_info *info) {
+void ux_window_layer::add_widget(std::unique_ptr<ux_window_widget> widget) {
+    this->widgets_.push_back(std::move(widget));
+}
+
+void ux_window_layer::initialize(window_info *info) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(info->get_window(), true);
@@ -32,9 +48,13 @@ void kekw::ux::view::ux_window_layer::initialize(window_info *info) {
     style.Colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
     style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    for (auto it = this->widgets_.begin(); it != this->widgets_.end(); ++it) {
+        (*it)->initialize(this);
+    }
 }
 
-void kekw::ux::view::ux_window_layer::render(window_info *info) {
+void ux_window_layer::render(window_info *info) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -60,19 +80,23 @@ void kekw::ux::view::ux_window_layer::render(window_info *info) {
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     ImGui::PopStyleColor(2);
 
-    if (ImGui::Begin("Test 1")) {
-        ImGui::Button("Clear");
-        ImGui::SameLine();
-        ImGui::Button("Copy");
+    for (auto it = this->widgets_.begin(); it != this->widgets_.end(); ++it) {
+        (*it)->render(this);
     }
-    ImGui::End();  // Test 1
 
-    if (ImGui::Begin("Test 2")) {
-        ImGui::Button("Clear");
-        ImGui::SameLine();
-        ImGui::Button("Copy");
-    }
-    ImGui::End();  // Test 2
+    // if (ImGui::Begin("Test 1")) {
+    //     ImGui::Button("Clear");
+    //     ImGui::SameLine();
+    //     ImGui::Button("Copy");
+    // }
+    // ImGui::End();  // Test 1
+
+    // if (ImGui::Begin("Test 2")) {
+    //     ImGui::Button("Clear");
+    //     ImGui::SameLine();
+    //     ImGui::Button("Copy");
+    // }
+    // ImGui::End();  // Test 2
 
     ImGui::End();  // DockSpace
 
