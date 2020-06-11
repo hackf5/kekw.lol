@@ -7,13 +7,15 @@
 
 #include <stdexcept>
 
-kekw::ux::view::window_info::window_info(GLFWwindow *window) : window_(window) {}
+using namespace kekw::ux::view;
 
-GLFWwindow *kekw::ux::view::window_info::get_window() const { return this->window_; }
+window_info::window_info(GLFWwindow *window) : window_(window) {}
 
-kekw::ux::view::window_layer::~window_layer() {}
+GLFWwindow *window_info::get_window() const { return this->window_; }
 
-kekw::ux::view::window_manager::window_manager() : window_(0), layers_() {
+window_layer::~window_layer() {}
+
+window_manager::window_manager() : window_(0), layers_() {
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW.");
     }
@@ -74,12 +76,12 @@ kekw::ux::view::window_manager::window_manager() : window_(0), layers_() {
     spdlog::debug("GL loaded.");
 }
 
-kekw::ux::view::window_manager::~window_manager() {
+window_manager::~window_manager() {
     glfwDestroyWindow(this->window_);
     glfwTerminate();
 }
 
-void kekw::ux::view::window_manager::framebuffer_size_callback(
+void window_manager::framebuffer_size_callback(
     GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width
     // and height will be significantly larger than specified on retina
@@ -87,11 +89,11 @@ void kekw::ux::view::window_manager::framebuffer_size_callback(
     glViewport(0, 0, width, height);
 }
 
-void kekw::ux::view::window_manager::add_layer(std::unique_ptr<window_layer> layer) {
+void window_manager::add_layer(std::unique_ptr<window_layer> layer) {
     this->layers_.push_back(std::move(layer));
 }
 
-void kekw::ux::view::window_manager::Start() {
+void window_manager::Start() {
     window_info info(this->window_);
 
     for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
@@ -100,6 +102,7 @@ void kekw::ux::view::window_manager::Start() {
 
     while (!glfwWindowShouldClose(this->window_)) {
         glfwPollEvents();
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {

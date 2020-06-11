@@ -10,6 +10,7 @@
 #include <src/ux/view/window-manager.h>
 #include <src/ux/view/ux-window-layer.h>
 #include <src/ux/view/gl-window-layer.h>
+#include <src/ux/view/recruit-window-layer.h>
 
 #include <memory>
 
@@ -30,8 +31,8 @@ int main(int argc, char *argv[]) {
     spdlog::info("Loading KEKW.lol... {}", "test");
 
     vw::window_manager manager;
-    manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::gl_window_layer()));
-    manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::ux_window_layer()));
+    manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::recruit_window_layer()));
+    // manager.add_layer(std::unique_ptr<vw::window_layer>(new vw::ux_window_layer()));
     manager.Start();
 
     return 0;
