@@ -9,13 +9,16 @@
 
 using namespace kekw::ux::view;
 
-window_info::window_info(GLFWwindow *window) : window_(window) {}
+window_info::window_info(GLFWwindow *window)
+    : window_(window),
+      left_mouse_button_state_(new mouse_button_state()),
+      right_mouse_button_state_(new mouse_button_state()) {}
 
 GLFWwindow *window_info::get_window() const { return this->window_; }
 
 window_layer::~window_layer() {}
 
-window_manager::window_manager() : window_(0), layers_() {
+window_manager::window_manager() : window_(0), layers_(), window_info_() {
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW.");
     }
@@ -37,6 +40,7 @@ window_manager::window_manager() : window_(0), layers_() {
         throw std::runtime_error("Failed to create GLFW window.");
     }
 
+    this->window_info_ = std::unique_ptr<window_info>(new window_info(this->window_));
     spdlog::debug("GLFW window created.");
 
     glfwSetWindowUserPointer(this->window_, this);
@@ -46,6 +50,12 @@ window_manager::window_manager() : window_(0), layers_() {
         this->window_, +[](GLFWwindow *window, int width, int height) {
             static_cast<window_manager *>(glfwGetWindowUserPointer(window))
                 ->framebuffer_size_callback(window, width, height);
+        });
+
+    glfwSetMouseButtonCallback(
+        this->window_, +[](GLFWwindow *window, int button, int action, int mods) {
+            static_cast<window_manager *>(glfwGetWindowUserPointer(window))
+                ->mouse_button_callback(window, button, action, mods);
         });
 
     glfwSwapInterval(1);  // Enable vsync
@@ -73,7 +83,7 @@ window_manager::window_manager() : window_(0), layers_() {
         throw std::runtime_error("Failed to load GL.");
     }
 
-    // glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     spdlog::debug("GL loaded.");
 }
 
@@ -88,6 +98,32 @@ void window_manager::framebuffer_size_callback(
     // and height will be significantly larger than specified on retina
     // displays.
     glViewport(0, 0, width, height);
+    this->window_info_->window_width_ = width;
+    this->window_info_->window_height_ = height;
+}
+
+void window_manager::mouse_button_callback(
+    GLFWwindow *window, int button, int action, int mods) {
+    switch (button) {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            if (action == GLFW_PRESS) {
+                this->window_info_->left_mouse_button_state_->update(true);
+            } else if (action == GLFW_RELEASE) {
+                this->window_info_->left_mouse_button_state_->update(false);
+            }
+            break;
+
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            if (action == GLFW_PRESS) {
+                this->window_info_->right_mouse_button_state_->update(true);
+            } else if (action == GLFW_RELEASE) {
+                this->window_info_->right_mouse_button_state_->update(false);
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 void window_manager::add_layer(std::unique_ptr<window_layer> layer) {
@@ -95,19 +131,25 @@ void window_manager::add_layer(std::unique_ptr<window_layer> layer) {
 }
 
 void window_manager::Start() {
-    window_info info(this->window_);
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    this->window_info_->window_width_ = (GLfloat)viewport[2];
+    this->window_info_->window_height_ = (GLfloat)viewport[3];
 
     for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
-        (**it).initialize(&info);
+        (**it).initialize(this->window_info_.get());
     }
 
     while (!glfwWindowShouldClose(this->window_)) {
+        this->window_info_->before_poll_events();
         glfwPollEvents();
+        this->window_info_->after_poll_events();
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT /** | GL_DEPTH_BUFFER_BIT **/);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
-            (**it).render(&info);
+            (**it).render(this->window_info_.get());
         }
 
         glfwSwapBuffers(this->window_);

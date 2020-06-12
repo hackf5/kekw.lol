@@ -8,9 +8,9 @@ using namespace kekw::ux::view;
 
 ux_window_widget::~ux_window_widget() {}
 
-void ux_window_widget::initialize(ux_window_layer *layer) {}
+void ux_window_widget::initialize(window_info *info) {}
 
-void ux_window_widget::render(ux_window_layer *layer) {}
+void ux_window_widget::render(window_info *info) {}
 
 ux_window_layer::~ux_window_layer() {
     ImGui_ImplOpenGL3_Shutdown();
@@ -50,7 +50,7 @@ void ux_window_layer::initialize(window_info *info) {
     style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 
     for (auto it = this->widgets_.begin(); it != this->widgets_.end(); ++it) {
-        (*it)->initialize(this);
+        (*it)->initialize(info);
     }
 }
 
@@ -81,7 +81,7 @@ void ux_window_layer::render(window_info *info) {
     ImGui::PopStyleColor(2);
 
     for (auto it = this->widgets_.begin(); it != this->widgets_.end(); ++it) {
-        (*it)->render(this);
+        (*it)->render(info);
     }
 
     ImGui::End();  // DockSpace

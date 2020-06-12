@@ -68,30 +68,40 @@ void recruit_window_layer::initialize(window_info *info) {
 void recruit_window_layer::render(window_info *info) {
     this->shader_.use();
 
-    auto model = glm::mat4(1.0f);
-    this->shader_.set("model", model);
-
     glBindVertexArray(this->vao_);
+    auto scale_factor = (float)info->window_width() / (float)info->window_height();
 
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    auto width = (GLfloat)viewport[2];
-    auto height = (GLfloat)viewport[3];
-    auto scale_factor = width / height;
-
-    auto projection = glm::perspective(glm::radians(45.0f), scale_factor, 0.1f, 100.0f);
+    auto projection = glm::perspective(glm::radians(45.0f), scale_factor, 0.1f, 10.0f);
     this->shader_.set("projection", projection);
+
+    auto view = glm::mat4(1.0f);
+    this->shader_.set("view", view);
+
+    glm::vec4 bounds = glm::vec4(0, 0, info->window_width(), info->window_height());
 
     auto av = this->recruit_env_->available_view();
     float left = -(av->size() * (card_width + margin) - margin) / 2.0f;
 
+    std::vector<glm::vec3> card_pos;
     for (auto it = av->begin(); it != av->end(); ++it, left += card_width + margin) {
-        auto view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(left, -card_width / 2.0f, -10.0f));
-        this->shader_.set("view", view);
+        auto model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(left, -card_width / 2.0f, -8.0f));
+        this->shader_.set("model", model);
+
+        // card_pos.push_back(glm::project())
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
+
+    float win_x = info->mouse_x();
+    float win_y = info->window_height() - info->mouse_y() - 1;
+    float win_z;
+    glReadPixels(win_x, win_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &win_z);
+
+    glm::vec3 mouse = glm::vec3(win_x, win_y, win_z);
+    auto unproj = glm::unProject(mouse, view, projection, bounds);
+    info->debug_1 =
+        fmt::format("({0:.3f}, {1:.3f}), depth: {2:.3f}", unproj.x, unproj.y, win_z);
 
     glBindVertexArray(0);
 }

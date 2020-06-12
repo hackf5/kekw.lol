@@ -8,11 +8,14 @@
 #include <src/mod/recruit-env.h>
 
 #include <src/ux/util/file-utils.h>
+
 #include <src/ux/view/window-manager.h>
 #include <src/ux/view/ux-window-layer.h>
 #include <src/ux/view/gl-window-layer.h>
 #include <src/ux/view/recruit-window-layer.h>
+
 #include <src/ux/view/widgets/test-widget.h>
+#include <src/ux/view/widgets/debug-overlay-widget.h>
 
 #include <memory>
 
@@ -56,6 +59,8 @@ int main(int argc, char *argv[]) {
     auto ux_layer = std::unique_ptr<vw::ux_window_layer>(new vw::ux_window_layer());
     ux_layer->add_widget(
         std::unique_ptr<vw::ux_window_widget>(new vw::widgets::test_widget(recruit_env)));
+    ux_layer->add_widget(
+        std::unique_ptr<vw::ux_window_widget>(new vw::widgets::debug_overlay_widget()));
     manager.add_layer(std::move(ux_layer));
 
     manager.Start();

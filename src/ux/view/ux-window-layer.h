@@ -9,14 +9,12 @@ namespace kekw {
 namespace ux {
 namespace view {
 
-class ux_window_layer;
-
 class ux_window_widget {
    public:
     virtual ~ux_window_widget() = 0;
 
-    virtual void initialize(ux_window_layer *layer);
-    virtual void render(ux_window_layer *layer);
+    virtual void initialize(window_info *info);
+    virtual void render(window_info *info);
 };
 
 class ux_window_layer : public window_layer {
