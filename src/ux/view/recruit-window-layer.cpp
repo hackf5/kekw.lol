@@ -56,18 +56,12 @@ void recruit_window_layer::render(window_info *info) {
     glm::vec3 ray_world = (glm::inverse(cam.get_view()) * ray_eye).xyz();
     ray_world = glm::normalize(ray_world);
 
-    std::vector<glm::vec3> card_pos;
+    float distance;
     for (auto it = av->begin(); it != av->end(); ++it, left += card_width + margin) {
         auto card = card_instance(it->get(), this->card_body_.get());
         card.shift(glm::vec3(left, 0.f, -11.0f));
-        glm::vec3 p0, p1, p2;
-        std::tie(p0, p1, p2) = card.first_triangle();
-        float distance;
-        glm::vec2 pos;
-        auto is_hit = glm::intersectRayTriangle(
-            cam.get_position(), ray_world, p0, p1, p2, pos, distance);
 
-        if (is_hit) {
+        if (card.hit_test(cam.get_position(), ray_world, distance)) {
             this->shader_->set("highlight", false);
         } else {
             this->shader_->set("highlight", true);

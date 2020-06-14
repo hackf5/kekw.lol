@@ -28,6 +28,8 @@ typedef boost::call_traits<glm::vec3>::const_reference vec3_ret_t;
 typedef boost::call_traits<glm::mat4>::param_type mat4_param_t;
 typedef boost::call_traits<glm::mat4>::const_reference mat4_ret_t;
 
+typedef std::tuple<glm::vec3, glm::vec3, glm::vec3> triangle_t;
+
 class camera {
    public:
     camera(float aspect_ratio)
@@ -223,9 +225,7 @@ class card_body {
 
     float height() const { return 88.0f / 62.0f; }
 
-    std::vector<std::array<glm::vec3, 3>> const& triangles() const {
-        return this->triangles_;
-    }
+    std::vector<triangle_t> const& triangles() const { return this->triangles_; }
 
     void render(mat4_param_t model) {
         this->shader_->use();
@@ -239,7 +239,7 @@ class card_body {
    private:
     std::shared_ptr<kekw::ux::shader> shader_;
     GLuint vbo_, vao_, ebo_;
-    std::vector<std::array<glm::highp_vec3, 3>> triangles_;
+    std::vector<triangle_t> triangles_;
 };
 
 class card_instance {
@@ -272,45 +272,42 @@ class card_instance {
 
     void render() { this->card_body_->render(this->translation_); }
 
-    std::tuple<glm::vec3, glm::vec3, glm::vec3> first_triangle() {
+    std::vector<triangle_t> triangles() {
         auto get_vertex = [](mat4_param_t model, vec3_param_t vertex) {
             return (model * glm::vec4(vertex, 1.f)).xyz();
         };
 
-        auto tr1 = this->card_body_->triangles()[0];
-        auto result = std::make_tuple(
-            get_vertex(this->translation_, tr1[0]),
-            get_vertex(this->translation_, tr1[1]),
-            get_vertex(this->translation_, tr1[2]));
+        auto local_triangles = this->card_body_->triangles();
+        std::vector<triangle_t> result;
+        for (auto it = local_triangles.begin(); it != local_triangles.end(); ++it) {
+            result.push_back(std::make_tuple(
+                get_vertex(this->translation_, std::get<0>(*it)),
+                get_vertex(this->translation_, std::get<1>(*it)),
+                get_vertex(this->translation_, std::get<2>(*it))));
+        }
 
         return result;
     }
 
     bool hit_test(vec3_param_t origin_w, vec3_param_t direction_w, float& distance) {
-        auto translation_inv = glm::inverse(this->translation_);
-        glm::vec3 origin_l = (translation_inv * glm::vec4(origin_w, 1.f)).xyz();
-        glm::vec3 direction_l =
-            glm::normalize((translation_inv * glm::vec4(direction_w, 1.f)).xyz());
-
         distance = std::numeric_limits<float>::infinity();
         auto distance_t = std::numeric_limits<float>::infinity();
 
-        auto tr = this->card_body_->triangles();
+        auto tr = this->triangles();
         bool hit_return = false;
         glm::vec2 intersect;
-
+        glm::vec3 p0, p1, p2;
         for (auto it = tr.begin(); it != tr.end(); ++it) {
-            glm::vec3 p1 = (*it)[0];
-            glm::vec3 p2 = (*it)[1];
-            glm::vec3 p3 = (*it)[2];
+            std::tie(p0, p1, p2) = *it;
 
             bool hit = glm::intersectRayTriangle(
-                origin_l, direction_l, p1, p2, p3, intersect, distance_t);
+                origin_w, direction_w, p0, p1, p2, intersect, distance_t);
 
             if (!hit) {
                 continue;
             }
 
+            hit_return = true;
             if (distance_t < distance) {
                 distance = distance_t;
             }
