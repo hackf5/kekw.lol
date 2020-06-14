@@ -7,3 +7,4 @@ target_sources(${UX_LIB_TARGET}
 )
 
 add_subdirectory(widgets)
+add_subdirectory(world)

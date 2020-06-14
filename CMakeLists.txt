@@ -21,7 +21,7 @@ SET(CMAKE_EXE_LINKER_FLAGS "-static")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -mwindows") # prevents a console window from being spawned
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -mwindows -DGLM_FORCE_SWIZZLE") # prevents a console window from being spawned
 
 # output paths
 set(OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})

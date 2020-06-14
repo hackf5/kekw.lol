@@ -77,7 +77,7 @@ void shader::compile() {
 
 void shader::use() const {
     if (!this->id_) {
-        throw std::runtime_error("Program is already compiled.");
+        throw std::runtime_error("Program is not compiled.");
     }
 
     glUseProgram(this->id_);
