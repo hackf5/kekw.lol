@@ -22,6 +22,7 @@ package_add_test(${TEST_TARGET} "")
 set_target_properties(${TEST_TARGET} PROPERTIES OUTPUT_NAME "kekwtest")
 target_link_libraries(${TEST_TARGET} spdlog::spdlog)
 target_link_libraries(${TEST_TARGET} ${MOD_LIB_TARGET})
+target_link_libraries(${TEST_TARGET} ${WLD_LIB_TARGET})
 
 
 set_target_properties(gtest PROPERTIES FOLDER extern)

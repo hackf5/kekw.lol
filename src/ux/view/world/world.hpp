@@ -18,9 +18,9 @@
 
 #include <vector>
 #include <memory>
-#include <array>
 #include <tuple>
 #include <limits>
+#include <map>
 
 typedef boost::call_traits<glm::vec3>::param_type vec3_param_t;
 typedef boost::call_traits<glm::vec3>::const_reference vec3_ret_t;
@@ -37,7 +37,7 @@ class camera {
           aspect_ratio_(aspect_ratio),
           clip_plane_(0.1f, 100.9f),
           viewport_(),
-          projection_(),
+          projection_(glm::identity<glm::mat4>()),
           dirty_(true) {}
 
     virtual ~camera() {}
@@ -104,6 +104,96 @@ class camera {
     glm::mat4 projection_;
 
     bool dirty_;
+};
+
+class body {
+   public:
+    virtual ~body() {}
+    virtual void initialize() = 0;
+    virtual std::vector<triangle_t> const& triangles() const = 0;
+};
+
+class body_instance {
+   public:
+    body_instance(body* body)
+        : body_(body), translation_(glm::identity<glm::mat4>()), dirty_(true) {}
+
+    ~body_instance() {}
+
+    void set_position(vec3_param_t position) {
+        this->translation_ = glm::translate(glm::identity<glm::mat4>(), position);
+        this->dirty_ = true;
+    }
+
+    void translate(vec3_param_t value) {
+        this->translation_ = glm::translate(this->translation_, value);
+        this->dirty_ = true;
+    }
+
+    std::vector<triangle_t> triangles() {
+        if (!this->dirty_) {
+            return this->triangles_;
+        }
+        auto get_vertex = [](mat4_param_t model, vec3_param_t vertex) {
+            return (model * glm::vec4(vertex, 1.f)).xyz();
+        };
+
+        auto local_triangles = this->body_->triangles();
+        this->triangles_.clear();
+        for (auto it = local_triangles.begin(); it != local_triangles.end(); ++it) {
+            this->triangles_.push_back(std::make_tuple(
+                get_vertex(this->translation_, std::get<0>(*it)),
+                get_vertex(this->translation_, std::get<1>(*it)),
+                get_vertex(this->translation_, std::get<2>(*it))));
+        }
+
+        return this->triangles_;
+    }
+
+   private:
+    body* body_;
+    glm::mat4 translation_;
+    std::vector<triangle_t> triangles_;
+    bool dirty_;
+};
+
+class renderer {
+    virtual ~renderer() {}
+    virtual void initialize() = 0;
+    virtual void render(
+        kekw::ux::shader const& shader,
+        mat4_param_t model = glm::identity<glm::mat4>()) = 0;
+};
+
+class scene_object {
+   public:
+    virtual ~scene_object(){};
+    virtual void initialize() = 0;
+    virtual void render(kekw::ux::shader const& shader);
+};
+
+class scene {
+   public:
+    virtual ~scene(){};
+
+    virtual void render() {
+        // init camera from windo_info.
+
+        // layout scene.
+
+        // user interaction.
+
+        // render the scene.
+        this->shader_->use();
+        this->shader_->set("projection", this->camera_->get_projection());
+        this->shader_->set("view", this->camera_->get_view());
+    }
+
+   private:
+    std::unique_ptr<camera> camera_;
+    std::shared_ptr<kekw::ux::shader> shader_;
+    std::map<int, std::unique_ptr<body>> bodies_;
+    std::vector<std::unique_ptr<scene_object>> objects_;
 };
 
 class fixed_camera : public camera {

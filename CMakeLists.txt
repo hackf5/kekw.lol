@@ -11,6 +11,7 @@ include(CPack)
 #outputs
 set(UX_LIB_TARGET ux_lib)
 set(MOD_LIB_TARGET mod_lib)
+set(WLD_LIB_TARGET wld_lib)
 set(MAIN_EXE_TARGET main_exe)
 
 SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.dll.a")
@@ -53,19 +54,28 @@ add_library(${MOD_LIB_TARGET} "")
 set_target_properties(${MOD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwmod")
 target_link_libraries(${MOD_LIB_TARGET} spdlog::spdlog)
 
+# mod lib
+add_library(${WLD_LIB_TARGET} "")
+set_target_properties(${WLD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwwld")
+target_link_libraries(${WLD_LIB_TARGET} spdlog::spdlog)
+
 # ux lib
 add_library(${UX_LIB_TARGET} "")
 set_target_properties(${UX_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwux")
 target_link_libraries(${UX_LIB_TARGET} glfw)
 target_link_libraries(${UX_LIB_TARGET} spdlog::spdlog)
 target_link_libraries(${UX_LIB_TARGET} ${MOD_LIB_TARGET})
+target_link_libraries(${UX_LIB_TARGET} ${WLD_LIB_TARGET})
 
 
 # main executable
 add_executable(${MAIN_EXE_TARGET} "")
 set_target_properties(${MAIN_EXE_TARGET} PROPERTIES OUTPUT_NAME "kekw")
+target_link_libraries(${MAIN_EXE_TARGET} glfw)
+target_link_libraries(${MAIN_EXE_TARGET} spdlog::spdlog)
 target_link_libraries(${MAIN_EXE_TARGET} ${UX_LIB_TARGET})
 target_link_libraries(${MAIN_EXE_TARGET} ${MOD_LIB_TARGET})
+target_link_libraries(${MAIN_EXE_TARGET} ${WLD_LIB_TARGET})
 
 # look for more CMake files.
 add_subdirectory(src)

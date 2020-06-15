@@ -43,9 +43,6 @@ void recruit_window_layer::render(window_info *info) {
 
     glm::vec4 bounds = glm::vec4(0, 0, info->window_width(), info->window_height());
 
-    auto av = this->recruit_env_->available_view();
-    float left = -(av->size() * (card_width + margin) - margin) / 2.0f;
-
     float mouse_x = (2.f * info->mouse_x()) / info->window_width() - 1.f;
     float mouse_y = 1.f - (2.f * info->mouse_y()) / info->window_height();
     float mouse_z = 1.f;
@@ -56,6 +53,8 @@ void recruit_window_layer::render(window_info *info) {
     glm::vec3 ray_world = (glm::inverse(cam.get_view()) * ray_eye).xyz();
     ray_world = glm::normalize(ray_world);
 
+    auto av = this->recruit_env_->available_view();
+    float left = -(av->size() * (card_width + margin) - margin) / 2.0f;
     float distance;
     for (auto it = av->begin(); it != av->end(); ++it, left += card_width + margin) {
         auto card = card_instance(it->get(), this->card_body_.get());
