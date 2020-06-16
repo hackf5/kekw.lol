@@ -2,6 +2,8 @@
 
 using namespace kekw::world;
 
+spatial::spatial() : transform() {}
+
 spatial* spatial::root() {
     if (this->parent_) {
         return this->parent_->root();

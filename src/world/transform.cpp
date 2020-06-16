@@ -1,10 +1,16 @@
 #include "transform.h"
 
+#include <glm/gtx/norm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace kekw::world;
 
 const transform transform::identity = transform();
+
+const vec3 transform::origin = glm::zero<vec3>();
+const vec3 transform::right = vec3(1.f, 0.f, 0.f);
+const vec3 transform::up = vec3(0.f, 1.f, 0.f);
+const vec3 transform::forward = vec3(0.f, 0.f, -1.f);
 
 transform::transform()
     : position_(vec3(0.f, 0.f, 0.f)),
@@ -36,4 +42,21 @@ void transform::recalculate_if_dirty() {
     this->on_recalculate();
 
     this->dirty_ = false;
+}
+
+void transform::lool_at(vec3_param_t target) {
+    // https://stackoverflow.com/questions/12435671/quaternion-lookat-function
+
+    vec3 direction = glm::normalize(target - this->position());
+    vec3 axis = glm::cross(transform::forward, direction);
+    if (glm::l2Norm(axis) <= 0.0001f) {
+        // the direction is parallel to the forward axis.
+        axis = transform::up;
+    }
+
+    float dot = glm::dot(transform::forward, direction);
+    float angle = glm::acos(dot);
+
+    this->set_rotation(glm::angleAxis(angle, glm::normalize(axis)));
+    this->set_scale(vec3(1.f, 1.f, 1.f));
 }

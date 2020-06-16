@@ -7,9 +7,8 @@ namespace world {
 
 class camera : public spatial {
    public:
+    camera();
     virtual ~camera(){};
-
-    void lool_at(vec3_param_t target);
 
     mat4_ret_t get_projection() const;
     mat4_ret_t get_view() const;
@@ -38,8 +37,15 @@ class camera : public spatial {
         this->make_dirty();
     }
 
-    vec3 to_screen_coords(vec3_param_t world) const;
-    vec3 to_world_coords(vec3_param_t screen) const;
+    inline vec3 to_screen_coords(vec3_param_t world) const {
+        return glm::project(
+            world, this->get_view(), this->get_projection(), this->get_viewport());
+    }
+
+    inline vec3 to_world_coords(vec3_param_t screen) const {
+        return glm::unProject(
+            screen, this->get_view(), this->get_projection(), this->get_viewport());
+    }
 
    protected:
     void on_recalculate() override;

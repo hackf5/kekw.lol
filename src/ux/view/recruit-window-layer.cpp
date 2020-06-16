@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "world/world.hpp"
+#include <src/world/camera.h>
 
 using namespace kekw::ux::view;
 
@@ -32,12 +33,13 @@ void recruit_window_layer::render(window_info *info) {
     this->shader_->use();
 
     auto scale_factor = (float)info->window_width() / (float)info->window_height();
-    auto cam = fixed_camera(scale_factor);
-    cam.set_clip_plane(glm::vec2(10.f, 20.f));
-    cam.viewport() = glm::vec4(0, 0, info->window_width(), info->window_height());
+    auto cam = kekw::world::camera();
+    cam.set_field_of_view(glm::radians(45.f));
+    cam.set_aspect_ratio(scale_factor);
+    cam.set_clip_plane(glm::vec2(0.1f, 100.f));
+    cam.set_viewport(glm::vec4(0, 0, info->window_width(), info->window_height()));
+    cam.lool_at(glm::vec3(0.f, 0.f, -11.0f));
 
-    auto projection = cam.get_projection();
-    auto view = cam.get_view();
     this->shader_->set("projection", cam.get_projection());
     this->shader_->set("view", cam.get_view());
 
@@ -60,7 +62,7 @@ void recruit_window_layer::render(window_info *info) {
         auto card = card_instance(it->get(), this->card_body_.get());
         card.shift(glm::vec3(left, 0.f, -11.0f));
 
-        if (card.hit_test(cam.get_position(), ray_world, distance)) {
+        if (card.hit_test(cam.position(), ray_world, distance)) {
             this->shader_->set("highlight", false);
         } else {
             this->shader_->set("highlight", true);

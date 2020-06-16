@@ -8,6 +8,7 @@ namespace kekw {
 namespace world {
 
 class spatial : public transform {
+   public:
     spatial();
     spatial(spatial* parent);
 
