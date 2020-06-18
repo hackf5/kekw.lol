@@ -1,5 +1,8 @@
 #include "camera.h"
 
+#include <glm/gtx/norm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace kekw::world;
 
 camera::camera() : spatial() {}
@@ -17,4 +20,24 @@ void camera::on_recalculate() {
         this->aspect_ratio_,
         this->clip_plane_.x,
         this->clip_plane_.y);
+}
+
+void camera::look_at(vec3_param_t target) {
+    // https://stackoverflow.com/questions/12435671/quaternion-lookat-function
+
+    // the look_at would be the same for two regular transforms, but the camera z-axis is
+    // currently moving in the opposite direction.
+    vec3 direction = glm::normalize(
+        target - glm::vec3(this->position().x, this->position().y, -this->position().z));
+    vec3 axis = glm::cross(transform::forward, direction);
+    if (glm::l2Norm(axis) <= 0.0001f) {
+        // the direction is parallel to the forward axis.
+        axis = transform::up;
+    }
+
+    auto dot = glm::dot(transform::forward, direction);
+    auto angle = glm::acos(dot);
+
+    this->set_rotation(glm::angleAxis(angle, glm::normalize(axis)));
+    this->set_scale(vec3(1.f, 1.f, 1.f));
 }

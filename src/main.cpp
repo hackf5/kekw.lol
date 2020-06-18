@@ -16,6 +16,9 @@
 
 #include <src/ux/view/widgets/test-widget.h>
 #include <src/ux/view/widgets/debug-overlay-widget.h>
+#include <src/ux/view/widgets/camera-widget.hpp>
+
+#include <src/world/camera.h>
 
 #include <memory>
 
@@ -52,15 +55,19 @@ int main(int argc, char *argv[]) {
     auto recruit_env = create_recruit_env(4);
     recruit_env->refresh();
 
+    auto camera = kekw::world::camera();
+
     vw::window_manager manager;
-    manager.add_layer(
-        std::unique_ptr<vw::window_layer>(new vw::recruit_window_layer(recruit_env)));
+    manager.add_layer(std::unique_ptr<vw::window_layer>(
+        new vw::recruit_window_layer(recruit_env, &camera)));
 
     auto ux_layer = std::unique_ptr<vw::ux_window_layer>(new vw::ux_window_layer());
     ux_layer->add_widget(
         std::unique_ptr<vw::ux_window_widget>(new vw::widgets::test_widget(recruit_env)));
     ux_layer->add_widget(
         std::unique_ptr<vw::ux_window_widget>(new vw::widgets::debug_overlay_widget()));
+    ux_layer->add_widget(
+        std::unique_ptr<vw::ux_window_widget>(new vw::widgets::camera_widget(&camera)));
     manager.add_layer(std::move(ux_layer));
 
     manager.Start();

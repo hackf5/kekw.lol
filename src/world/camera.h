@@ -47,6 +47,8 @@ class camera : public spatial {
             screen, this->get_view(), this->get_projection(), this->get_viewport());
     }
 
+    void look_at(vec3_param_t target);
+
    protected:
     void on_recalculate() override;
 

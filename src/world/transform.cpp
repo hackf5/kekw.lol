@@ -43,20 +43,3 @@ void transform::recalculate_if_dirty() {
 
     this->dirty_ = false;
 }
-
-void transform::look_at(vec3_param_t target) {
-    // https://stackoverflow.com/questions/12435671/quaternion-lookat-function
-
-    vec3 direction = glm::normalize(target - this->position());
-    vec3 axis = glm::cross(transform::forward, direction);
-    if (glm::l2Norm(axis) <= 0.0001f) {
-        // the direction is parallel to the forward axis.
-        axis = transform::up;
-    }
-
-    auto dot = glm::dot(transform::forward, direction);
-    auto angle = glm::acos(dot);
-
-    this->set_rotation(glm::angleAxis(angle, glm::normalize(axis)));
-    this->set_scale(vec3(1.f, 1.f, 1.f));
-}

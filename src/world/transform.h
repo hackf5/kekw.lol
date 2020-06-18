@@ -37,8 +37,6 @@ class transform {
         this->make_dirty();
     }
 
-    void look_at(vec3_param_t target);
-
    protected:
     virtual void on_recalculate() {}
     void recalculate_if_dirty();

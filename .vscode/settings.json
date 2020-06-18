@@ -98,6 +98,9 @@
         "cfenv": "cpp",
         "valarray": "cpp",
         "regex": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "version": "cpp"
     },
 }
