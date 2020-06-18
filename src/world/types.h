@@ -10,6 +10,8 @@
 namespace kekw {
 namespace world {
 
+typedef float real_t;
+
 typedef glm::vec2 vec2;
 typedef boost::call_traits<vec2>::param_type vec2_param_t;
 typedef boost::call_traits<vec2>::const_reference vec2_ret_t;

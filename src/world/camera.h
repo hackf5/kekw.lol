@@ -20,13 +20,13 @@ class camera : public spatial {
     }
 
     inline float get_field_of_view() const { return this->field_of_view_; }
-    inline void set_field_of_view(float value) {
+    inline void set_field_of_view(real_t value) {
         this->field_of_view_ = value;
         this->make_dirty();
     }
 
     inline float get_aspect_ratio() const { return this->aspect_ratio_; }
-    inline void set_aspect_ratio(float value) {
+    inline void set_aspect_ratio(real_t value) {
         this->aspect_ratio_ = value;
         this->make_dirty();
     }
@@ -51,8 +51,8 @@ class camera : public spatial {
     void on_recalculate() override;
 
    private:
-    float field_of_view_;
-    float aspect_ratio_;
+    real_t field_of_view_;
+    real_t aspect_ratio_;
     vec2 clip_plane_;
     vec4 viewport_;
     mat4 projection_;

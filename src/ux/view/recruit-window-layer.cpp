@@ -1,5 +1,8 @@
 #include "recruit-window-layer.h"
 
+#include <inc/glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -27,42 +30,62 @@ void recruit_window_layer::initialize(window_info *info) {
 
     this->card_body_ = std::shared_ptr<card_body>(new card_body(this->shader_));
     this->card_body_->initialize();
+
+    glGenVertexArrays(1, &(this->vao_));
+    glBindVertexArray(this->vao_);
+
+    glGenBuffers(1, &(this->vbo_));
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo_);
+
+    glVertexAttribPointer(
+        0,  // attribute. No particular reason for 0, but must match the layout in the
+            // shader.
+        3,         // size
+        GL_FLOAT,  // type
+        GL_FALSE,  // normalized?
+        0,         // stride
+        (void *)0  // array buffer offset
+    );
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void recruit_window_layer::render(window_info *info) {
     this->shader_->use();
 
-    auto scale_factor = (float)info->window_width() / (float)info->window_height();
+    auto aspect_ratio = (float)info->window_width() / (float)info->window_height();
     auto cam = kekw::world::camera();
+    cam.set_position(glm::vec3(6.f, 6.f, -1.f));
     cam.set_field_of_view(glm::radians(45.f));
-    cam.set_aspect_ratio(scale_factor);
-    cam.set_clip_plane(glm::vec2(0.1f, 100.f));
+    cam.set_aspect_ratio(aspect_ratio);
+    cam.set_clip_plane(glm::vec2(0.1, 100.f));
     cam.set_viewport(glm::vec4(0, 0, info->window_width(), info->window_height()));
-    cam.lool_at(glm::vec3(0.f, 0.f, -11.0f));
+    cam.look_at(glm::vec3(2.f, 2.f, -10.0f));
 
     this->shader_->set("projection", cam.get_projection());
     this->shader_->set("view", cam.get_view());
 
-    glm::vec4 bounds = glm::vec4(0, 0, info->window_width(), info->window_height());
+    auto mouse_x = info->mouse_x();
+    auto mouse_y = cam.get_viewport().w - info->mouse_y();
+    auto mouse_screen = glm::vec2(mouse_x, mouse_y);
+    auto v0 = cam.to_world_coords(glm::vec3(mouse_screen, 0.f));
+    auto v1 = cam.to_world_coords(glm::vec3(mouse_screen, 1.f));
 
-    float mouse_x = (2.f * info->mouse_x()) / info->window_width() - 1.f;
-    float mouse_y = 1.f - (2.f * info->mouse_y()) / info->window_height();
-    float mouse_z = 1.f;
-    auto ray_nds = glm::vec3(mouse_x, mouse_y, mouse_z);
-    auto ray_clip = glm::vec4(ray_nds.xy(), -1.0, 1.0);
-    glm::vec4 ray_eye = glm::inverse(cam.get_projection()) * ray_clip;
-    ray_eye = glm::vec4(ray_eye.xy(), -1.f, 0.f);
-    glm::vec3 ray_world = (glm::inverse(cam.get_view()) * ray_eye).xyz();
-    ray_world = glm::normalize(ray_world);
+    auto v0_inv = cam.to_screen_coords(v0);
+    auto v0_inv_inv = cam.to_world_coords(v0_inv);
+    auto direction = glm::normalize(v1 - v0);
+
+    // this is wrong, the origin should be the camera position, but it is flipped.
+    auto origin_w = -cam.position();
 
     auto av = this->recruit_env_->available_view();
     float left = -(av->size() * (card_width + margin) - margin) / 2.0f;
     float distance;
     for (auto it = av->begin(); it != av->end(); ++it, left += card_width + margin) {
         auto card = card_instance(it->get(), this->card_body_.get());
-        card.shift(glm::vec3(left, 0.f, -11.0f));
+        card.shift(glm::vec3(left, 0.f, -10.0f));
 
-        if (card.hit_test(cam.position(), ray_world, distance)) {
+        if (card.hit_test(origin_w, direction, distance)) {
             this->shader_->set("highlight", false);
         } else {
             this->shader_->set("highlight", true);
@@ -80,5 +103,9 @@ void recruit_window_layer::render(window_info *info) {
     auto unproj = cam.to_world_coords(mouse);
     info->debug_1 = fmt::format(
         "({0:.3f}, {1:.3f}), depth: {2:.3f}", unproj.x, unproj.y, 1.0f - win_z);
-    info->debug_1 += fmt::format("\nray world: {0}", glm::to_string(ray_world));
+    info->debug_1 += fmt::format("\nray world: {0}", glm::to_string(direction));
+    info->debug_1 +=
+        fmt::format("\nray: {0}, {1}", glm::to_string(v0), glm::to_string(v1));
+    info->debug_1 += fmt::format(
+        "\nv0, v0_inv_inv: {0}, {1}", glm::to_string(v0), glm::to_string(v0_inv_inv));
 }

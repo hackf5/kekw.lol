@@ -13,9 +13,9 @@ const vec3 transform::up = vec3(0.f, 1.f, 0.f);
 const vec3 transform::forward = vec3(0.f, 0.f, -1.f);
 
 transform::transform()
-    : position_(vec3(0.f, 0.f, 0.f)),
+    : position_(transform::origin),
       rotation_(glm::identity<quat>()),
-      scale_(vec3(1.f, 1.f, 1.f)),
+      scale_(glm::one<vec3>()),
       matrix_(glm::identity<mat4>()),
       dirty_(false) {}
 
@@ -44,7 +44,7 @@ void transform::recalculate_if_dirty() {
     this->dirty_ = false;
 }
 
-void transform::lool_at(vec3_param_t target) {
+void transform::look_at(vec3_param_t target) {
     // https://stackoverflow.com/questions/12435671/quaternion-lookat-function
 
     vec3 direction = glm::normalize(target - this->position());
@@ -54,8 +54,8 @@ void transform::lool_at(vec3_param_t target) {
         axis = transform::up;
     }
 
-    float dot = glm::dot(transform::forward, direction);
-    float angle = glm::acos(dot);
+    auto dot = glm::dot(transform::forward, direction);
+    auto angle = glm::acos(dot);
 
     this->set_rotation(glm::angleAxis(angle, glm::normalize(axis)));
     this->set_scale(vec3(1.f, 1.f, 1.f));
