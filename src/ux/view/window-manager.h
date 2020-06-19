@@ -84,30 +84,31 @@ class window_info {
 
     GLFWwindow *get_window() const;
 
-    double mouse_x() const { return this->mouse_x_; }
-    double mouse_y() const { return this->mouse_y_; }
+    inline double mouse_x() const { return this->mouse_x_; }
+    inline double mouse_y() const { return this->mouse_y_; }
 
-    mouse_button_state const *left_mouse_button() const {
+    inline mouse_button_state const *left_mouse_button() const {
         return this->left_mouse_button_state_.get();
     }
 
-    mouse_button_state const *right_mouse_button() const {
+    inline mouse_button_state const *right_mouse_button() const {
         return this->right_mouse_button_state_.get();
     }
 
-    bool focused() const { return this->focused_; }
-    int window_width() const { return this->window_width_; }
-    int window_height() const { return this->window_height_; }
+    inline bool focused() const { return this->focused_; }
+
+    inline double window_width() const { return this->window_width_; }
+    inline double window_height() const { return this->window_height_; }
 
     std::string debug_1;
 
    private:
-    void before_poll_events() {
+    inline void before_poll_events() {
         this->left_mouse_button_state_->before_poll_events();
         this->right_mouse_button_state_->before_poll_events();
     }
 
-    void after_poll_events() {
+    inline void after_poll_events() {
         this->focused_ = glfwGetWindowAttrib(this->window_, GLFW_FOCUSED) != 0;
         glfwGetCursorPos(this->window_, &this->mouse_x_, &this->mouse_y_);
     }
@@ -116,6 +117,7 @@ class window_info {
 
     const std::unique_ptr<mouse_button_state> left_mouse_button_state_;
     const std::unique_ptr<mouse_button_state> right_mouse_button_state_;
+
     int window_width_;
     int window_height_;
     bool focused_;

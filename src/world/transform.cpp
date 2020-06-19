@@ -34,9 +34,9 @@ mat4_ret_t transform::matrix() const {
 }
 
 void transform::recalculate_if_dirty() {
-    if (!this->dirty_) {
-        return;
-    }
+    // if (!this->dirty_) {
+    //     return;
+    // }
 
     this->matrix_ = glm::translate(
         glm::scale(glm::mat4_cast(this->rotation()), this->scale()),

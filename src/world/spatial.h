@@ -12,8 +12,19 @@ class spatial : public transform {
     spatial();
     spatial(spatial* parent);
 
-    spatial* root();
-    spatial* parent();
+    inline mat4 absolute_matrix() const {
+        auto result = this->matrix();
+        if (this->parent()) {
+            result = this->parent()->absolute_matrix() * result;
+        }
+
+        return result;
+    }
+
+    spatial* root() const;
+    spatial* parent() const;
+
+    void set_parent(spatial* parent);
 
    private:
     spatial* parent_;
