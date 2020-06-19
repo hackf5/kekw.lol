@@ -5,7 +5,7 @@
 
 using namespace kekw::world;
 
-camera::camera() : spatial() {}
+camera::camera() : spatial() { this->is_mirror_ = true; }
 
 mat4_ret_t camera::get_projection() const {
     as_non_const(this)->recalculate_if_dirty();
@@ -25,10 +25,9 @@ void camera::on_recalculate() {
 void camera::look_at(vec3_param_t target) {
     // https://stackoverflow.com/questions/12435671/quaternion-lookat-function
 
-    // the look_at would be the same for two regular transforms, but the camera z-axis is
-    // currently moving in the opposite direction.
+    // for non-camera transforms x/y probably not flipped.
     vec3 direction = glm::normalize(
-        target - glm::vec3(this->position().x, this->position().y, -this->position().z));
+        target - glm::vec3(-this->position().x, -this->position().y, this->position().z));
     vec3 axis = glm::cross(transform::forward, direction);
     if (glm::l2Norm(axis) <= 0.0001f) {
         // the direction is parallel to the forward axis.

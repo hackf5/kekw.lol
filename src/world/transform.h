@@ -49,6 +49,9 @@ class transform {
     mat4 matrix_;
 
     bool dirty_;
+
+   protected:
+    bool is_mirror_;
 };
 
 }  // namespace world

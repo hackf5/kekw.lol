@@ -52,9 +52,6 @@ void recruit_window_layer::render(window_info *info) {
 
     auto direction = glm::normalize(v1 - v0);
 
-    // this is wrong, the origin should be the camera position, but it is flipped.
-    auto origin_w = -this->camera_->position();
-
     auto av = this->recruit_env_->available_view();
     float left = -(av->size() * (card_width + margin) - margin) / 2.0f;
     float distance;
@@ -62,7 +59,7 @@ void recruit_window_layer::render(window_info *info) {
         auto card = card_instance(it->get(), this->card_body_.get());
         card.shift(glm::vec3(left, 0.f, -10.0f));
 
-        if (card.hit_test(origin_w, direction, distance)) {
+        if (card.hit_test(this->camera_->position(), direction, distance)) {
             this->shader_->set("highlight", false);
         } else {
             this->shader_->set("highlight", true);

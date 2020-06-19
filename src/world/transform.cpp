@@ -17,14 +17,16 @@ transform::transform()
       rotation_(glm::identity<quat>()),
       scale_(glm::one<vec3>()),
       matrix_(glm::identity<mat4>()),
-      dirty_(false) {}
+      dirty_(false),
+      is_mirror_(false) {}
 
 transform::transform(transform const& other)
     : position_(other.position_),
       rotation_(other.rotation_),
       scale_(other.scale_),
       matrix_(other.matrix_),
-      dirty_(other.dirty_) {}
+      dirty_(other.dirty_),
+      is_mirror_(other.is_mirror_) {}
 
 mat4_ret_t transform::matrix() const {
     as_non_const(this)->recalculate_if_dirty();
@@ -37,7 +39,8 @@ void transform::recalculate_if_dirty() {
     }
 
     this->matrix_ = glm::translate(
-        glm::scale(glm::mat4_cast(this->rotation()), this->scale()), this->position());
+        glm::scale(glm::mat4_cast(this->rotation()), this->scale()),
+        this->is_mirror_ ? -this->position() : this->position());
 
     this->on_recalculate();
 
