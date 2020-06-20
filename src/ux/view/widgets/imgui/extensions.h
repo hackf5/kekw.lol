@@ -1,7 +1,7 @@
 #pragma once
 
-#include <inc/imgui/imgui.h>
-#include <inc/imgui/imgui_internal.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 
 namespace kekw {
 namespace ux {

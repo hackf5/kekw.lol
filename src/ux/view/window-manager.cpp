@@ -1,7 +1,7 @@
 #include "window-manager.h"
 
 #include <spdlog/spdlog.h>
-#include <inc/stb/stb_image.h>
+#include <stb/stb_image.h>
 
 #include <src/ux/util/file-utils.h>
 

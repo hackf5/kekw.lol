@@ -1,8 +1,8 @@
 #include "ux-window-layer.h"
 
-#include <inc/imgui/imgui.h>
-#include <inc/imgui/imgui_impl_glfw.h>
-#include <inc/imgui/imgui_impl_opengl3.h>
+#include <imgui/imgui.h>
+#include <imgui/examples/imgui_impl_glfw.h>
+#include <imgui/examples/imgui_impl_opengl3.h>
 
 using namespace kekw::ux::view;
 

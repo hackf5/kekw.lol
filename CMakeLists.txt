@@ -34,20 +34,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 include_directories(${PROJECT_SOURCE_DIR}/extern/glfw/include)
+include_directories(${PROJECT_SOURCE_DIR}/extern)
+include_directories(${PROJECT_SOURCE_DIR}/extern/imgui)
 
 # external input paths - need converting to submodules
 include_directories(C:/dev/cpplibs/usr/include)
-
-# glfw
-set(GLFW_BUILD_EXAMPLES OFF)
-set(GLFW_BUILD_TESTS OFF)
-set(GLFW_BUILD_DOCS OFF)
-set(GLFW_INSTALL OFF)
-set(GLFW_VULKAN_STATIC OFF)
-add_subdirectory("${PROJECT_SOURCE_DIR}/extern/glfw" "extern/glfw")
-
-# spdlog
-add_subdirectory("${PROJECT_SOURCE_DIR}/extern/spdlog" "extern/spdlog")
 
 # mod lib
 add_library(${MOD_LIB_TARGET} "")
@@ -80,6 +71,7 @@ target_link_libraries(${MAIN_EXE_TARGET} ${WLD_LIB_TARGET})
 # look for more CMake files.
 add_subdirectory(src)
 add_subdirectory(inc)
+add_subdirectory(extern)
 
 enable_testing()
 include(GoogleTest)
