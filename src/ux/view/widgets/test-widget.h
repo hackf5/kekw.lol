@@ -15,7 +15,7 @@ class test_widget : public ux_window_widget {
    public:
     test_widget(std::shared_ptr<kekw::mod::recruit_env> recruit_env);
 
-    void render(window_info *info) override;
+    void update(window_info *info) override;
 
    private:
     std::shared_ptr<kekw::mod::recruit_env> recruit_env_;

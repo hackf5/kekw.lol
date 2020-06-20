@@ -29,7 +29,7 @@ class camera_widget : public ux_window_widget {
         this->camera_->set_position(glm::zero<vec3>());
     }
 
-    void render(window_info *info) override {
+    void update(window_info *info) override {
         if (!ImGui::Begin("Camera")) {
             ImGui::End();
             return;

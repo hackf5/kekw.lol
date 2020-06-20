@@ -149,6 +149,10 @@ void window_manager::Start() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
+            (**it).update(this->window_info_.get());
+        }
+
+        for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
             (**it).render(this->window_info_.get());
         }
 

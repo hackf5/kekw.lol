@@ -4,7 +4,7 @@
 
 using namespace kekw::ux::view::widgets;
 
-void debug_overlay_widget::render(window_info* info) {
+void debug_overlay_widget::update(window_info* info) {
     // FIXME-VIEWPORT: Select a default viewport
     const float DISTANCE = 10.0f;
     static int corner = 0;

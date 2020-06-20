@@ -9,12 +9,13 @@
 namespace kekw {
 namespace world {
 
-class update_context;
-class render_context;
+class update_context {};
+class render_context {};
 
 class entity : public spatial {
    public:
     virtual ~entity() {}
+
     virtual void on_update(update_context* context) {}
     virtual void on_render(render_context* context) {}
 };

@@ -18,6 +18,9 @@ class window_layer {
     virtual ~window_layer() = 0;
 
     virtual void initialize(window_info *info) = 0;
+
+    virtual void update(window_info *info) {}
+
     virtual void render(window_info *info) = 0;
 };
 

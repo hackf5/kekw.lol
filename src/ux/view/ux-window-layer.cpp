@@ -10,7 +10,7 @@ ux_window_widget::~ux_window_widget() {}
 
 void ux_window_widget::initialize(window_info *info) {}
 
-void ux_window_widget::render(window_info *info) {}
+void ux_window_widget::update(window_info *info) {}
 
 ux_window_layer::~ux_window_layer() {
     ImGui_ImplOpenGL3_Shutdown();
@@ -54,7 +54,7 @@ void ux_window_layer::initialize(window_info *info) {
     }
 }
 
-void ux_window_layer::render(window_info *info) {
+void ux_window_layer::update(window_info *info) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -81,11 +81,13 @@ void ux_window_layer::render(window_info *info) {
     ImGui::PopStyleColor(2);
 
     for (auto it = this->widgets_.begin(); it != this->widgets_.end(); ++it) {
-        (*it)->render(info);
+        (*it)->update(info);
     }
 
     ImGui::End();  // DockSpace
+}
 
-    ImGui::Render();
+void ux_window_layer::render(window_info *info) {
+        ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
