@@ -12,10 +12,10 @@ class spatial : public transform {
     spatial();
     spatial(spatial* parent);
 
-    inline mat4 absolute_matrix() const {
-        auto result = this->matrix();
+    inline mat4 abs_mat() const {
+        auto result = this->mat();
         if (this->parent()) {
-            result = this->parent()->absolute_matrix() * result;
+            result = this->parent()->abs_mat() * result;
         }
 
         return result;

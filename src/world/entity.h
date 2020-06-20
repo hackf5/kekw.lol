@@ -1,7 +1,6 @@
 #pragma once
 
 #include "spatial.h"
-#include "types.h"
 
 #include <vector>
 #include <memory>

@@ -28,7 +28,7 @@ transform::transform(transform const& other)
       dirty_(other.dirty_),
       is_mirror_(other.is_mirror_) {}
 
-mat4_ret_t transform::matrix() const {
+mat4_ret_t transform::mat() const {
     as_non_const(this)->recalculate_if_dirty();
     return this->matrix_;
 }

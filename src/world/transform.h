@@ -20,7 +20,7 @@ class transform {
     inline vec3_ret_t position() const { return this->position_; }
     inline quat_ret_t rotation() const { return this->rotation_; }
     inline vec3_ret_t scale() const { return this->scale_; }
-    mat4_ret_t matrix() const;
+    mat4_ret_t mat() const;
 
     inline void set_position(vec3_param_t value) {
         this->position_ = value;

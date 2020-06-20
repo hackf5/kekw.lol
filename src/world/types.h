@@ -6,6 +6,7 @@
 #include <boost/call_traits.hpp>
 
 #include <type_traits>
+#include <tuple>
 
 namespace kekw {
 namespace world {
@@ -31,6 +32,22 @@ typedef boost::call_traits<mat4>::const_reference mat4_ret_t;
 typedef glm::quat quat;
 typedef boost::call_traits<quat>::param_type quat_param_t;
 typedef boost::call_traits<quat>::const_reference quat_ret_t;
+
+struct triangle {
+    const vec3 v0;
+    const vec3 v1;
+    const vec3 v2;
+
+    std::tuple<vec3, vec3, vec3> transform(mat4_param_t model) const {
+        auto tv = [](mat4_param_t m, vec3_param_t v) {
+            return (m * glm::vec4(v, 1.f)).xyz();
+        };
+
+        return std::make_tuple(tv(model, v0), tv(model, v1), tv(model, v2));
+    }
+};
+
+typedef triangle triangle_t;
 
 template <typename T>
 inline typename std::remove_const<T>::type *as_non_const(T *p) {
