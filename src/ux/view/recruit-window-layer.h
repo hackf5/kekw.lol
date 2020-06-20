@@ -29,7 +29,6 @@ class recruit_window_layer : public window_layer {
 
    private:
     std::shared_ptr<kekw::ux::shader> shader_;
-    GLuint vbo_, vao_, ebo_;
     std::shared_ptr<kekw::mod::recruit_env> recruit_env_;
     std::shared_ptr<card_body> card_body_;
 

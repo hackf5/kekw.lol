@@ -1,9 +1,18 @@
 #pragma once
 
+#include <src/world/camera.h>
+#include <memory>
+
 namespace kekw {
-namespace scene {
+namespace world {
 
-class scene {};
+class scene {
+   public:
+    camera* cam() { return this->camera_.get(); }
 
-}  // namespace scene
+   private:
+    std::unique_ptr<camera> camera_;
+};
+
+}  // namespace world
 }  // namespace kekw

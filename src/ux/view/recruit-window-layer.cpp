@@ -16,11 +16,7 @@ recruit_window_layer::recruit_window_layer(
     std::shared_ptr<kekw::mod::recruit_env> recruit_env, kekw::world::camera *camera)
     : shader_(new shader()), recruit_env_(recruit_env), camera_(camera) {}
 
-recruit_window_layer::~recruit_window_layer() {
-    glDeleteVertexArrays(1, &(this->vao_));
-    glDeleteBuffers(1, &(this->vbo_));
-    glDeleteBuffers(1, &(this->ebo_));
-}
+recruit_window_layer::~recruit_window_layer() {}
 
 void recruit_window_layer::initialize(window_info *info) {
     // compile shader
