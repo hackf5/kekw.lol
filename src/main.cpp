@@ -14,7 +14,6 @@
 
 #include <src/ux/view/window-manager.h>
 #include <src/ux/view/ux-window-layer.h>
-#include <src/ux/view/gl-window-layer.h>
 #include <src/ux/view/recruit-window-layer.h>
 
 #include <src/ux/view/widgets/test-widget.h>
@@ -73,7 +72,7 @@ int main(int argc, char *argv[]) {
         std::unique_ptr<vw::ux_window_widget>(new vw::widgets::camera_widget(&camera)));
     manager.add_layer(std::move(ux_layer));
 
-    manager.Start();
+    manager.start();
 
     return 0;
 }

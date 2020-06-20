@@ -131,7 +131,7 @@ void window_manager::add_layer(std::unique_ptr<window_layer> layer) {
     this->layers_.push_back(std::move(layer));
 }
 
-void window_manager::Start() {
+void window_manager::start() {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     this->window_info_->window_width_ = (GLfloat)viewport[2];

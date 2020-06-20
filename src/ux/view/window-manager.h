@@ -30,7 +30,7 @@ class window_manager {
     ~window_manager();
 
     void add_layer(std::unique_ptr<window_layer> layer);
-    void Start();
+    void start();
 
    private:
     GLFWwindow *window_;
