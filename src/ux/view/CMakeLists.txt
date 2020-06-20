@@ -4,6 +4,7 @@ target_sources(${UX_LIB_TARGET}
         ${CMAKE_CURRENT_SOURCE_DIR}/gl-window-layer.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ux-window-layer.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/recruit-window-layer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/scene-window-layer.cpp
 )
 
 add_subdirectory(widgets)
