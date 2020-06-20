@@ -24,8 +24,8 @@ class recruit_window_layer : public window_layer {
         std::shared_ptr<kekw::mod::recruit_env> recruit_env, kekw::world::camera* camera);
     ~recruit_window_layer();
 
-    void initialize(window_info* manager) override;
-    void render(window_info* manager) override;
+    void initialize(window_context* manager) override;
+    void render(window_context* manager) override;
 
    private:
     std::shared_ptr<kekw::ux::shader> shader_;

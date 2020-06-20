@@ -20,7 +20,7 @@ class camera_widget : public ux_window_widget {
    public:
     camera_widget(world::camera *camera) : camera_(camera) {}
 
-    void initialize(window_info *info) override {
+    void initialize(window_context *info) override {
         this->camera_->set_clip_plane(vec2(0.1f, 100.f));
         this->camera_->set_field_of_view(glm::radians(45.f));
         this->camera_->set_aspect_ratio(info->window_width() / info->window_height());
@@ -29,7 +29,7 @@ class camera_widget : public ux_window_widget {
         this->camera_->set_position(glm::zero<vec3>());
     }
 
-    void update(window_info *info) override {
+    void update(window_context *info) override {
         if (!ImGui::Begin("Camera")) {
             ImGui::End();
             return;

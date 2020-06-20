@@ -13,7 +13,7 @@ namespace ux {
 namespace view {
 
 // forward declaration
-class window_info;
+class window_context;
 
 namespace world {
 
@@ -42,7 +42,7 @@ typedef boost::call_traits<mat4>::const_reference mat4_ret_t;
 typedef std::tuple<vec3, vec3, vec3> triangle_t;
 typedef std::vector<triangle_t> mesh_t;
 
-typedef kekw::ux::view::window_info window_info_t;
+typedef kekw::ux::view::window_context window_info_t;
 
 class camera {
    public:

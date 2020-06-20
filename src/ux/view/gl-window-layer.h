@@ -12,8 +12,8 @@ namespace view {
 class gl_window_layer : public window_layer {
    public:
     ~gl_window_layer();
-    void initialize(window_info *manager) override;
-    void render(window_info *manager) override;
+    void initialize(window_context *manager) override;
+    void render(window_context *manager) override;
 
    private:
     kekw::ux::shader shader_;

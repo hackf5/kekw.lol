@@ -9,12 +9,12 @@
 
 using namespace kekw::ux::view;
 
-window_info::window_info(GLFWwindow *window)
+window_context::window_context(GLFWwindow *window)
     : window_(window),
       left_mouse_button_state_(new mouse_button_state()),
       right_mouse_button_state_(new mouse_button_state()) {}
 
-GLFWwindow *window_info::get_window() const { return this->window_; }
+GLFWwindow *window_context::get_window() const { return this->window_; }
 
 window_layer::~window_layer() {}
 
@@ -40,7 +40,8 @@ window_manager::window_manager() : window_(0), layers_(), window_info_() {
         throw std::runtime_error("Failed to create GLFW window.");
     }
 
-    this->window_info_ = std::unique_ptr<window_info>(new window_info(this->window_));
+    this->window_info_ =
+        std::unique_ptr<window_context>(new window_context(this->window_));
     spdlog::debug("GLFW window created.");
 
     glfwSetWindowUserPointer(this->window_, this);

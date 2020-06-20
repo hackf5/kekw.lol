@@ -11,17 +11,17 @@ namespace kekw {
 namespace ux {
 namespace view {
 
-class window_info;
+class window_context;
 
 class window_layer {
    public:
     virtual ~window_layer() = 0;
 
-    virtual void initialize(window_info *info) = 0;
+    virtual void initialize(window_context *info) = 0;
 
-    virtual void update(window_info *info) {}
+    virtual void update(window_context *info) {}
 
-    virtual void render(window_info *info) = 0;
+    virtual void render(window_context *info) = 0;
 };
 
 class window_manager {
@@ -37,7 +37,7 @@ class window_manager {
 
     std::vector<std::unique_ptr<window_layer>> layers_;
 
-    std::unique_ptr<window_info> window_info_;
+    std::unique_ptr<window_context> window_info_;
 
     void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -46,7 +46,7 @@ class window_manager {
 
 class mouse_button_state {
     friend class window_manager;
-    friend class window_info;
+    friend class window_context;
 
    private:
     bool is_down_;
@@ -79,11 +79,11 @@ class mouse_button_state {
     }
 };
 
-class window_info {
+class window_context {
     friend class window_manager;
 
    public:
-    window_info(GLFWwindow *window);
+    window_context(GLFWwindow *window);
 
     GLFWwindow *get_window() const;
 

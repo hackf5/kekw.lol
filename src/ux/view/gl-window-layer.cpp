@@ -9,7 +9,7 @@ kekw::ux::view::gl_window_layer::~gl_window_layer() {
     glDeleteTextures(1, &(this->texture_));
 }
 
-void kekw::ux::view::gl_window_layer::initialize(window_info *info) {
+void kekw::ux::view::gl_window_layer::initialize(window_context *info) {
     // clang-format off
     float vertices[] = {
         // positions         // colors           // texture coords (relative to mesh)
@@ -90,7 +90,7 @@ void kekw::ux::view::gl_window_layer::initialize(window_info *info) {
     this->shader_.compile();
 }
 
-void kekw::ux::view::gl_window_layer::render(window_info *info) {
+void kekw::ux::view::gl_window_layer::render(window_context *info) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     this->shader_.use();
 

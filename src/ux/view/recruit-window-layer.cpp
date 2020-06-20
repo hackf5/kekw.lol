@@ -18,7 +18,7 @@ recruit_window_layer::recruit_window_layer(
 
 recruit_window_layer::~recruit_window_layer() {}
 
-void recruit_window_layer::initialize(window_info *info) {
+void recruit_window_layer::initialize(window_context *info) {
     // compile shader
     this->shader_->add_stage_file(GL_VERTEX_SHADER, "glsl/card.vert");
     this->shader_->add_stage_file(GL_FRAGMENT_SHADER, "glsl/card.frag");
@@ -28,7 +28,7 @@ void recruit_window_layer::initialize(window_info *info) {
     this->card_body_->initialize();
 }
 
-void recruit_window_layer::render(window_info *info) {
+void recruit_window_layer::render(window_context *info) {
     this->shader_->use();
 
     this->camera_->set_aspect_ratio(info->window_width() / info->window_height());

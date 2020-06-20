@@ -8,9 +8,9 @@ using namespace kekw::ux::view;
 
 ux_window_widget::~ux_window_widget() {}
 
-void ux_window_widget::initialize(window_info *info) {}
+void ux_window_widget::initialize(window_context *info) {}
 
-void ux_window_widget::update(window_info *info) {}
+void ux_window_widget::update(window_context *info) {}
 
 ux_window_layer::~ux_window_layer() {
     ImGui_ImplOpenGL3_Shutdown();
@@ -22,7 +22,7 @@ void ux_window_layer::add_widget(std::unique_ptr<ux_window_widget> widget) {
     this->widgets_.push_back(std::move(widget));
 }
 
-void ux_window_layer::initialize(window_info *info) {
+void ux_window_layer::initialize(window_context *info) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(info->get_window(), true);
@@ -54,7 +54,7 @@ void ux_window_layer::initialize(window_info *info) {
     }
 }
 
-void ux_window_layer::update(window_info *info) {
+void ux_window_layer::update(window_context *info) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -87,7 +87,7 @@ void ux_window_layer::update(window_info *info) {
     ImGui::End();  // DockSpace
 }
 
-void ux_window_layer::render(window_info *info) {
-        ImGui::Render();
+void ux_window_layer::render(window_context *info) {
+    ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
