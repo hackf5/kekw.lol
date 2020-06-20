@@ -12,12 +12,14 @@ namespace view {
 
 class scene_window_layer : public window_layer {
    public:
+    scene_window_layer(std::shared_ptr<kekw::world::scene> scene) : scene_(scene) {}
+
     void initialize(window_context *info) override;
     void update(window_context *info) override;
     void render(window_context *info) override;
 
    private:
-    std::unique_ptr<kekw::world::scene> scene_;
+    std::shared_ptr<kekw::world::scene> scene_;
 };
 
 }  // namespace view
