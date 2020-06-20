@@ -9,6 +9,9 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glfw")
 # spdlog
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/spdlog")
 
+# glm doesn't need building
+# add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glm")
+
 # dear imgui
 target_sources(${UX_LIB_TARGET}
     PRIVATE

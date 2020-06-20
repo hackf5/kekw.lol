@@ -36,6 +36,7 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 include_directories(${PROJECT_SOURCE_DIR}/extern/glfw/include)
 include_directories(${PROJECT_SOURCE_DIR}/extern)
 include_directories(${PROJECT_SOURCE_DIR}/extern/imgui)
+include_directories(${PROJECT_SOURCE_DIR}/extern/glm)
 
 # external input paths - need converting to submodules
 include_directories(C:/dev/cpplibs/usr/include)
