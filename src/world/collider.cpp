@@ -15,11 +15,11 @@ bool mesh_collider::hit_test(
     auto distance_t = std::numeric_limits<real_t>::infinity();
 
     bool hit_return = false;
-    for (auto it = this->msh()->begin(); it != this->msh()->end(); ++it) {
+    for (auto it = this->mesh()->begin(); it != this->mesh()->end(); ++it) {
         // it would obviously be better to cache the transforms, but since
         // there will be such a small number of entities, recalculating
         // on every frame is fine.
-        const auto [p0, p1, p2] = it->transform(this->spa()->abs_mat());
+        const auto [p0, p1, p2] = it->transform(this->spatial()->abs_mat());
 
         glm::vec2 _;
         bool hit =

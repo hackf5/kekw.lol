@@ -13,10 +13,8 @@ class render_context;
 
 class entity : public spatial {
    public:
-    virtual ~entity() {}
-
-    virtual void on_update(update_context* context) {}
-    virtual void on_render(render_context* context) {}
+    virtual void on_update(update_context* context) = 0;
+    virtual void on_render(render_context* context) = 0;
 };
 
 }  // namespace world

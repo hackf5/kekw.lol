@@ -11,47 +11,37 @@ namespace world {
 class collider {
    public:
     collider(spatial* spatial) : spatial_(spatial) {}
-    virtual ~collider() {}
+    virtual ~collider(){};
 
-    inline spatial* spa() { return this->spatial_; }
+    inline const spatial* spatial() const { return this->spatial_; }
 
     virtual bool hit_test(
         vec3_param_t origin_w, vec3_param_t direction_w, real_t& distance) = 0;
 
    private:
-    spatial* spatial_;
+    kekw::world::spatial* const spatial_;
 };
 
 class mesh {
    public:
-    typedef std::vector<triangle_t>::const_iterator iterator;
+    virtual ~mesh() = 0;
 
-    mesh(triangle_t const* triangles, size_t size) : triangles_() {
-        for (auto it = triangles; it != triangles + size; ++it) {
-            this->triangles_.push_back(*it);
-        }
-    }
-
-    virtual ~mesh() {}
-
-    inline iterator begin() const { return this->triangles_.begin(); }
-    inline iterator end() const { return this->triangles_.end(); }
-
-   private:
-    std::vector<triangle_t> triangles_;
+    virtual const triangle* begin() const = 0;
+    virtual const triangle* end() const = 0;
 };
 
 class mesh_collider : public collider {
    public:
-    mesh_collider(spatial* spatial, mesh* mesh) : collider(spatial), mesh_(mesh) {}
+    mesh_collider(kekw::world::spatial* spatial, const kekw::world::mesh* mesh)
+        : collider(spatial), mesh_(mesh) {}
 
-    inline mesh* msh() { return this->mesh_; }
+    inline const mesh* mesh() const { return this->mesh_; };
 
     bool hit_test(
         vec3_param_t origin_w, vec3_param_t direction_w, real_t& distance) override;
 
    private:
-    mesh* mesh_;
+    const kekw::world::mesh* const mesh_;
 };
 
 }  // namespace world

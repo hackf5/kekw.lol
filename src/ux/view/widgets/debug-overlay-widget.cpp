@@ -37,12 +37,12 @@ void debug_overlay_widget::update(window_context* info) {
         ImGui::Text("Debug: (right-click to change position)");
 
         ImGui::Separator();
-        if (info->focused())
+        if (info->has_focus())
             ImGui::Text("Mouse Position: (%.1f,%.1f)", info->mouse_x(), info->mouse_y());
         else
             ImGui::Text("Mouse Position: <invalid>");
 
-        ImGui::Text("Mouse Position World: %s", info->debug_1.c_str());
+        // ImGui::Text("Mouse Position World: %s", info->debug_1.c_str());
 
         if (ImGui::BeginPopupContextWindow()) {
             if (ImGui::MenuItem("Custom", NULL, corner == -1)) corner = -1;

@@ -34,20 +34,23 @@ typedef boost::call_traits<quat>::param_type quat_param_t;
 typedef boost::call_traits<quat>::const_reference quat_ret_t;
 
 struct triangle {
+    triangle() : v0(), v1(), v2() {}
+
+    triangle(vec3_param_t v0, vec3_param_t v1, vec3_param_t v2)
+        : v0(v0), v1(v1), v2(v2) {}
+
     const vec3 v0;
     const vec3 v1;
     const vec3 v2;
 
-    std::tuple<vec3, vec3, vec3> transform(mat4_param_t model) const {
+    triangle transform(mat4_param_t model) const {
         auto tv = [](mat4_param_t m, vec3_param_t v) {
             return (m * glm::vec4(v, 1.f)).xyz();
         };
 
-        return std::make_tuple(tv(model, v0), tv(model, v1), tv(model, v2));
+        return triangle(tv(model, v0), tv(model, v1), tv(model, v2));
     }
 };
-
-typedef triangle triangle_t;
 
 template <typename T>
 inline typename std::remove_const<T>::type *as_non_const(T *p) {

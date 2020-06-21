@@ -9,12 +9,10 @@
 
 using namespace kekw::ux::view;
 
-window_context::window_context(GLFWwindow *window)
+window_context_impl::window_context_impl(GLFWwindow *window)
     : window_(window),
-      left_mouse_button_state_(new mouse_button_state()),
-      right_mouse_button_state_(new mouse_button_state()) {}
-
-GLFWwindow *window_context::get_window() const { return this->window_; }
+      left_mouse_button_state_(new mouse_button_state_impl()),
+      right_mouse_button_state_(new mouse_button_state_impl()) {}
 
 window_layer::~window_layer() {}
 
@@ -41,7 +39,7 @@ window_manager::window_manager() : window_(0), layers_(), window_info_() {
     }
 
     this->window_info_ =
-        std::unique_ptr<window_context>(new window_context(this->window_));
+        std::unique_ptr<window_context_impl>(new window_context_impl(this->window_));
     spdlog::debug("GLFW window created.");
 
     glfwSetWindowUserPointer(this->window_, this);
@@ -99,31 +97,27 @@ void window_manager::framebuffer_size_callback(
     // and height will be significantly larger than specified on retina
     // displays.
     glViewport(0, 0, width, height);
-    this->window_info_->window_width_ = width;
-    this->window_info_->window_height_ = height;
+    this->window_info_->update_dimensions(width, height);
 }
 
 void window_manager::mouse_button_callback(
     GLFWwindow *window, int button, int action, int mods) {
+    mouse_button_state_impl *m_button;
     switch (button) {
         case GLFW_MOUSE_BUTTON_LEFT:
-            if (action == GLFW_PRESS) {
-                this->window_info_->left_mouse_button_state_->update(true);
-            } else if (action == GLFW_RELEASE) {
-                this->window_info_->left_mouse_button_state_->update(false);
-            }
+            m_button = this->window_info_->left_mouse_button();
             break;
-
         case GLFW_MOUSE_BUTTON_RIGHT:
-            if (action == GLFW_PRESS) {
-                this->window_info_->right_mouse_button_state_->update(true);
-            } else if (action == GLFW_RELEASE) {
-                this->window_info_->right_mouse_button_state_->update(false);
-            }
+            m_button = this->window_info_->right_mouse_button();
             break;
-
         default:
             break;
+    }
+
+    if (action == GLFW_PRESS) {
+        m_button->update(true);
+    } else if (action == GLFW_RELEASE) {
+        m_button->update(false);
     }
 }
 
@@ -134,8 +128,7 @@ void window_manager::add_layer(std::unique_ptr<window_layer> layer) {
 void window_manager::start() {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-    this->window_info_->window_width_ = (GLfloat)viewport[2];
-    this->window_info_->window_height_ = (GLfloat)viewport[3];
+    this->window_info_->update_dimensions(viewport[2], viewport[3]);
 
     for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
         (**it).initialize(this->window_info_.get());

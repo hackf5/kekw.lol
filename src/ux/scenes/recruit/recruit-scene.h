@@ -4,6 +4,8 @@
 #include <src/world/entity.h>
 #include <src/world/scene.h>
 
+#include <memory>
+
 namespace kekw {
 namespace ux {
 namespace scenes {

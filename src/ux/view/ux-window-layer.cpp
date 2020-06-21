@@ -25,7 +25,7 @@ void ux_window_layer::add_widget(std::unique_ptr<ux_window_widget> widget) {
 void ux_window_layer::initialize(window_context *info) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(info->get_window(), true);
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow *)info->get_window(), true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
     ImGuiIO &io = ImGui::GetIO();
