@@ -2,8 +2,10 @@
 
 #include <glm/ext.hpp>
 #include <src/ux/util/file-utils.h>
+#include <fmt/format.h>
 
 #include <stdexcept>
+#include <unordered_map>
 
 using namespace kekw::ux;
 
@@ -107,4 +109,20 @@ void shader::delete_shaders() {
     for (auto it = this->shaders_.begin(); it != this->shaders_.end(); ++it) {
         glDeleteShader(std::get<1>(*it));
     }
+}
+
+static auto map_instance = std::unordered_map<std::string, std::unique_ptr<shader>>();
+
+shader *kekw::ux::register_shader(std::string const &name) {
+    if (map_instance.count(name)) {
+        auto message = fmt::format("shader '{0}' is already registered", name);
+        throw std::invalid_argument(message);
+    }
+
+    map_instance.insert(std::make_pair(name, std::make_unique<shader>()));
+    return map_instance.find(name)->second.get();
+}
+
+const shader *kekw::ux::get_shader(std::string const &name) {
+    return map_instance.find(name)->second.get();
 }

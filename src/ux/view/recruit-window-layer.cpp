@@ -20,7 +20,7 @@ recruit_window_layer::~recruit_window_layer() {}
 
 void recruit_window_layer::initialize(window_context *info) {
     // compile shader
-    this->shader_->add_stage_file(GL_VERTEX_SHADER, "glsl/card.vert");
+    this->shader_->add_stage_file(GL_VERTEX_SHADER, "glsl/default.vert");
     this->shader_->add_stage_file(GL_FRAGMENT_SHADER, "glsl/card.frag");
     this->shader_->compile();
 

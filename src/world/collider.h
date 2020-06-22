@@ -24,7 +24,7 @@ class collider {
 
 class mesh {
    public:
-    virtual ~mesh() = 0;
+    virtual ~mesh(){};
 
     virtual const triangle* begin() const = 0;
     virtual const triangle* end() const = 0;

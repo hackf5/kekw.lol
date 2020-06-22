@@ -25,6 +25,8 @@
 
 #include <src/world/camera.h>
 
+#include <src/ux/scenes/common/card-entity.h>
+
 #include <memory>
 
 namespace vw = kekw::ux::view;
@@ -62,7 +64,8 @@ int main(int argc, char *argv[]) {
 
     auto camera = kekw::world::camera();
     auto scene = std::make_shared<kekw::ux::scenes::recruit_scene>(
-        std::make_unique<kekw::world::camera>(), std::unique_ptr<kekw::world::entity>());
+        std::make_unique<kekw::world::camera>(),
+        std::make_unique<kekw::ux::scenes::card_entity>());
 
     vw::window_manager manager;
     manager.add_layer(std::make_unique<vw::scene_window_layer>(scene));

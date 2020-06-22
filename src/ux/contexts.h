@@ -1,5 +1,7 @@
 #pragma once
 
+#include <src/world/scene.h>
+
 namespace kekw {
 
 class mouse_button_state {
@@ -27,18 +29,44 @@ class window_context {
     virtual mouse_button_state const *right_mouse_button() const = 0;
 };
 
-class update_context {
+class context_base {
    public:
-    virtual ~update_context() {}
+    context_base(const window_context *window_ctx, kekw::world::scene *scene)
+        : window_ctx_(window_ctx), scene_(scene) {}
+    virtual ~context_base() {}
 
-    virtual const window_context *window_ctx() const = 0;
+    inline const window_context *window_ctx() const { return this->window_ctx_; };
+
+    inline kekw::world::scene *scene() const { return this->scene_; }
+
+   private:
+    const window_context *const window_ctx_;
+    kekw::world::scene *const scene_;
 };
 
-class render_context {
+class initialize_context : public context_base {
    public:
-    virtual ~render_context() {}
+    initialize_context(const window_context *window_ctx, kekw::world::scene *scene)
+        : context_base(window_ctx, scene) {}
 
-    virtual const window_context *window_ctx() const = 0;
+    virtual void register_service(
+        const std::string &name, std::shared_ptr<void> service) = 0;
+
+    virtual std::shared_ptr<void> locate_service(const std::string &name) = 0;
+};
+
+class update_context : public context_base {
+   public:
+    update_context(const window_context *window_ctx, kekw::world::scene *scene)
+        : context_base(window_ctx, scene) {}
+
+    virtual const update_context *previous_context() = 0;
+};
+
+class render_context : public context_base {
+   public:
+    render_context(const window_context *window_ctx, kekw::world::scene *scene)
+        : context_base(window_ctx, scene) {}
 };
 
 }  // namespace kekw

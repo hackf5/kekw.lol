@@ -1,7 +1,10 @@
 #pragma once
 
+#include <src/ux/shader/shader.h>
+#include <src/ux/contexts.h>
 #include <src/world/entity.h>
 #include <src/world/collider.h>
+#include <src/world/renderer.h>
 
 #include <memory>
 #include <vector>
@@ -45,10 +48,26 @@ class box_mesh_2d : public mesh {
 
 class card_entity : public entity {
    public:
-    card_entity() : collider_(std::make_unique<mesh_collider>(this, &MESH)) {}
+    card_entity() : entity(), collider_(std::make_unique<mesh_collider>(this, &MESH)) {}
+
+    void on_initialize(initialize_context* context) override {
+        this->renderer_ = context->locate_service("card_renderer");
+        this->set_position(glm::vec3(0, 0.f, -10.0f));
+    }
+
+    void on_update(update_context* context) override {}
+
+    void on_render(render_context* context) override {
+        this->get_renderer()->render(this->mat());
+    }
 
    private:
+    inline kekw::world::renderer* get_renderer() {
+        return static_cast<kekw::world::renderer*>(this->renderer_.get());
+    }
+
     std::unique_ptr<collider> collider_;
+    std::shared_ptr<void> renderer_;
     static const box_mesh_2d MESH;
 };
 

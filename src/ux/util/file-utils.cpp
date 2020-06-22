@@ -6,10 +6,10 @@
 
 namespace kekw {
 namespace util {
-class AppFilepaths {
+class app_filepaths {
    public:
-    AppFilepaths(std::string const& exe_path);
-    fs::path GetAbsolutePath(std::string const& relative_path) const;
+    app_filepaths(std::string const& exe_path);
+    fs::path get_absolute_path(std::string const& relative_path) const;
 
    private:
     std::unique_ptr<fs::path> exe_path_;
@@ -17,10 +17,10 @@ class AppFilepaths {
 }  // namespace util
 }  // namespace kekw
 
-kekw::util::AppFilepaths::AppFilepaths(std::string const& exe_path)
+kekw::util::app_filepaths::app_filepaths(std::string const& exe_path)
     : exe_path_(new fs::path(exe_path)) {}
 
-fs::path kekw::util::AppFilepaths::GetAbsolutePath(
+fs::path kekw::util::app_filepaths::get_absolute_path(
     std::string const& relative_path) const {
     return this->exe_path_->parent_path() / relative_path;
 }
@@ -44,12 +44,12 @@ std::string kekw::util::read_file(std::string const& path, bool is_binary) {
     return read_fstream(stream);
 }
 
-kekw::util::AppFilepaths* instance;
+static kekw::util::app_filepaths* instance;
 
 void kekw::util::set_exe_path(std::string const& exe_path) {
-    instance = new AppFilepaths(exe_path);
+    instance = new app_filepaths(exe_path);
 }
 
 fs::path kekw::util::get_absolute_path(std::string const& relative_path) {
-    return instance->GetAbsolutePath(relative_path);
+    return instance->get_absolute_path(relative_path);
 }

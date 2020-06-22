@@ -8,6 +8,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <string_view>
 
 namespace kekw {
 namespace ux {
@@ -36,5 +37,9 @@ class shader {
 
     void delete_shaders();
 };
+
+shader *register_shader(std::string const &name);
+const shader *get_shader(std::string const &name);
+
 }  // namespace ux
 }  // namespace kekw

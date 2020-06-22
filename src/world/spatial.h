@@ -14,7 +14,7 @@ class spatial : public transform {
 
     inline mat4 abs_mat() const {
         auto result = this->mat();
-        if (this->parent()) {
+        if (this->parent() != nullptr) {
             result = this->parent()->abs_mat() * result;
         }
 
@@ -22,9 +22,10 @@ class spatial : public transform {
     }
 
     spatial* root() const;
-    spatial* parent() const;
 
-    void set_parent(spatial* parent);
+    inline spatial* parent() const { return this->parent_; }
+
+    inline void set_parent(spatial* parent) { this->parent_ = parent; }
 
    private:
     spatial* parent_;

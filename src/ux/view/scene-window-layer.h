@@ -2,6 +2,7 @@
 
 #include "window-manager.h"
 
+#include <src/ux/contexts.h>
 #include <src/world/scene.h>
 
 #include <memory>
@@ -20,6 +21,7 @@ class scene_window_layer : public window_layer {
 
    private:
     std::shared_ptr<kekw::world::scene> scene_;
+    std::unique_ptr<update_context> previous_context_;
 };
 
 }  // namespace view
