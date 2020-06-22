@@ -30,10 +30,17 @@ class update_context_impl : public kekw::update_context {
     update_context_impl(const kekw::window_context *window_ctx, kekw::world::scene *scene)
         : update_context(window_ctx, scene) {}
 
+    kekw::world::vec3_ret_t get_mouse_ray() const override { return this->mouse_ray_; };
+
+    void set_mouse_ray(kekw::world::vec3_param_t ray) override {
+        this->mouse_ray_ = ray;
+    };
+
     inline const update_context *previous_context() { return this->previous_context_; }
 
    private:
     update_context_impl *previous_context_;
+    kekw::world::vec3 mouse_ray_;
 };
 
 void scene_window_layer::initialize(window_context *info) {

@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
     vw::window_manager manager;
     manager.add_layer(std::make_unique<vw::scene_window_layer>(scene));
 
-    manager.add_layer(std::unique_ptr<vw::window_layer>(
-        new vw::recruit_window_layer(recruit_env, scene->cam())));
+    // manager.add_layer(std::unique_ptr<vw::window_layer>(
+    //     new vw::recruit_window_layer(recruit_env, scene->cam())));
 
     auto ux_layer = std::unique_ptr<vw::ux_window_layer>(new vw::ux_window_layer());
     ux_layer->add_widget(

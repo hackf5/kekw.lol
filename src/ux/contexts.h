@@ -1,5 +1,6 @@
 #pragma once
 
+#include <src/world/types.h>
 #include <src/world/scene.h>
 
 namespace kekw {
@@ -59,6 +60,10 @@ class update_context : public context_base {
    public:
     update_context(const window_context *window_ctx, kekw::world::scene *scene)
         : context_base(window_ctx, scene) {}
+
+    virtual kekw::world::vec3_ret_t get_mouse_ray() const = 0;
+
+    virtual void set_mouse_ray(kekw::world::vec3_param_t ray) = 0;
 
     virtual const update_context *previous_context() = 0;
 };

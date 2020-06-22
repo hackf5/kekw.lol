@@ -48,27 +48,40 @@ class box_mesh_2d : public mesh {
 
 class card_entity : public entity {
    public:
-    card_entity() : entity(), collider_(std::make_unique<mesh_collider>(this, &MESH)) {}
+    card_entity()
+        : entity(),
+          collider_(std::make_unique<mesh_collider>(this, &MESH)),
+          is_hit_(false) {}
 
     void on_initialize(initialize_context* context) override {
         this->renderer_ = context->locate_service("card_renderer");
         this->set_position(glm::vec3(0, 0.f, -10.0f));
     }
 
-    void on_update(update_context* context) override {}
+    void on_update(update_context* context) override {
+        real_t distance;
+        this->is_hit_ = this->collider_->hit_test(
+            context->scene()->cam()->position(), context->get_mouse_ray(), distance);
+    }
 
     void on_render(render_context* context) override {
-        this->get_renderer()->render(this->mat());
+        auto r = this->get_renderer();
+        auto shader = r->get_shader();
+        shader->use();
+        shader->set("highlight", this->is_hit_);
+        r->render(this);
     }
 
    private:
+    static const box_mesh_2d MESH;
+
     inline kekw::world::renderer* get_renderer() {
         return static_cast<kekw::world::renderer*>(this->renderer_.get());
     }
 
     std::unique_ptr<collider> collider_;
     std::shared_ptr<void> renderer_;
-    static const box_mesh_2d MESH;
+    bool is_hit_;
 };
 
 }  // namespace scenes

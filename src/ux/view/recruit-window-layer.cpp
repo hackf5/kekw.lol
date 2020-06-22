@@ -45,7 +45,6 @@ void recruit_window_layer::render(window_context *info) {
     auto mouse_screen = glm::vec2(mouse_x, mouse_y);
     auto v0 = this->camera_->to_world_coords(glm::vec3(mouse_screen, 0.f));
     auto v1 = this->camera_->to_world_coords(glm::vec3(mouse_screen, 1.f));
-
     auto direction = glm::normalize(v1 - v0);
 
     auto av = this->recruit_env_->available_view();

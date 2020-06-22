@@ -10,11 +10,12 @@ box_mesh_2d::box_mesh_2d(real_t width, real_t height)
     : width_(width), height_(height), vertexes_() {
     mat4 scale = glm::scale(glm::identity<mat4>(), vec3(width_, height_, 1.0f));
 
-    auto make_vertex = [](unsigned int index) {
-        return vec3(
-            UNIFORM_VERTEXES[index],
-            UNIFORM_VERTEXES[index + 1],
-            UNIFORM_VERTEXES[index + 2]);
+    auto make_vertex = [&scale](unsigned int index) {
+        return scale * vec4(
+                           UNIFORM_VERTEXES[index],
+                           UNIFORM_VERTEXES[index + 1],
+                           UNIFORM_VERTEXES[index + 2],
+                           1.f);
     };
 
     unsigned int triangle_index = 0;

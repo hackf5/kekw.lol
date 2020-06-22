@@ -76,9 +76,14 @@ class card_renderer : public kekw::world::renderer {
 
     real_t height() const { return this->height_; }
 
-    void render(mat4_param_t model) override {
-        auto shader = kekw::ux::get_shader("default");
-        shader->set("model", model);
+    inline const kekw::ux::shader* get_shader() const override {
+        return kekw::ux::get_shader("default");
+    }
+
+    void render(const entity* entity) override {
+        auto shader = this->get_shader();
+        shader->use();
+        shader->set("model", entity->mat());
 
         glBindVertexArray(this->vao_);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -102,6 +107,7 @@ class recruit_scene : public kekw::world::scene {
         shader->add_stage_file(GL_VERTEX_SHADER, "glsl/default.vert");
         shader->add_stage_file(GL_FRAGMENT_SHADER, "glsl/card.frag");
         shader->compile();
+        shader->use();
 
         auto cr = std::make_shared<card_renderer>(1, 88.0f / 62.0f);
         cr->initialize();
@@ -122,6 +128,13 @@ class recruit_scene : public kekw::world::scene {
         // could move during update.
         this->projection_ = this->cam()->get_projection();
         this->view_ = this->cam()->get_view();
+
+        auto mouse_x = window_ctx->mouse_x();
+        auto mouse_y = this->cam()->get_viewport().w - window_ctx->mouse_y();
+        auto mouse_screen = glm::vec2(mouse_x, mouse_y);
+        auto v0 = this->cam()->to_world_coords(glm::vec3(mouse_screen, 0.f));
+        auto v1 = this->cam()->to_world_coords(glm::vec3(mouse_screen, 1.f));
+        context->set_mouse_ray(glm::normalize(v1 - v0));
 
         this->root()->on_update(context);
     };
