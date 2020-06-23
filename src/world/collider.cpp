@@ -9,6 +9,10 @@
 
 using namespace kekw;
 
+collider::~collider() {}
+
+mesh::~mesh() {}
+
 bool mesh_collider::hit_test(
     vec3_param_t origin_w, vec3_param_t direction_w, real_t& distance) {
     distance = std::numeric_limits<real_t>::infinity();
@@ -19,7 +23,7 @@ bool mesh_collider::hit_test(
         // it would obviously be better to cache the transforms, but since
         // there will be such a small number of entities, recalculating
         // on every frame is fine.
-        const auto [p0, p1, p2] = it->transform(this->spatial()->abs_mat());
+        const auto [p0, p1, p2] = it->transform(this->spatial()->abs_matrix());
 
         glm::vec2 _;
         bool hit =

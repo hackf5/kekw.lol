@@ -9,22 +9,14 @@ namespace kekw {
 class spatial : public transform {
    public:
     spatial();
-    spatial(spatial* parent);
-
-    inline mat4 abs_mat() const {
-        auto result = this->mat();
-        if (this->parent() != nullptr) {
-            result = this->parent()->abs_mat() * result;
-        }
-
-        return result;
-    }
 
     spatial* root() const;
 
     inline spatial* parent() const { return this->parent_; }
 
     inline void set_parent(spatial* parent) { this->parent_ = parent; }
+
+    mat4 abs_matrix() const;
 
    private:
     spatial* parent_;

@@ -3,14 +3,13 @@
 #include "types.h"
 #include "spatial.h"
 
-#include <vector>
-
 namespace kekw {
 
 class collider {
    public:
     collider(kekw::spatial* spatial) : spatial_(spatial) {}
-    virtual ~collider(){};
+
+    virtual ~collider() = 0;
 
     inline const spatial* spatial() const { return this->spatial_; }
 
@@ -23,7 +22,7 @@ class collider {
 
 class mesh {
    public:
-    virtual ~mesh(){};
+    virtual ~mesh() = 0;
 
     virtual const triangle* begin() const = 0;
     virtual const triangle* end() const = 0;

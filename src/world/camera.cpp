@@ -12,7 +12,7 @@ mat4_ret_t camera::get_projection() const {
     return this->projection_;
 }
 
-mat4_ret_t camera::get_view() const { return this->mat(); }
+mat4_ret_t camera::get_view() const { return this->matrix(); }
 
 void camera::on_recalculate() {
     this->projection_ = glm::perspective(

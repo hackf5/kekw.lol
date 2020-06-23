@@ -79,7 +79,7 @@ class card_renderer : public renderer {
     void render(const entity* entity) override {
         auto shader = this->get_shader();
         shader->use();
-        shader->set("model", entity->mat());
+        shader->set("model", entity->matrix());
 
         glBindVertexArray(this->vao_);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

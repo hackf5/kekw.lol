@@ -7,7 +7,6 @@ namespace kekw {
 class camera : public spatial {
    public:
     camera();
-    virtual ~camera(){};
 
     mat4_ret_t get_projection() const;
     mat4_ret_t get_view() const;

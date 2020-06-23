@@ -103,4 +103,10 @@
         "stack": "cpp",
         "version": "cpp"
     },
+    "C_Cpp.default.cppStandard": "gnu++17",
+    "search.exclude": {
+        "extern/": true,
+        "inc/": true,
+        ".git/": true,
+    },
 }
