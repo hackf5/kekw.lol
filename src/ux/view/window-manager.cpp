@@ -9,14 +9,67 @@
 
 using namespace kekw;
 
+namespace kekw {
+
+class mouse_button_state_impl : public mouse_button_state {
+   public:
+    inline bool is_down() override { return this->is_down_; }
+    inline bool is_click() override { return this->is_click_; }
+    inline bool is_click_release() override { return this->is_click_release_; }
+
+    void before_poll_events() {
+        this->is_click_ = false;
+        this->is_click_release_ = false;
+    }
+
+    void update(bool is_down) {
+        if (this->is_down_ == is_down) {
+            // no change in state;
+            return;
+        }
+
+        if (this->is_down_) {
+            // then !is_down;
+            this->is_click_release_ = true;
+        } else {
+            this->is_click_ = true;
+        }
+    }
+
+   private:
+    bool is_down_;
+    bool is_click_release_;
+    bool is_click_;
+};
+
+}  // namespace kekw
+
 window_context_impl::window_context_impl(GLFWwindow *window)
     : window_(window),
       left_mouse_button_state_(new mouse_button_state_impl()),
       right_mouse_button_state_(new mouse_button_state_impl()) {}
 
+mouse_button_state const *window_context_impl::left_mouse_button() const {
+    return this->left_mouse_button_state_.get();
+}
+
+mouse_button_state const *window_context_impl::right_mouse_button() const {
+    return this->right_mouse_button_state_.get();
+}
+
+void window_context_impl::before_poll_events() {
+    this->left_mouse_button_state_->before_poll_events();
+    this->right_mouse_button_state_->before_poll_events();
+}
+
+void window_context_impl::after_poll_events() {
+    this->has_focus_ = glfwGetWindowAttrib(this->window_, GLFW_FOCUSED) != 0;
+    glfwGetCursorPos(this->window_, &this->mouse_x_, &this->mouse_y_);
+}
+
 window_layer::~window_layer() {}
 
-window_manager::window_manager() : window_(0), layers_(), window_info_() {
+window_manager::window_manager() : window_(0), layers_(), window_context_() {
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW.");
     }
@@ -38,7 +91,7 @@ window_manager::window_manager() : window_(0), layers_(), window_info_() {
         throw std::runtime_error("Failed to create GLFW window.");
     }
 
-    this->window_info_ =
+    this->window_context_ =
         std::unique_ptr<window_context_impl>(new window_context_impl(this->window_));
     spdlog::debug("GLFW window created.");
 
@@ -97,7 +150,7 @@ void window_manager::framebuffer_size_callback(
     // and height will be significantly larger than specified on retina
     // displays.
     glViewport(0, 0, width, height);
-    this->window_info_->update_dimensions(width, height);
+    this->window_context_->update_dimensions(width, height);
 }
 
 void window_manager::mouse_button_callback(
@@ -105,10 +158,10 @@ void window_manager::mouse_button_callback(
     mouse_button_state_impl *m_button;
     switch (button) {
         case GLFW_MOUSE_BUTTON_LEFT:
-            m_button = this->window_info_->left_mouse_button();
+            m_button = this->window_context_->left_mouse_button();
             break;
         case GLFW_MOUSE_BUTTON_RIGHT:
-            m_button = this->window_info_->right_mouse_button();
+            m_button = this->window_context_->right_mouse_button();
             break;
         default:
             break;
@@ -128,26 +181,26 @@ void window_manager::add_layer(std::unique_ptr<window_layer> layer) {
 void window_manager::start() {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-    this->window_info_->update_dimensions(viewport[2], viewport[3]);
+    this->window_context_->update_dimensions(viewport[2], viewport[3]);
 
     for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
-        (**it).initialize(this->window_info_.get());
+        (**it).initialize(this->window_context_.get());
     }
 
     while (!glfwWindowShouldClose(this->window_)) {
-        this->window_info_->before_poll_events();
+        this->window_context_->before_poll_events();
         glfwPollEvents();
-        this->window_info_->after_poll_events();
+        this->window_context_->after_poll_events();
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
-            (**it).update(this->window_info_.get());
+            (**it).update(this->window_context_.get());
         }
 
         for (auto it = this->layers_.begin(); it != this->layers_.end(); ++it) {
-            (**it).render(this->window_info_.get());
+            (**it).render(this->window_context_.get());
         }
 
         glfwSwapBuffers(this->window_);

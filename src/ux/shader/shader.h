@@ -1,14 +1,11 @@
 #pragma once
 
 #include <inc/glad/glad.h>
-#include <glm/glm.hpp>
+#include <src/world/types.h>
 
-#include <fstream>
 #include <memory>
 #include <string>
-#include <tuple>
 #include <vector>
-#include <string_view>
 
 namespace kekw {
 
@@ -26,7 +23,7 @@ class shader {
     void set(std::string const &name, GLboolean value) const;
     void set(std::string const &name, GLint value) const;
     void set(std::string const &name, GLfloat value) const;
-    void set(std::string const &name, glm::mat4 const &value) const;
+    void set(std::string const &name, mat4_param_t value) const;
 
    private:
     typedef std::tuple<GLenum, GLuint> stage_t;

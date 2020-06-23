@@ -20,11 +20,11 @@ class window_layer {
    public:
     virtual ~window_layer() = 0;
 
-    virtual void initialize(window_context *info) = 0;
+    virtual void initialize(window_context *context) = 0;
 
-    virtual void update(window_context *info) {}
+    virtual void update(window_context *context) = 0;
 
-    virtual void render(window_context *info) = 0;
+    virtual void render(window_context *context) = 0;
 };
 
 class window_manager {
@@ -40,42 +40,11 @@ class window_manager {
 
     std::vector<std::unique_ptr<window_layer>> layers_;
 
-    std::unique_ptr<window_context_impl> window_info_;
+    std::unique_ptr<window_context_impl> window_context_;
 
     void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
     void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
-};
-
-class mouse_button_state_impl : public mouse_button_state {
-   public:
-    inline bool is_down() override { return this->is_down_; }
-    inline bool is_click() override { return this->is_click_; }
-    inline bool is_click_release() override { return this->is_click_release_; }
-
-    void before_poll_events() {
-        this->is_click_ = false;
-        this->is_click_release_ = false;
-    }
-
-    void update(bool is_down) {
-        if (this->is_down_ == is_down) {
-            // no change in state;
-            return;
-        }
-
-        if (this->is_down_) {
-            // then !is_down;
-            this->is_click_release_ = true;
-        } else {
-            this->is_click_ = true;
-        }
-    }
-
-   private:
-    bool is_down_;
-    bool is_click_release_;
-    bool is_click_;
 };
 
 class window_context_impl : public window_context {
@@ -91,23 +60,13 @@ class window_context_impl : public window_context {
     inline double mouse_x() const override { return this->mouse_x_; }
     inline double mouse_y() const override { return this->mouse_y_; }
 
-    inline mouse_button_state const *left_mouse_button() const override {
-        return this->left_mouse_button_state_.get();
-    }
+    mouse_button_state const *left_mouse_button() const override;
 
-    inline mouse_button_state const *right_mouse_button() const override {
-        return this->right_mouse_button_state_.get();
-    }
+    mouse_button_state const *right_mouse_button() const;
 
-    inline void before_poll_events() {
-        this->left_mouse_button_state_->before_poll_events();
-        this->right_mouse_button_state_->before_poll_events();
-    }
+    void before_poll_events();
 
-    inline void after_poll_events() {
-        this->has_focus_ = glfwGetWindowAttrib(this->window_, GLFW_FOCUSED) != 0;
-        glfwGetCursorPos(this->window_, &this->mouse_x_, &this->mouse_y_);
-    }
+    inline void after_poll_events();
 
     inline void update_dimensions(double width, double height) {
         this->window_width_ = width;

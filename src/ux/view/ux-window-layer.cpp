@@ -8,9 +8,9 @@ using namespace kekw;
 
 ux_window_widget::~ux_window_widget() {}
 
-void ux_window_widget::initialize(window_context *info) {}
+void ux_window_widget::initialize(window_context *context) {}
 
-void ux_window_widget::update(window_context *info) {}
+void ux_window_widget::update(window_context *context) {}
 
 ux_window_layer::~ux_window_layer() {
     ImGui_ImplOpenGL3_Shutdown();
@@ -22,10 +22,10 @@ void ux_window_layer::add_widget(std::unique_ptr<ux_window_widget> widget) {
     this->widgets_.push_back(std::move(widget));
 }
 
-void ux_window_layer::initialize(window_context *info) {
+void ux_window_layer::initialize(window_context *context) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow *)info->get_window(), true);
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow *)context->get_window(), true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
     ImGuiIO &io = ImGui::GetIO();
@@ -50,11 +50,11 @@ void ux_window_layer::initialize(window_context *info) {
     style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 
     for (auto it = this->widgets_.begin(); it != this->widgets_.end(); ++it) {
-        (*it)->initialize(info);
+        (*it)->initialize(context);
     }
 }
 
-void ux_window_layer::update(window_context *info) {
+void ux_window_layer::update(window_context *context) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -81,13 +81,13 @@ void ux_window_layer::update(window_context *info) {
     ImGui::PopStyleColor(2);
 
     for (auto it = this->widgets_.begin(); it != this->widgets_.end(); ++it) {
-        (*it)->update(info);
+        (*it)->update(context);
     }
 
     ImGui::End();  // DockSpace
 }
 
-void ux_window_layer::render(window_context *info) {
+void ux_window_layer::render(window_context *context) {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

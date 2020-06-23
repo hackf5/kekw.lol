@@ -13,9 +13,9 @@ class scene_window_layer : public window_layer {
    public:
     scene_window_layer(std::shared_ptr<scene> scene) : scene_(scene) {}
 
-    void initialize(window_context *info) override;
-    void update(window_context *info) override;
-    void render(window_context *info) override;
+    void initialize(window_context *context) override;
+    void update(window_context *context) override;
+    void render(window_context *context) override;
 
    private:
     std::shared_ptr<scene> scene_;

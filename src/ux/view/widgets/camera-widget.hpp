@@ -15,20 +15,14 @@ class camera_widget : public ux_window_widget {
    public:
     camera_widget(camera *camera) : camera_(camera) {}
 
-    void initialize(window_context *info) override {
-        this->camera_->set_clip_plane(vec2(0.1f, 100.f));
-        this->camera_->set_field_of_view(glm::radians(45.f));
-        this->camera_->set_aspect_ratio(info->window_width() / info->window_height());
-        this->camera_->set_viewport(
-            vec4(0.f, 0.f, info->window_width(), info->window_height()));
-        this->camera_->set_position(glm::zero<vec3>());
-    }
+    void initialize(window_context *context) override {}
 
-    void update(window_context *info) override {
+    void update(window_context *context) override {
         if (!ImGui::Begin("Camera")) {
             ImGui::End();
             return;
         }
+
         auto p = vec3(this->camera_->position());
         auto position = static_cast<float *>(glm::value_ptr(p));
         if (ImGui::SliderFloat3("Position", position, -10, 10)) {

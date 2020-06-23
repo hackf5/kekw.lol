@@ -16,7 +16,6 @@
 #include <src/ux/view/ux-window-layer.h>
 #include <src/ux/view/scene-window-layer.h>
 
-#include <src/ux/view/widgets/test-widget.h>
 #include <src/ux/view/widgets/debug-overlay-widget.h>
 #include <src/ux/view/widgets/camera-widget.hpp>
 
@@ -69,8 +68,6 @@ int main(int argc, char *argv[]) {
     manager.add_layer(std::make_unique<scene_window_layer>(scene));
 
     auto ux_layer = std::unique_ptr<ux_window_layer>(new ux_window_layer());
-    ux_layer->add_widget(std::unique_ptr<ux_window_widget>(new test_widget(recruit_env)));
-
     ux_layer->add_widget(std::unique_ptr<ux_window_widget>(new debug_overlay_widget()));
     ux_layer->add_widget(
         std::unique_ptr<ux_window_widget>(new camera_widget(scene->cam())));

@@ -4,7 +4,7 @@
 
 using namespace kekw;
 
-void debug_overlay_widget::update(window_context* info) {
+void debug_overlay_widget::update(window_context* context) {
     // FIXME-VIEWPORT: Select a default viewport
     const float DISTANCE = 10.0f;
     static int corner = 0;
@@ -37,12 +37,13 @@ void debug_overlay_widget::update(window_context* info) {
         ImGui::Text("Debug: (right-click to change position)");
 
         ImGui::Separator();
-        if (info->has_focus())
-            ImGui::Text("Mouse Position: (%.1f,%.1f)", info->mouse_x(), info->mouse_y());
+        if (context->has_focus())
+            ImGui::Text(
+                "Mouse Position: (%.1f,%.1f)", context->mouse_x(), context->mouse_y());
         else
             ImGui::Text("Mouse Position: <invalid>");
 
-        // ImGui::Text("Mouse Position World: %s", info->debug_1.c_str());
+        // ImGui::Text("Mouse Position World: %s", context->debug_1.c_str());
 
         if (ImGui::BeginPopupContextWindow()) {
             if (ImGui::MenuItem("Custom", NULL, corner == -1)) corner = -1;

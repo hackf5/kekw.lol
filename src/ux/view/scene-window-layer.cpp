@@ -4,7 +4,7 @@
 
 using namespace kekw;
 
-class initialize_context_impl : public kekw::initialize_context {
+class initialize_context_impl : public initialize_context {
    public:
     initialize_context_impl(const kekw::window_context *window_ctx, kekw::scene *scene)
         : initialize_context(window_ctx, scene) {}
@@ -22,7 +22,7 @@ class initialize_context_impl : public kekw::initialize_context {
     std::unordered_map<std::string, std::shared_ptr<void>> _services;
 };
 
-class update_context_impl : public kekw::update_context {
+class update_context_impl : public update_context {
     friend scene_window_layer;
 
    public:
@@ -40,17 +40,17 @@ class update_context_impl : public kekw::update_context {
     vec3 mouse_ray_;
 };
 
-void scene_window_layer::initialize(window_context *info) {
-    initialize_context_impl ctx(info, this->scene_.get());
+void scene_window_layer::initialize(window_context *context) {
+    initialize_context_impl ctx(context, this->scene_.get());
 
     this->scene_->on_initialize(&ctx);
 
     this->previous_context_ =
-        std::make_unique<update_context_impl>(info, this->scene_.get());
+        std::make_unique<update_context_impl>(context, this->scene_.get());
 }
 
-void scene_window_layer::update(window_context *info) {
-    auto ctx = std::make_unique<update_context_impl>(info, this->scene_.get());
+void scene_window_layer::update(window_context *context) {
+    auto ctx = std::make_unique<update_context_impl>(context, this->scene_.get());
     ctx->previous_context_ =
         dynamic_cast<update_context_impl *>(this->previous_context_.get());
 
@@ -61,7 +61,7 @@ void scene_window_layer::update(window_context *info) {
     this->previous_context_ = std::move(ctx);
 }
 
-void scene_window_layer::render(window_context *info) {
-    render_context ctx(info, this->scene_.get());
+void scene_window_layer::render(window_context *context) {
+    render_context ctx(context, this->scene_.get());
     this->scene_->on_render(&ctx);
 }

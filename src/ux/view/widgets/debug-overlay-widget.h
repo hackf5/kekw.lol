@@ -8,9 +8,7 @@ namespace kekw {
 
 class debug_overlay_widget : public ux_window_widget {
    public:
-    void update(window_context *info) override;
-
-   private:
+    void update(window_context *context) override;
 };
 
 }  // namespace kekw
