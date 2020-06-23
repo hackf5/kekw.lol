@@ -11,7 +11,6 @@
 #include <string_view>
 
 namespace kekw {
-namespace ux {
 
 class shader {
    public:
@@ -41,5 +40,4 @@ class shader {
 shader *register_shader(std::string const &name);
 const shader *get_shader(std::string const &name);
 
-}  // namespace ux
 }  // namespace kekw

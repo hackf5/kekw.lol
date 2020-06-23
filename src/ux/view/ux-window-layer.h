@@ -6,8 +6,6 @@
 #include <vector>
 
 namespace kekw {
-namespace ux {
-namespace view {
 
 class ux_window_widget {
    public:
@@ -31,6 +29,4 @@ class ux_window_layer : public window_layer {
     std::vector<std::unique_ptr<ux_window_widget>> widgets_;
 };
 
-}  // namespace view
-}  // namespace ux
 }  // namespace kekw

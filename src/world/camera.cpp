@@ -3,7 +3,7 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace kekw::world;
+using namespace kekw;
 
 camera::camera() : spatial() { this->is_mirror_ = true; }
 

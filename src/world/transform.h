@@ -3,7 +3,6 @@
 #include "types.h"
 
 namespace kekw {
-namespace world {
 
 class transform {
    public:
@@ -54,5 +53,4 @@ class transform {
     bool is_mirror_;
 };
 
-}  // namespace world
 }  // namespace kekw

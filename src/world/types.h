@@ -9,7 +9,6 @@
 #include <tuple>
 
 namespace kekw {
-namespace world {
 
 typedef float real_t;
 
@@ -57,5 +56,4 @@ inline typename std::remove_const<T>::type *as_non_const(T *p) {
     return const_cast<typename std::remove_const<T>::type *>(p);
 }
 
-}  // namespace world
 }  // namespace kekw

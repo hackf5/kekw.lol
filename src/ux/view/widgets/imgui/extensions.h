@@ -4,17 +4,9 @@
 #include <imgui/imgui_internal.h>
 
 namespace kekw {
-namespace ux {
-namespace view {
-namespace widgets {
-namespace imgui {
 
-void begin_disable_item(bool enabled);
+void imgui_begin_disable_item(bool enabled);
 
-void end_disable_item(bool enabled, char const* reason = nullptr);
+void imgui_end_disable_item(bool enabled, char const* reason = nullptr);
 
-}  // namespace imgui
-}  // namespace widgets
-}  // namespace view
-}  // namespace ux
 }  // namespace kekw

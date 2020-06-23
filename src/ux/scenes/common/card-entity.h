@@ -9,11 +9,7 @@
 #include <memory>
 #include <vector>
 
-using namespace kekw::world;
-
 namespace kekw {
-namespace ux {
-namespace scenes {
 
 class box_mesh_2d : public mesh {
    public:
@@ -75,8 +71,8 @@ class card_entity : public entity {
    private:
     static const box_mesh_2d MESH;
 
-    inline kekw::world::renderer* get_renderer() {
-        return static_cast<kekw::world::renderer*>(this->renderer_.get());
+    inline renderer* get_renderer() {
+        return static_cast<renderer*>(this->renderer_.get());
     }
 
     std::unique_ptr<collider> collider_;
@@ -84,6 +80,4 @@ class card_entity : public entity {
     bool is_hit_;
 };
 
-}  // namespace scenes
-}  // namespace ux
 }  // namespace kekw

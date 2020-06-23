@@ -4,7 +4,7 @@
 #include <imgui/examples/imgui_impl_glfw.h>
 #include <imgui/examples/imgui_impl_opengl3.h>
 
-using namespace kekw::ux::view;
+using namespace kekw;
 
 ux_window_widget::~ux_window_widget() {}
 

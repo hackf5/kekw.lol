@@ -10,15 +10,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace kekw {
-namespace ux {
-namespace view {
-namespace widgets {
-
-using namespace kekw::world;
 
 class camera_widget : public ux_window_widget {
    public:
-    camera_widget(world::camera *camera) : camera_(camera) {}
+    camera_widget(camera *camera) : camera_(camera) {}
 
     void initialize(window_context *info) override {
         this->camera_->set_clip_plane(vec2(0.1f, 100.f));
@@ -44,10 +39,7 @@ class camera_widget : public ux_window_widget {
     }
 
    private:
-    world::camera *camera_;
+    camera *camera_;
 };
 
-}  // namespace widgets
-}  // namespace view
-}  // namespace ux
 }  // namespace kekw

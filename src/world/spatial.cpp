@@ -1,6 +1,6 @@
 #include "spatial.h"
 
-using namespace kekw::world;
+using namespace kekw;
 
 spatial::spatial() : transform(), parent_(nullptr) {}
 

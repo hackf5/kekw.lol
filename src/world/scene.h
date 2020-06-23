@@ -6,7 +6,6 @@
 #include <memory>
 
 namespace kekw {
-namespace world {
 
 class scene {
    public:
@@ -27,5 +26,4 @@ class scene {
     std::unique_ptr<entity> root_;
 };
 
-}  // namespace world
 }  // namespace kekw

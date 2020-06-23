@@ -10,8 +10,6 @@
 #include <string>
 
 namespace kekw {
-namespace ux {
-namespace view {
 
 class window_layer;
 class window_manager;
@@ -49,7 +47,7 @@ class window_manager {
     void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 };
 
-class mouse_button_state_impl : public kekw::mouse_button_state {
+class mouse_button_state_impl : public mouse_button_state {
    public:
     inline bool is_down() override { return this->is_down_; }
     inline bool is_click() override { return this->is_click_; }
@@ -80,7 +78,7 @@ class mouse_button_state_impl : public kekw::mouse_button_state {
     bool is_click_;
 };
 
-class window_context_impl : public kekw::window_context {
+class window_context_impl : public window_context {
    public:
     window_context_impl(GLFWwindow *window);
 
@@ -93,11 +91,11 @@ class window_context_impl : public kekw::window_context {
     inline double mouse_x() const override { return this->mouse_x_; }
     inline double mouse_y() const override { return this->mouse_y_; }
 
-    inline kekw::mouse_button_state const *left_mouse_button() const override {
+    inline mouse_button_state const *left_mouse_button() const override {
         return this->left_mouse_button_state_.get();
     }
 
-    inline kekw::mouse_button_state const *right_mouse_button() const override {
+    inline mouse_button_state const *right_mouse_button() const override {
         return this->right_mouse_button_state_.get();
     }
 
@@ -137,6 +135,4 @@ class window_context_impl : public kekw::window_context {
     const std::unique_ptr<mouse_button_state_impl> right_mouse_button_state_;
 };
 
-}  // namespace view
-}  // namespace ux
 }  // namespace kekw

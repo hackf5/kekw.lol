@@ -7,9 +7,6 @@
 #include <memory>
 
 namespace kekw {
-namespace ux {
-namespace view {
-namespace widgets {
 
 class test_widget : public ux_window_widget {
    public:
@@ -21,7 +18,4 @@ class test_widget : public ux_window_widget {
     std::shared_ptr<kekw::mod::recruit_env> recruit_env_;
 };
 
-}  // namespace widgets
-}  // namespace view
-}  // namespace ux
 }  // namespace kekw

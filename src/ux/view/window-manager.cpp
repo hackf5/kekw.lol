@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-using namespace kekw::ux::view;
+using namespace kekw;
 
 window_context_impl::window_context_impl(GLFWwindow *window)
     : window_(window),
@@ -63,7 +63,7 @@ window_manager::window_manager() : window_(0), layers_(), window_info_() {
     // TODO: this fails for non-ascii paths, converting from wide string to
     // string seems like a total ball ache. needs <windows.h> to be included and
     // the WideCharToMultiByte should be called.
-    auto icon_path = kekw::util::get_absolute_path("res/img/app-icon.png");
+    auto icon_path = get_absolute_path("res/img/app-icon.png");
 
     GLFWimage images[1];
     images[0].pixels = stbi_load(

@@ -6,11 +6,10 @@
 #include <vector>
 
 namespace kekw {
-namespace world {
 
 class collider {
    public:
-    collider(spatial* spatial) : spatial_(spatial) {}
+    collider(kekw::spatial* spatial) : spatial_(spatial) {}
     virtual ~collider(){};
 
     inline const spatial* spatial() const { return this->spatial_; }
@@ -19,7 +18,7 @@ class collider {
         vec3_param_t origin_w, vec3_param_t direction_w, real_t& distance) = 0;
 
    private:
-    kekw::world::spatial* const spatial_;
+    kekw::spatial* const spatial_;
 };
 
 class mesh {
@@ -32,7 +31,7 @@ class mesh {
 
 class mesh_collider : public collider {
    public:
-    mesh_collider(kekw::world::spatial* spatial, const kekw::world::mesh* mesh)
+    mesh_collider(kekw::spatial* spatial, const kekw::mesh* mesh)
         : collider(spatial), mesh_(mesh) {}
 
     inline const mesh* mesh() const { return this->mesh_; };
@@ -41,8 +40,7 @@ class mesh_collider : public collider {
         vec3_param_t origin_w, vec3_param_t direction_w, real_t& distance) override;
 
    private:
-    const kekw::world::mesh* const mesh_;
+    const kekw::mesh* const mesh_;
 };
 
-}  // namespace world
 }  // namespace kekw

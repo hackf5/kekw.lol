@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <unordered_map>
 
-using namespace kekw::ux;
+using namespace kekw;
 
 shader::shader() : id_(0), shaders_() {}
 
@@ -23,8 +23,7 @@ void shader::add_stage_file(GLenum stage, std::string const &path) {
         throw std::runtime_error("Cannot add stages to a compiled program.");
     }
 
-    this->add_stage(
-        stage, kekw::util::read_file(kekw::util::get_absolute_path(path).string()));
+    this->add_stage(stage, read_file(get_absolute_path(path).string()));
 }
 
 void shader::add_stage(GLenum stage, std::string const &source) {
@@ -113,7 +112,7 @@ void shader::delete_shaders() {
 
 static auto map_instance = std::unordered_map<std::string, std::unique_ptr<shader>>();
 
-shader *kekw::ux::register_shader(std::string const &name) {
+shader *kekw::register_shader(std::string const &name) {
     if (map_instance.count(name)) {
         auto message = fmt::format("shader '{0}' is already registered", name);
         throw std::invalid_argument(message);
@@ -123,6 +122,6 @@ shader *kekw::ux::register_shader(std::string const &name) {
     return map_instance.find(name)->second.get();
 }
 
-const shader *kekw::ux::get_shader(std::string const &name) {
+const shader *kekw::get_shader(std::string const &name) {
     return map_instance.find(name)->second.get();
 }

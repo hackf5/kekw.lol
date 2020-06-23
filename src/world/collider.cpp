@@ -7,7 +7,7 @@
 
 #include <limits>
 
-using namespace kekw::world;
+using namespace kekw;
 
 bool mesh_collider::hit_test(
     vec3_param_t origin_w, vec3_param_t direction_w, real_t& distance) {

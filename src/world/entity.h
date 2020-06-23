@@ -11,8 +11,6 @@ class initialize_context;
 class update_context;
 class render_context;
 
-namespace world {
-
 class entity : public spatial {
    public:
     entity() : spatial() {}
@@ -22,5 +20,4 @@ class entity : public spatial {
     virtual void on_render(render_context* context) = 0;
 };
 
-}  // namespace world
 }  // namespace kekw

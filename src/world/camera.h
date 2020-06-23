@@ -3,7 +3,6 @@
 #include "spatial.h"
 
 namespace kekw {
-namespace world {
 
 class camera : public spatial {
    public:
@@ -60,5 +59,4 @@ class camera : public spatial {
     mat4 projection_;
 };
 
-}  // namespace world
 }  // namespace kekw

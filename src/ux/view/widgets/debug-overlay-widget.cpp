@@ -2,7 +2,7 @@
 
 #include "imgui/extensions.h"
 
-using namespace kekw::ux::view::widgets;
+using namespace kekw;
 
 void debug_overlay_widget::update(window_context* info) {
     // FIXME-VIEWPORT: Select a default viewport

@@ -28,7 +28,8 @@
 
 #include <memory>
 
-namespace vw = kekw::ux::view;
+using namespace kekw;
+
 namespace md = kekw::mod;
 
 std::shared_ptr<md::recruit_env> create_recruit_env(md::index_t max_size) {
@@ -45,12 +46,12 @@ std::shared_ptr<md::recruit_env> create_recruit_env(md::index_t max_size) {
 }
 
 int main(int argc, char *argv[]) {
-    kekw::util::set_exe_path(std::string(argv[0]));
+    set_exe_path(std::string(argv[0]));
 
     // TODO: there may be some perf issues here, see
     // https://github.com/gabime/spdlog/wiki
     auto file_logger = spdlog::basic_logger_mt<spdlog::async_factory>(
-        "basic_logger", kekw::util::get_absolute_path("logs/log.txt").string());
+        "basic_logger", get_absolute_path("logs/log.txt").string());
     file_logger->flush_on(spdlog::level::debug);
     spdlog::set_default_logger(file_logger);
 
@@ -61,25 +62,18 @@ int main(int argc, char *argv[]) {
     auto recruit_env = create_recruit_env(4);
     recruit_env->refresh();
 
-    auto camera = kekw::world::camera();
-    auto scene = std::make_shared<kekw::ux::scenes::recruit_scene>(
-        std::make_unique<kekw::world::camera>(),
-        std::make_unique<kekw::ux::scenes::card_entity>());
+    auto scene = std::make_shared<recruit_scene>(
+        std::make_unique<camera>(), std::make_unique<card_entity>());
 
-    vw::window_manager manager;
-    manager.add_layer(std::make_unique<vw::scene_window_layer>(scene));
+    window_manager manager;
+    manager.add_layer(std::make_unique<scene_window_layer>(scene));
 
-    // manager.add_layer(std::unique_ptr<vw::window_layer>(
-    //     new vw::recruit_window_layer(recruit_env, scene->cam())));
+    auto ux_layer = std::unique_ptr<ux_window_layer>(new ux_window_layer());
+    ux_layer->add_widget(std::unique_ptr<ux_window_widget>(new test_widget(recruit_env)));
 
-    auto ux_layer = std::unique_ptr<vw::ux_window_layer>(new vw::ux_window_layer());
+    ux_layer->add_widget(std::unique_ptr<ux_window_widget>(new debug_overlay_widget()));
     ux_layer->add_widget(
-        std::unique_ptr<vw::ux_window_widget>(new vw::widgets::test_widget(recruit_env)));
-
-    ux_layer->add_widget(
-        std::unique_ptr<vw::ux_window_widget>(new vw::widgets::debug_overlay_widget()));
-    ux_layer->add_widget(std::unique_ptr<vw::ux_window_widget>(
-        new vw::widgets::camera_widget(scene->cam())));
+        std::unique_ptr<ux_window_widget>(new camera_widget(scene->cam())));
     manager.add_layer(std::move(ux_layer));
 
     manager.start();

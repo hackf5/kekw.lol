@@ -13,13 +13,9 @@
 
 #include <memory>
 
-using namespace kekw::world;
-
 namespace kekw {
-namespace ux {
-namespace scenes {
 
-class card_renderer : public kekw::world::renderer {
+class card_renderer : public renderer {
    public:
     card_renderer(real_t width, real_t height) : width_(width), height_(height) {}
 
@@ -76,8 +72,8 @@ class card_renderer : public kekw::world::renderer {
 
     real_t height() const { return this->height_; }
 
-    inline const kekw::ux::shader* get_shader() const override {
-        return kekw::ux::get_shader("default");
+    inline const shader* get_shader() const override {
+        return kekw::get_shader("default");
     }
 
     void render(const entity* entity) override {
@@ -95,15 +91,13 @@ class card_renderer : public kekw::world::renderer {
     real_t width_, height_;
 };
 
-class recruit_scene : public kekw::world::scene {
+class recruit_scene : public scene {
    public:
-    recruit_scene(
-        std::unique_ptr<kekw::world::camera> cam,
-        std::unique_ptr<kekw::world::entity> root)
+    recruit_scene(std::unique_ptr<camera> cam, std::unique_ptr<entity> root)
         : scene(std::move(cam), std::move(root)) {}
 
     void on_initialize(initialize_context* context) override {
-        auto shader = kekw::ux::register_shader("default");
+        auto shader = register_shader("default");
         shader->add_stage_file(GL_VERTEX_SHADER, "glsl/default.vert");
         shader->add_stage_file(GL_FRAGMENT_SHADER, "glsl/card.frag");
         shader->compile();
@@ -140,7 +134,7 @@ class recruit_scene : public kekw::world::scene {
     };
 
     void on_render(render_context* context) override {
-        auto shader = kekw::ux::get_shader("default");
+        auto shader = get_shader("default");
         shader->use();
         shader->set("projection", this->projection_);
         shader->set("view", this->view_);
@@ -149,11 +143,9 @@ class recruit_scene : public kekw::world::scene {
     };
 
    private:
-    std::unique_ptr<kekw::world::scene> scene_;
+    std::unique_ptr<scene> scene_;
     mat4 projection_;
     mat4 view_;
 };
 
-}  // namespace scenes
-}  // namespace ux
 }  // namespace kekw

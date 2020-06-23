@@ -32,22 +32,22 @@ class window_context {
 
 class context_base {
    public:
-    context_base(const window_context *window_ctx, kekw::world::scene *scene)
+    context_base(const window_context *window_ctx, kekw::scene *scene)
         : window_ctx_(window_ctx), scene_(scene) {}
     virtual ~context_base() {}
 
     inline const window_context *window_ctx() const { return this->window_ctx_; };
 
-    inline kekw::world::scene *scene() const { return this->scene_; }
+    inline kekw::scene *scene() const { return this->scene_; }
 
    private:
     const window_context *const window_ctx_;
-    kekw::world::scene *const scene_;
+    kekw::scene *const scene_;
 };
 
 class initialize_context : public context_base {
    public:
-    initialize_context(const window_context *window_ctx, kekw::world::scene *scene)
+    initialize_context(const window_context *window_ctx, kekw::scene *scene)
         : context_base(window_ctx, scene) {}
 
     virtual void register_service(
@@ -58,19 +58,19 @@ class initialize_context : public context_base {
 
 class update_context : public context_base {
    public:
-    update_context(const window_context *window_ctx, kekw::world::scene *scene)
+    update_context(const window_context *window_ctx, kekw::scene *scene)
         : context_base(window_ctx, scene) {}
 
-    virtual kekw::world::vec3_ret_t get_mouse_ray() const = 0;
+    virtual vec3_ret_t get_mouse_ray() const = 0;
 
-    virtual void set_mouse_ray(kekw::world::vec3_param_t ray) = 0;
+    virtual void set_mouse_ray(vec3_param_t ray) = 0;
 
     virtual const update_context *previous_context() = 0;
 };
 
 class render_context : public context_base {
    public:
-    render_context(const window_context *window_ctx, kekw::world::scene *scene)
+    render_context(const window_context *window_ctx, kekw::scene *scene)
         : context_base(window_ctx, scene) {}
 };
 

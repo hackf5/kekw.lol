@@ -5,7 +5,6 @@
 #include <memory>
 
 namespace kekw {
-namespace world {
 
 class spatial : public transform {
    public:
@@ -31,5 +30,4 @@ class spatial : public transform {
     spatial* parent_;
 };
 
-}  // namespace world
 }  // namespace kekw

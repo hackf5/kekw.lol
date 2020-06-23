@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-using namespace kekw::ux::scenes;
+using namespace kekw;
 
 const box_mesh_2d card_entity::MESH = box_mesh_2d(1, 88.0f / 62.0f);
 
