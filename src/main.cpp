@@ -14,7 +14,6 @@
 
 #include <src/ux/view/window-manager.h>
 #include <src/ux/view/ux-window-layer.h>
-#include <src/ux/view/recruit-window-layer.h>
 #include <src/ux/view/scene-window-layer.h>
 
 #include <src/ux/view/widgets/test-widget.h>
