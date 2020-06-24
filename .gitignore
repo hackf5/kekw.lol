@@ -37,3 +37,4 @@ bin/
 
 # Transients
 imgui.ini
+.vscode/c_cpp_properties.json

@@ -8,7 +8,6 @@ const box_mesh_2d card_entity::MESH = box_mesh_2d(1, 88.0f / 62.0f);
 
 void card_entity::on_initialize(initialize_context* context) {
     this->renderer_ = context->locate_service("card_renderer");
-    this->set_position(vec3(0, 0.f, -10.0f));
 }
 
 void card_entity::on_update(update_context* context) {

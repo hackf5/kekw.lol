@@ -57,7 +57,7 @@ void card_renderer::initialize() {
 void card_renderer::render(const entity* entity) {
     auto shader = this->get_shader();
     shader->use();
-    shader->set("model", entity->matrix());
+    shader->set("model", entity->abs_matrix());
 
     glBindVertexArray(this->vao_);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
