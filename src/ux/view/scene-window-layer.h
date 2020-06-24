@@ -19,7 +19,7 @@ class scene_window_layer : public window_layer {
 
    private:
     std::shared_ptr<scene> scene_;
-    std::unique_ptr<update_context> previous_context_;
+    std::unique_ptr<update_context> last_update_ctx;
 };
 
 }  // namespace kekw

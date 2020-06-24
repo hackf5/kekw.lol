@@ -1,5 +1,6 @@
 #include "scene-window-layer.h"
 
+#include <limits>
 #include <unordered_map>
 
 using namespace kekw;
@@ -27,17 +28,39 @@ class update_context_impl : public update_context {
 
    public:
     update_context_impl(const kekw::window_context *window_ctx, kekw::scene *scene)
-        : update_context(window_ctx, scene) {}
+        : update_context(window_ctx, scene),
+          hit_distance_(std::numeric_limits<real_t>::max()),
+          hit_id_(false) {}
 
-    vec3_ret_t get_mouse_ray() const override { return this->mouse_ray_; };
+    inline vec3_ret_t get_mouse_ray() const override { return this->mouse_ray_; };
 
-    void set_mouse_ray(vec3_param_t ray) override { this->mouse_ray_ = ray; };
+    inline void set_mouse_ray(vec3_param_t ray) override { this->mouse_ray_ = ray; };
 
-    inline const update_context *previous_context() { return this->previous_context_; }
+    void register_hit(unsigned long id, real_t distance) override {
+        if (distance < this->hit_distance_) {
+            this->hit_distance_ = distance;
+            this->hit_id_ = id;
+        }
+    }
+
+    unsigned long get_hit_id() const override { return this->hit_id_; }
 
    private:
-    update_context_impl *previous_context_;
     vec3 mouse_ray_;
+    real_t hit_distance_;
+    unsigned long hit_id_;
+};
+
+class render_context_impl : public render_context {
+   public:
+    render_context_impl(
+        const window_context *window_ctx, kekw::scene *scene, update_context *update_ctx)
+        : render_context(window_ctx, scene), update_ctx_(update_ctx) {}
+
+    const update_context *update_ctx() override { return this->update_ctx_; };
+
+   private:
+    update_context *update_ctx_;
 };
 
 void scene_window_layer::initialize(window_context *context) {
@@ -45,23 +68,17 @@ void scene_window_layer::initialize(window_context *context) {
 
     this->scene_->on_initialize(&ctx);
 
-    this->previous_context_ =
+    this->last_update_ctx =
         std::make_unique<update_context_impl>(context, this->scene_.get());
 }
 
 void scene_window_layer::update(window_context *context) {
     auto ctx = std::make_unique<update_context_impl>(context, this->scene_.get());
-    ctx->previous_context_ =
-        dynamic_cast<update_context_impl *>(this->previous_context_.get());
-
     this->scene_->on_update(ctx.get());
-
-    // prevent an infinite chain of contexts.
-    ctx->previous_context_ = nullptr;
-    this->previous_context_ = std::move(ctx);
+    this->last_update_ctx = std::move(ctx);
 }
 
 void scene_window_layer::render(window_context *context) {
-    render_context ctx(context, this->scene_.get());
+    render_context_impl ctx(context, this->scene_.get(), this->last_update_ctx.get());
     this->scene_->on_render(&ctx);
 }

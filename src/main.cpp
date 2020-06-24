@@ -23,7 +23,7 @@
 
 #include <src/world/camera.h>
 
-#include <src/ux/scenes/common/card-band-entity.h>
+#include <src/ux/scenes/recruit/recruit-scene-entity.h>
 
 #include <memory>
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     recruit_env->refresh();
 
     auto scene = std::make_shared<recruit_scene>(
-        std::make_unique<camera>(), std::make_unique<card_band_entity>());
+        std::make_unique<camera>(), std::make_unique<recruit_scene_entity>());
 
     window_manager manager;
     manager.add_layer(std::make_unique<scene_window_layer>(scene));

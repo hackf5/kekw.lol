@@ -65,13 +65,17 @@ class update_context : public context_base {
 
     virtual void set_mouse_ray(vec3_param_t ray) = 0;
 
-    virtual const update_context *previous_context() = 0;
+    virtual void register_hit(unsigned long id, real_t distance) = 0;
+
+    virtual unsigned long get_hit_id() const = 0;
 };
 
 class render_context : public context_base {
    public:
     render_context(const window_context *window_ctx, kekw::scene *scene)
         : context_base(window_ctx, scene) {}
+
+    virtual const update_context *update_ctx() = 0;
 };
 
 }  // namespace kekw

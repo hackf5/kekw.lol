@@ -16,9 +16,7 @@ namespace kekw {
 class card_entity : public entity {
    public:
     card_entity()
-        : entity(),
-          collider_(std::make_unique<mesh_collider>(this, &MESH)),
-          is_hit_(false) {}
+        : entity(), collider_(std::make_unique<mesh_collider>(this, &MESH)), id_(ID++) {}
 
     void on_initialize(initialize_context* context) override;
     void on_update(update_context* context) override;
@@ -26,6 +24,7 @@ class card_entity : public entity {
 
    private:
     static const box_mesh_2d MESH;
+    static unsigned long ID;
 
     inline renderer* get_renderer() {
         return static_cast<renderer*>(this->renderer_.get());
@@ -33,7 +32,8 @@ class card_entity : public entity {
 
     std::unique_ptr<collider> collider_;
     std::shared_ptr<void> renderer_;
-    bool is_hit_;
+
+    unsigned long id_;
 };
 
 }  // namespace kekw

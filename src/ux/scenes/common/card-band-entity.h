@@ -14,8 +14,6 @@ class card_band_entity : public entity {
     card_band_entity() : entity(), cards_() {}
 
     void on_initialize(initialize_context* context) override {
-        this->set_position(vec3(0, 0.f, -10.0f));
-
         for (int i = 0; i != 6; i++) {
             this->cards_.push_back(std::make_unique<card_entity>());
         }
