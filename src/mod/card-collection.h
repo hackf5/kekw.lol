@@ -3,7 +3,7 @@
 #include "mod-types.h"
 #include "card.h"
 
-#include <fmt/format.h>
+#include <spdlog/fmt/bundled/format.h>
 
 #include <memory>
 #include <string>

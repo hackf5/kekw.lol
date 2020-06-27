@@ -1,6 +1,6 @@
 #include "file-utils.h"
 
-#include <fmt/format.h>
+#include <spdlog/fmt/bundled/format.h>
 #include <iterator>
 #include <stdexcept>
 

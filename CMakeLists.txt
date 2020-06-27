@@ -14,15 +14,21 @@ set(MOD_LIB_TARGET mod_lib)
 set(WLD_LIB_TARGET wld_lib)
 set(MAIN_EXE_TARGET main_exe)
 
-SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.dll.a")
-SET(BUILD_SHARED_LIBS OFF)
-SET(CMAKE_EXE_LINKER_FLAGS "-static")
+if (WIN32)
+  SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.dll.a")
+  SET(BUILD_SHARED_LIBS OFF)
+  SET(CMAKE_EXE_LINKER_FLAGS "-static")
+endif()
 
 # compiler flags
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -mwindows -DGLM_FORCE_SWIZZLE") # prevents a console window from being spawned
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DGLM_FORCE_SWIZZLE") # prevents a console window from being spawned
+
+if(WIN32)
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -mwindows") # prevents a console window from being spawned
+endif()
 
 # output paths
 set(OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
@@ -39,7 +45,10 @@ include_directories(${PROJECT_SOURCE_DIR}/extern/imgui)
 include_directories(${PROJECT_SOURCE_DIR}/extern/glm)
 
 # external input paths - need converting to submodules
-include_directories(C:/dev/cpplibs/usr/include)
+
+include_directories($ENV{CXX_INCLUDE_DIR})
+
+# include_directories(C:/dev/cpplibs/usr/include)
 
 # mod lib
 add_library(${MOD_LIB_TARGET} "")

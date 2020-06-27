@@ -3,7 +3,7 @@
 #include <src/ux/util/file-utils.h>
 
 #include <glm/ext.hpp>
-#include <fmt/format.h>
+#include <spdlog/fmt/bundled/format.h>
 
 #include <stdexcept>
 #include <unordered_map>

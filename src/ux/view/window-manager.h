@@ -53,7 +53,7 @@ class window_context_impl : public window_context {
 
     inline void *get_window() const override { return this->window_; }
 
-    inline bool has_focus() const { return this->has_focus_; }
+    inline bool has_focus() const override { return this->has_focus_; }
     inline double window_width() const override { return this->window_width_; }
     inline double window_height() const override { return this->window_height_; }
 
@@ -62,7 +62,7 @@ class window_context_impl : public window_context {
 
     mouse_button_state const *left_mouse_button() const override;
 
-    mouse_button_state const *right_mouse_button() const;
+    mouse_button_state const *right_mouse_button() const override;
 
     void before_poll_events();
 

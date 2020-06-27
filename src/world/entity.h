@@ -15,9 +15,9 @@ class entity : public spatial {
    public:
     entity() : spatial() {}
 
-    virtual void on_initialize(initialize_context* context) = 0;
-    virtual void on_update(update_context* context) = 0;
-    virtual void on_render(render_context* context) = 0;
+    virtual void on_initialize(initialize_context* context){};
+    virtual void on_update(update_context* context){};
+    virtual void on_render(render_context* context){};
 };
 
 }  // namespace kekw

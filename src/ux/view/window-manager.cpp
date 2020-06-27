@@ -82,7 +82,9 @@ window_manager::window_manager() : window_(0), layers_(), window_context_() {
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 
     // required for Mac OS X
-    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     const auto window_width = 1280;
     const auto window_height = 720;
