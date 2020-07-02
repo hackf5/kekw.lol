@@ -35,12 +35,16 @@ void ux_window_layer::initialize(window_context *context) {
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // 4k monitor
-    auto SCALE = 2.0f;
-    ImFontConfig cfg;
-    cfg.SizePixels = 13 * SCALE;
-    ImGui::GetIO().Fonts->AddFontDefault(&cfg)->DisplayOffset.y = SCALE;
-    ImGui::GetStyle().ScaleAllSizes(SCALE);
-    ImGui::GetIO().FontGlobalScale = SCALE / 2;
+    auto virtual_res = context->window_dims() / context->content_scale();
+    if (virtual_res.x > 2000) {
+        // this is a bit hacky, but seems like a reasonable test for a 4k monitor.
+        auto SCALE = 2.0f;
+        ImFontConfig cfg;
+        cfg.SizePixels = 13 * SCALE;
+        ImGui::GetIO().Fonts->AddFontDefault(&cfg)->DisplayOffset.y = SCALE;
+        ImGui::GetStyle().ScaleAllSizes(SCALE);
+        ImGui::GetIO().FontGlobalScale = SCALE / 2;
+    }
 
     ImGui::StyleColorsDark();
 

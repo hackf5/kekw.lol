@@ -39,7 +39,9 @@ void debug_overlay_widget::update(window_context* context) {
         ImGui::Separator();
         if (context->has_focus())
             ImGui::Text(
-                "Mouse Position: (%.1f,%.1f)", context->mouse_x(), context->mouse_y());
+                "Mouse Position: (%.1f,%.1f)",
+                context->mouse_coords().x,
+                context->mouse_coords().y);
         else
             ImGui::Text("Mouse Position: <invalid>");
 

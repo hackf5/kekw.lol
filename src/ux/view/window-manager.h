@@ -54,11 +54,10 @@ class window_context_impl : public window_context {
     inline void *get_window() const override { return this->window_; }
 
     inline bool has_focus() const override { return this->has_focus_; }
-    inline double window_width() const override { return this->window_width_; }
-    inline double window_height() const override { return this->window_height_; }
-
-    inline double mouse_x() const override { return this->mouse_x_; }
-    inline double mouse_y() const override { return this->mouse_y_; }
+    inline vec2 window_dims() const override { return this->window_dims_; }
+    inline vec2 content_scale() const override { return this->content_scale_; }
+    inline vec2 screen_resolution() const override { return this->screen_resolution_; }
+    inline vec2 mouse_coords() const override { return this->mouse_coords_; }
 
     mouse_button_state const *left_mouse_button() const override;
 
@@ -68,9 +67,8 @@ class window_context_impl : public window_context {
 
     inline void after_poll_events();
 
-    inline void update_dimensions(double width, double height) {
-        this->window_width_ = width;
-        this->window_height_ = height;
+    inline void update_dimensions(float width, float height) {
+        this->window_dims_ = vec2(width, height);
     }
 
     inline mouse_button_state_impl *left_mouse_button() {
@@ -84,11 +82,11 @@ class window_context_impl : public window_context {
    private:
     GLFWwindow *window_;
 
-    int window_width_;
-    int window_height_;
     bool has_focus_;
-    double mouse_x_;
-    double mouse_y_;
+    vec2 window_dims_;
+    vec2 mouse_coords_;
+    vec2 content_scale_;
+    vec2 screen_resolution_;
 
     const std::unique_ptr<mouse_button_state_impl> left_mouse_button_state_;
     const std::unique_ptr<mouse_button_state_impl> right_mouse_button_state_;

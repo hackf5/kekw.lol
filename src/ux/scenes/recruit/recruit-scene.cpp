@@ -21,9 +21,8 @@ void recruit_scene::on_initialize(initialize_context* context) {
 
     auto window_ctx = context->window_ctx();
     this->cam()->set_aspect_ratio(
-        window_ctx->window_width() / window_ctx->window_height());
-    this->cam()->set_viewport(
-        vec4(0.f, 0.f, window_ctx->window_width(), window_ctx->window_height()));
+        window_ctx->window_dims().x / window_ctx->window_dims().y);
+    this->cam()->set_viewport(vec4(0.f, 0.f, window_ctx->window_dims()));
     this->cam()->set_position(glm::zero<vec3>());
 
     this->root()->on_initialize(context);
@@ -32,9 +31,8 @@ void recruit_scene::on_initialize(initialize_context* context) {
 void recruit_scene::on_update(update_context* context) {
     auto window_ctx = context->window_ctx();
     this->cam()->set_aspect_ratio(
-        window_ctx->window_width() / window_ctx->window_height());
-    this->cam()->set_viewport(
-        glm::vec4(0.f, 0.f, window_ctx->window_width(), window_ctx->window_height()));
+        window_ctx->window_dims().x / window_ctx->window_dims().y);
+    this->cam()->set_viewport(glm::vec4(0.f, 0.f, window_ctx->window_dims()));
     this->cam()->look_at(glm::vec4(0.f, 0.f, -10.0f, 1.f));
 
     // the camera transforms need to be stored immediately after look_at as the camera
@@ -42,11 +40,11 @@ void recruit_scene::on_update(update_context* context) {
     this->projection_ = this->cam()->get_projection();
     this->view_ = this->cam()->get_view();
 
-    auto mouse_x = window_ctx->mouse_x();
-    auto mouse_y = this->cam()->get_viewport().w - window_ctx->mouse_y();
-    auto mouse_screen = glm::vec2(mouse_x, mouse_y);
-    auto v0 = this->cam()->to_world_coords(glm::vec3(mouse_screen, 0.f));
-    auto v1 = this->cam()->to_world_coords(glm::vec3(mouse_screen, 1.f));
+    auto mouse_x = window_ctx->mouse_coords().x;
+    auto mouse_y = this->cam()->get_viewport().w - window_ctx->mouse_coords().y;
+    auto mouse_screen = vec2(mouse_x, mouse_y);
+    auto v0 = this->cam()->to_world_coords(vec3(mouse_screen, 0.f));
+    auto v1 = this->cam()->to_world_coords(vec3(mouse_screen, 1.f));
     context->set_mouse_ray(glm::normalize(v1 - v0));
 
     this->root()->on_update(context);
