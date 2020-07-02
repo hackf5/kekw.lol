@@ -105,6 +105,10 @@ void shader::set(const std::string &name, mat4_param_t value) const {
         glm::value_ptr(value));
 }
 
+void shader::set(const std::string &name, vec4_param_t value) const {
+    glUniform4fv(glGetUniformLocation(this->id_, name.c_str()), 1, glm::value_ptr(value));
+}
+
 void shader::delete_shaders() {
     for (auto it = this->shaders_.begin(); it != this->shaders_.end(); ++it) {
         glDeleteShader(std::get<1>(*it));

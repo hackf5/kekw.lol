@@ -24,6 +24,7 @@ class shader {
     void set(std::string const &name, GLint value) const;
     void set(std::string const &name, GLfloat value) const;
     void set(std::string const &name, mat4_param_t value) const;
+    void set(std::string const &name, vec4_param_t value) const;
 
    private:
     typedef std::tuple<GLenum, GLuint> stage_t;

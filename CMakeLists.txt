@@ -43,6 +43,7 @@ include_directories(${PROJECT_SOURCE_DIR}/extern/glfw/include)
 include_directories(${PROJECT_SOURCE_DIR}/extern)
 include_directories(${PROJECT_SOURCE_DIR}/extern/imgui)
 include_directories(${PROJECT_SOURCE_DIR}/extern/glm)
+include_directories(${PROJECT_SOURCE_DIR}/extern/vivid/include)
 
 # external input paths - need converting to submodules
 
@@ -55,7 +56,7 @@ add_library(${MOD_LIB_TARGET} "")
 set_target_properties(${MOD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwmod")
 target_link_libraries(${MOD_LIB_TARGET} spdlog::spdlog)
 
-# mod lib
+# wld lib
 add_library(${WLD_LIB_TARGET} "")
 set_target_properties(${WLD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwwld")
 target_link_libraries(${WLD_LIB_TARGET} spdlog::spdlog)
@@ -65,6 +66,7 @@ add_library(${UX_LIB_TARGET} "")
 set_target_properties(${UX_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwux")
 target_link_libraries(${UX_LIB_TARGET} glfw)
 target_link_libraries(${UX_LIB_TARGET} spdlog::spdlog)
+target_link_libraries(${UX_LIB_TARGET} vivid::vivid)
 target_link_libraries(${UX_LIB_TARGET} ${MOD_LIB_TARGET})
 target_link_libraries(${UX_LIB_TARGET} ${WLD_LIB_TARGET})
 
@@ -74,6 +76,7 @@ add_executable(${MAIN_EXE_TARGET} "")
 set_target_properties(${MAIN_EXE_TARGET} PROPERTIES OUTPUT_NAME "kekw")
 target_link_libraries(${MAIN_EXE_TARGET} glfw)
 target_link_libraries(${MAIN_EXE_TARGET} spdlog::spdlog)
+target_link_libraries(${MAIN_EXE_TARGET} vivid::vivid)
 target_link_libraries(${MAIN_EXE_TARGET} ${UX_LIB_TARGET})
 target_link_libraries(${MAIN_EXE_TARGET} ${MOD_LIB_TARGET})
 target_link_libraries(${MAIN_EXE_TARGET} ${WLD_LIB_TARGET})

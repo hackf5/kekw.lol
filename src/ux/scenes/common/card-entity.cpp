@@ -27,9 +27,9 @@ void card_entity::on_render(render_context* context) {
     shader->use();
 
     if (this->id_ == context->update_ctx()->get_hit_id()) {
-        shader->set("state", 1);
+        shader->set("color", vec4(vivid::Color("#B20D30").value(), 1.0));
     } else {
-        shader->set("state", 0);
+        shader->set("color", vec4(this->color_.value(), 1.0));
     }
 
     r->render(this);

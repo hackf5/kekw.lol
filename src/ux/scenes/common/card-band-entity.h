@@ -3,6 +3,7 @@
 #include "card-entity.h"
 
 #include <src/world/entity.h>
+#include <vivid/vivid.h>
 
 #include <vector>
 #include <memory>
@@ -18,10 +19,15 @@ class card_band_entity : public entity {
             this->cards_.push_back(std::make_unique<card_entity>());
         }
 
-        for (auto it = this->cards_.begin(); it != this->cards_.end(); ++it) {
+        auto start_color = vivid::Color("#3F84E5");
+        auto end_color = vivid::Color("#BAF2E9");
+        int index = 0;
+        for (auto it = this->cards_.begin(); it != this->cards_.end(); ++it, ++index) {
             auto card = it->get();
             card->set_parent(this);
             card->on_initialize(context);
+            card->set_color(vivid::lerpLch(
+                start_color, end_color, (float)index / this->cards_.size()));
         }
     }
 

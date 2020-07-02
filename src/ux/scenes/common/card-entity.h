@@ -9,6 +9,8 @@
 #include <src/world/collider.h>
 #include <src/world/renderer.h>
 
+#include <vivid/vivid.h>
+
 #include <memory>
 
 namespace kekw {
@@ -22,6 +24,9 @@ class card_entity : public entity {
     void on_update(update_context* context) override;
     void on_render(render_context* context) override;
 
+    inline const vivid::Color& get_color() const { return this->color_; }
+    inline void set_color(const vivid::Color& value) { this->color_ = value; }
+
    private:
     static const box_mesh_2d MESH;
     static unsigned long ID;
@@ -34,6 +39,7 @@ class card_entity : public entity {
     std::shared_ptr<void> renderer_;
 
     unsigned long id_;
+    vivid::Color color_;
 };
 
 }  // namespace kekw

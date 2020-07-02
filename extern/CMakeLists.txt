@@ -12,6 +12,11 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/spdlog")
 # glm doesn't need building
 # add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/glm")
 
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/json")
+
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/vivid")
+
 # dear imgui
 target_sources(${UX_LIB_TARGET}
     PRIVATE
