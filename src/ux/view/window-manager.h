@@ -59,9 +59,9 @@ class window_context_impl : public window_context {
     inline vec2 screen_resolution() const override { return this->screen_resolution_; }
     inline vec2 mouse_coords() const override { return this->mouse_coords_; }
 
-    mouse_button_state const *left_mouse_button() const override;
+    mouse_button_state *left_mouse_button() const override;
 
-    mouse_button_state const *right_mouse_button() const override;
+    mouse_button_state *right_mouse_button() const override;
 
     void before_poll_events();
 

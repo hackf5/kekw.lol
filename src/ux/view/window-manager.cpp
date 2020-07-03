@@ -5,6 +5,7 @@
 
 #include <src/ux/util/file-utils.h>
 
+#include <string>
 #include <stdexcept>
 
 using namespace kekw;
@@ -13,9 +14,24 @@ namespace kekw {
 
 class mouse_button_state_impl : public mouse_button_state {
    public:
-    inline bool is_down() override { return this->is_down_; }
-    inline bool is_click() override { return this->is_click_; }
-    inline bool is_click_release() override { return this->is_click_release_; }
+    inline bool is_down() const override { return this->is_down_; }
+    inline bool is_click() const override { return this->is_click_; }
+    inline bool is_click_release() const override { return this->is_click_release_; }
+
+    inline void begin_drag(unsigned long id, mat4_param_t transform) override {
+        if (id == 0) {
+            throw std::invalid_argument("id cannot be 0");
+        }
+
+        if (!this->is_click()) {
+            throw std::runtime_error("can only begin drag on click");
+        }
+
+        this->drag_id_ = id;
+        this->drag_transform_ = transform;
+    }
+
+    inline bool is_dragging(unsigned long id) override { return this->drag_id_ == id; }
 
     void before_poll_events() {
         this->is_click_ = false;
@@ -31,8 +47,12 @@ class mouse_button_state_impl : public mouse_button_state {
         if (this->is_down_) {
             // then !is_down;
             this->is_click_release_ = true;
+            this->drag_id_ = 0;
+            this->drag_transform_ = glm::identity<mat4>();
+            this->is_down_ = false;
         } else {
             this->is_click_ = true;
+            this->is_down_ = true;
         }
     }
 
@@ -40,6 +60,9 @@ class mouse_button_state_impl : public mouse_button_state {
     bool is_down_;
     bool is_click_release_;
     bool is_click_;
+
+    unsigned long drag_id_;
+    mat4 drag_transform_;
 };
 
 }  // namespace kekw
@@ -56,11 +79,11 @@ window_context_impl::window_context_impl(GLFWwindow *window)
     this->screen_resolution_ = vec2(scr_x, scr_y);
 }
 
-mouse_button_state const *window_context_impl::left_mouse_button() const {
+mouse_button_state *window_context_impl::left_mouse_button() const {
     return this->left_mouse_button_state_.get();
 }
 
-mouse_button_state const *window_context_impl::right_mouse_button() const {
+mouse_button_state *window_context_impl::right_mouse_button() const {
     return this->right_mouse_button_state_.get();
 }
 

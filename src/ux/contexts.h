@@ -9,9 +9,12 @@ class mouse_button_state {
    public:
     virtual ~mouse_button_state() {}
 
-    virtual bool is_down() = 0;
-    virtual bool is_click() = 0;
-    virtual bool is_click_release() = 0;
+    virtual bool is_down() const = 0;
+    virtual bool is_click() const = 0;
+    virtual bool is_click_release() const = 0;
+
+    virtual void begin_drag(unsigned long id, mat4_param_t transform) = 0;
+    virtual bool is_dragging(unsigned long id) = 0;
 };
 
 class window_context {
@@ -26,8 +29,8 @@ class window_context {
     virtual vec2 screen_resolution() const = 0;
     virtual vec2 mouse_coords() const = 0;
 
-    virtual mouse_button_state const *left_mouse_button() const = 0;
-    virtual mouse_button_state const *right_mouse_button() const = 0;
+    virtual mouse_button_state *left_mouse_button() const = 0;
+    virtual mouse_button_state *right_mouse_button() const = 0;
 };
 
 class context_base {
