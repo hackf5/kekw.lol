@@ -23,3 +23,6 @@
 	path = extern/json
 	url = https://github.com/nlohmann/json.git
 	branch = master
+[submodule "extern/vivid"]
+	path = extern/vivid
+	url = https://github.com/hackf5/vivid.git
