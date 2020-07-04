@@ -19,7 +19,7 @@ class mouse_button_state_impl : public mouse_button_state {
     inline bool is_click() const override { return this->is_click_; }
     inline bool is_click_release() const override { return this->is_click_release_; }
 
-    inline void begin_drag(unsigned long id, mat4_param_t transform) override {
+    inline void begin_drag(unsigned long id, vec3_param_t intersect) override {
         if (id == 0) {
             throw std::invalid_argument("id cannot be 0");
         }
@@ -29,14 +29,16 @@ class mouse_button_state_impl : public mouse_button_state {
         }
 
         this->drag_id_ = id;
-        this->drag_transform_ = transform;
+        this->drag_intersect_ = intersect;
     }
 
     inline bool is_dragging(unsigned long id) const override {
         return this->drag_id_ == id;
     }
 
-    inline mat4 get_drag_transform() const override { return this->drag_transform_; }
+    inline vec3_ret_t get_drag_intersect() const override {
+        return this->drag_intersect_;
+    }
 
     void before_poll_events() {
         this->is_click_ = false;
@@ -53,7 +55,6 @@ class mouse_button_state_impl : public mouse_button_state {
             // then !is_down;
             this->is_click_release_ = true;
             this->drag_id_ = 0;
-            this->drag_transform_ = glm::identity<mat4>();
             this->is_down_ = false;
         } else {
             this->is_click_ = true;
@@ -67,7 +68,7 @@ class mouse_button_state_impl : public mouse_button_state {
     bool is_click_;
 
     unsigned long drag_id_;
-    mat4 drag_transform_;
+    vec3 drag_intersect_;
 };
 
 }  // namespace kekw

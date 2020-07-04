@@ -25,12 +25,17 @@ void card_entity::on_update(update_context* context) {
 void card_entity::on_render(render_context* context) {
     if (context->window_ctx()->left_mouse_button()->is_click() &&
         this->id_ == context->update_ctx()->get_hit_id()) {
-        auto position = (this->abs_matrix() * vec4(transform::origin, 1.f)).xyz();
-        auto t = glm::translate(
-            this->abs_matrix(),
-            context->update_ctx()->get_drag_plane_intercept() - position);
+        auto centre = (this->abs_matrix() * vec4(transform::origin, 1.f)).xyz();
+        real_t distance;
+        this->collider_->hit_test(
+            context->scene()->cam()->position(),
+            context->update_ctx()->get_mouse_ray(),
+            distance);
 
-        context->window_ctx()->left_mouse_button()->begin_drag(this->id_, t);
+        auto intersect = context->scene()->cam()->position() +
+                         context->update_ctx()->get_mouse_ray() * distance;
+
+        context->window_ctx()->left_mouse_button()->begin_drag(this->id_, intersect);
     }
 
     auto r = this->get_renderer();
@@ -38,11 +43,13 @@ void card_entity::on_render(render_context* context) {
     shader->use();
 
     if (context->window_ctx()->left_mouse_button()->is_dragging(this->id_)) {
-        auto drag_transform =
-            context->window_ctx()->left_mouse_button()->get_drag_transform();
-        auto position = (drag_transform * vec4(transform::origin, 1.f)).xyz();
+        auto position = (this->abs_matrix() * vec4(transform::origin, 1.f)).xyz();
+
         auto t = glm::translate(
-            drag_transform, context->update_ctx()->get_drag_plane_intercept() - position);
+            this->abs_matrix(),
+            context->update_ctx()->get_drag_plane_intercept() -
+                context->window_ctx()->left_mouse_button()->get_drag_intersect());
+
         shader->set("model", t);
         shader->set("color", vec4(vivid::Color("#B0F2B4").value(), 1.0));
     } else {
