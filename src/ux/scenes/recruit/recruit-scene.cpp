@@ -16,6 +16,10 @@ void recruit_scene::on_initialize(initialize_context* context) {
     cr->initialize();
     context->register_service("card_renderer", cr);
 
+    auto dr = std::make_shared<card_renderer>(0.25f, 88.0f / 62.0f);
+    dr->initialize();
+    context->register_service("drop_renderer", dr);
+
     this->cam()->set_clip_plane(vec2(0.1f, 100.f));
     this->cam()->set_field_of_view(glm::radians(45.f));
 
@@ -26,7 +30,7 @@ void recruit_scene::on_initialize(initialize_context* context) {
     this->cam()->set_position(glm::zero<vec3>());
 
     this->root()->on_initialize(context);
-};
+}
 
 void recruit_scene::on_update(update_context* context) {
     auto window_ctx = context->window_ctx();
@@ -48,7 +52,11 @@ void recruit_scene::on_update(update_context* context) {
     context->set_mouse_ray(glm::normalize(v1 - v0));
 
     this->root()->on_update(context);
-};
+}
+
+void recruit_scene::on_late_update(update_context* context) {
+    this->root()->on_late_update(context);
+}
 
 void recruit_scene::on_render(render_context* context) {
     auto shader = get_shader("default");
@@ -57,4 +65,4 @@ void recruit_scene::on_render(render_context* context) {
     shader->set("view", this->view_);
 
     this->root()->on_render(context);
-};
+}

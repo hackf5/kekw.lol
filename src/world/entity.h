@@ -17,6 +17,7 @@ class entity : public spatial {
 
     virtual void on_initialize(initialize_context* context){};
     virtual void on_update(update_context* context){};
+    virtual void on_late_update(update_context* context){};
     virtual void on_render(render_context* context){};
 };
 

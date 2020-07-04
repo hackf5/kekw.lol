@@ -12,9 +12,11 @@ class mouse_button_state {
     virtual bool is_down() const = 0;
     virtual bool is_click() const = 0;
     virtual bool is_click_release() const = 0;
+    virtual bool is_dragging() const = 0;
 
     virtual void begin_drag(unsigned long id, vec3_param_t intersect) = 0;
     virtual bool is_dragging(unsigned long id) const = 0;
+
     virtual vec3_ret_t get_drag_intersect() const = 0;
 };
 
@@ -82,6 +84,8 @@ class render_context : public context_base {
         : context_base(window_ctx, scene) {}
 
     virtual const update_context *update_ctx() = 0;
+
+    virtual unsigned int pass() const = 0;
 };
 
 }  // namespace kekw

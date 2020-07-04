@@ -20,6 +20,8 @@ class recruit_scene : public scene {
 
     void on_update(update_context* context) override;
 
+    void on_late_update(update_context* context) override;
+
     void on_render(render_context* context) override;
 
    private:

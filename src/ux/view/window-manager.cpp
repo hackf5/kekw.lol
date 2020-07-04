@@ -18,6 +18,7 @@ class mouse_button_state_impl : public mouse_button_state {
     inline bool is_down() const override { return this->is_down_; }
     inline bool is_click() const override { return this->is_click_; }
     inline bool is_click_release() const override { return this->is_click_release_; }
+    inline bool is_dragging() const override { return this->drag_id_ != 0; }
 
     inline void begin_drag(unsigned long id, vec3_param_t intersect) override {
         if (id == 0) {
@@ -176,6 +177,9 @@ window_manager::window_manager() : window_(0), layers_(), window_context_() {
     }
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     spdlog::debug("GL loaded.");
 }
 

@@ -3,7 +3,6 @@
 #include "box-mesh-2d.h"
 
 #include <src/ux/contexts.h>
-
 #include <src/world/types.h>
 #include <src/world/entity.h>
 #include <src/world/collider.h>
@@ -22,6 +21,7 @@ class card_entity : public entity {
 
     void on_initialize(initialize_context* context) override;
     void on_update(update_context* context) override;
+    void on_late_update(update_context* context) override;
     void on_render(render_context* context) override;
 
     inline const vivid::Color& get_color() const { return this->color_; }
@@ -31,15 +31,17 @@ class card_entity : public entity {
     static const box_mesh_2d MESH;
     static unsigned long ID;
 
+    std::unique_ptr<collider> collider_;
+    std::shared_ptr<void> renderer_;
+    unsigned long id_;
+    vivid::Color color_;
+
     inline renderer* get_renderer() {
         return static_cast<renderer*>(this->renderer_.get());
     }
 
-    std::unique_ptr<collider> collider_;
-    std::shared_ptr<void> renderer_;
-
-    unsigned long id_;
-    vivid::Color color_;
+    void render_drag(render_context* context);
+    void render(render_context* context);
 };
 
 }  // namespace kekw

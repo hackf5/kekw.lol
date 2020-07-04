@@ -68,12 +68,17 @@ class render_context_impl : public render_context {
    public:
     render_context_impl(
         const window_context *window_ctx, kekw::scene *scene, update_context *update_ctx)
-        : render_context(window_ctx, scene), update_ctx_(update_ctx) {}
+        : render_context(window_ctx, scene), update_ctx_(update_ctx), pass_(0) {}
 
-    const update_context *update_ctx() override { return this->update_ctx_; };
+    inline const update_context *update_ctx() override { return this->update_ctx_; };
+
+    inline void next_pass() { ++this->pass_; }
+
+    inline unsigned int pass() const override { return this->pass_; };
 
    private:
     update_context *update_ctx_;
+    unsigned int pass_;
 };
 
 void scene_window_layer::initialize(window_context *context) {
@@ -88,10 +93,14 @@ void scene_window_layer::initialize(window_context *context) {
 void scene_window_layer::update(window_context *context) {
     auto ctx = std::make_unique<update_context_impl>(context, this->scene_.get());
     this->scene_->on_update(ctx.get());
+    this->scene_->on_late_update(ctx.get());
     this->last_update_ctx = std::move(ctx);
 }
 
 void scene_window_layer::render(window_context *context) {
     render_context_impl ctx(context, this->scene_.get(), this->last_update_ctx.get());
+
+    this->scene_->on_render(&ctx);
+    ctx.next_pass();
     this->scene_->on_render(&ctx);
 }
