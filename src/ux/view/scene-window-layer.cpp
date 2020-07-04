@@ -1,5 +1,7 @@
 #include "scene-window-layer.h"
 
+#include <src/world/plane.h>
+
 #include <limits>
 #include <unordered_map>
 
@@ -30,7 +32,8 @@ class update_context_impl : public update_context {
     update_context_impl(const kekw::window_context *window_ctx, kekw::scene *scene)
         : update_context(window_ctx, scene),
           hit_distance_(std::numeric_limits<real_t>::max()),
-          hit_id_(false) {}
+          hit_id_(false),
+          drag_plane_({0.f, 0.f, -8.f}, {1.f, 0.f, -8.f}, {0.f, 1.f, -8.f}) {}
 
     inline vec3_ret_t get_mouse_ray() const override { return this->mouse_ray_; };
 
@@ -43,12 +46,22 @@ class update_context_impl : public update_context {
         }
     }
 
-    unsigned long get_hit_id() const override { return this->hit_id_; }
+    inline unsigned long get_hit_id() const override { return this->hit_id_; }
+
+    inline vec3 get_drag_plane_intercept() const override {
+        real_t distance;
+        this->drag_plane_.hit_test(
+            this->scene()->cam()->position(), this->get_mouse_ray(), distance);
+        auto drag_plane_intercept =
+            this->scene()->cam()->position() + distance * this->get_mouse_ray();
+        return drag_plane_intercept;
+    }
 
    private:
     vec3 mouse_ray_;
     real_t hit_distance_;
     unsigned long hit_id_;
+    plane drag_plane_;
 };
 
 class render_context_impl : public render_context {

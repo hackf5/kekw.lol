@@ -3,6 +3,7 @@
 #include <spdlog/spdlog.h>
 #include <stb/stb_image.h>
 
+#include <src/world/transform.h>
 #include <src/ux/util/file-utils.h>
 
 #include <string>
@@ -31,7 +32,11 @@ class mouse_button_state_impl : public mouse_button_state {
         this->drag_transform_ = transform;
     }
 
-    inline bool is_dragging(unsigned long id) override { return this->drag_id_ == id; }
+    inline bool is_dragging(unsigned long id) const override {
+        return this->drag_id_ == id;
+    }
+
+    inline mat4 get_drag_transform() const override { return this->drag_transform_; }
 
     void before_poll_events() {
         this->is_click_ = false;

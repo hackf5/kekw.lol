@@ -14,7 +14,8 @@ class mouse_button_state {
     virtual bool is_click_release() const = 0;
 
     virtual void begin_drag(unsigned long id, mat4_param_t transform) = 0;
-    virtual bool is_dragging(unsigned long id) = 0;
+    virtual bool is_dragging(unsigned long id) const = 0;
+    virtual mat4 get_drag_transform() const = 0;
 };
 
 class window_context {
@@ -71,6 +72,8 @@ class update_context : public context_base {
     virtual void register_hit(unsigned long id, real_t distance) = 0;
 
     virtual unsigned long get_hit_id() const = 0;
+
+    virtual vec3 get_drag_plane_intercept() const = 0;
 };
 
 class render_context : public context_base {

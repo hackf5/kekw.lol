@@ -1,6 +1,7 @@
 #include "card-entity.h"
 
 #include <src/ux/shader/shader.h>
+#include <src/world/plane.h>
 
 using namespace kekw;
 
@@ -22,26 +23,35 @@ void card_entity::on_update(update_context* context) {
 }
 
 void card_entity::on_render(render_context* context) {
-    if (context->window_ctx()->left_mouse_button()->is_click()) {
-        if (this->id_ == context->update_ctx()->get_hit_id()) {
-            context->window_ctx()->left_mouse_button()->begin_drag(
-                this->id_, this->abs_matrix());
-        }
-    }
+    if (context->window_ctx()->left_mouse_button()->is_click() &&
+        this->id_ == context->update_ctx()->get_hit_id()) {
+        auto position = (this->abs_matrix() * vec4(transform::origin, 1.f)).xyz();
+        auto t = glm::translate(
+            this->abs_matrix(),
+            context->update_ctx()->get_drag_plane_intercept() - position);
 
-    if (context->window_ctx()->left_mouse_button()->is_dragging(this->id_)) {
-        return;
+        context->window_ctx()->left_mouse_button()->begin_drag(this->id_, t);
     }
 
     auto r = this->get_renderer();
     auto shader = r->get_shader();
     shader->use();
-    shader->set("model", this->abs_matrix());
 
-    if (this->id_ == context->update_ctx()->get_hit_id()) {
-        shader->set("color", vec4(vivid::Color("#B20D30").value(), 1.0));
+    if (context->window_ctx()->left_mouse_button()->is_dragging(this->id_)) {
+        auto drag_transform =
+            context->window_ctx()->left_mouse_button()->get_drag_transform();
+        auto position = (drag_transform * vec4(transform::origin, 1.f)).xyz();
+        auto t = glm::translate(
+            drag_transform, context->update_ctx()->get_drag_plane_intercept() - position);
+        shader->set("model", t);
+        shader->set("color", vec4(vivid::Color("#B0F2B4").value(), 1.0));
     } else {
-        shader->set("color", vec4(this->color_.value(), 1.0));
+        shader->set("model", this->abs_matrix());
+        if (this->id_ == context->update_ctx()->get_hit_id()) {
+            shader->set("color", vec4(vivid::Color("#B20D30").value(), 1.0));
+        } else {
+            shader->set("color", vec4(this->color_.value(), 1.0));
+        }
     }
 
     r->render(this);
