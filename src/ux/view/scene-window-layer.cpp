@@ -31,22 +31,28 @@ class update_context_impl : public update_context {
    public:
     update_context_impl(const kekw::window_context *window_ctx, kekw::scene *scene)
         : update_context(window_ctx, scene),
-          hit_distance_(std::numeric_limits<real_t>::max()),
-          hit_id_(false),
+          hit_map_(),
           drag_plane_({0.f, 0.f, -8.f}, {1.f, 0.f, -8.f}, {0.f, 1.f, -8.f}) {}
 
     inline vec3_ret_t get_mouse_ray() const override { return this->mouse_ray_; };
 
     inline void set_mouse_ray(vec3_param_t ray) override { this->mouse_ray_ = ray; };
 
-    void register_hit(unsigned long id, real_t distance) override {
-        if (distance < this->hit_distance_) {
-            this->hit_distance_ = distance;
-            this->hit_id_ = id;
+    void register_hit(
+        const std::string &category, unsigned long id, real_t distance) override {
+        auto it = this->hit_map_.find(category);
+        if (it == this->hit_map_.end()) {
+            this->hit_map_.insert(std::make_pair(category, hit_data(id, distance)));
+        } else if (distance < it->second.distance_) {
+            it->second.id_ = id;
+            it->second.distance_ = distance;
         }
     }
 
-    inline unsigned long get_hit_id() const override { return this->hit_id_; }
+    inline unsigned long get_hit_id(const std::string &category) const override {
+        auto it = this->hit_map_.find(category);
+        return it != this->hit_map_.end() ? it->second.id_ : 0;
+    }
 
     inline vec3 get_drag_plane_intercept() const override {
         real_t distance;
@@ -58,9 +64,14 @@ class update_context_impl : public update_context {
     }
 
    private:
+    struct hit_data {
+        hit_data(unsigned long id, real_t distance) : id_(id), distance_(distance) {}
+        unsigned long id_ = 0;
+        real_t distance_ = std::numeric_limits<real_t>::max();
+    };
+
     vec3 mouse_ray_;
-    real_t hit_distance_;
-    unsigned long hit_id_;
+    std::unordered_map<std::string, hit_data> hit_map_;
     plane drag_plane_;
 };
 

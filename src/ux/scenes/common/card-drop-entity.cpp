@@ -11,12 +11,28 @@ void card_drop_entity::on_initialize(initialize_context* context) {
     this->renderer_ = context->locate_service("drop_renderer");
 }
 
-void card_drop_entity::on_update(update_context* context) {}
+void card_drop_entity::on_update(update_context* context) {
+    real_t distance;
+    auto hit = this->collider_->hit_test(
+        context->scene()->cam()->position(), context->get_mouse_ray(), distance);
+
+    if (hit) {
+        context->register_hit("d", this->id(), distance);
+    }
+}
 
 void card_drop_entity::on_late_update(update_context* context) {}
 
 void card_drop_entity::on_render(render_context* context) {
     if (context->pass() != 0) {
+        return;
+    }
+
+    if (!context->window_ctx()->left_mouse_button()->is_dragging()) {
+        return;
+    }
+
+    if (context->update_ctx()->get_hit_id("d") != this->id()) {
         return;
     }
 

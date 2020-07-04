@@ -3,6 +3,8 @@
 #include <src/world/types.h>
 #include <src/world/scene.h>
 
+#include <string>
+
 namespace kekw {
 
 class mouse_button_state {
@@ -71,9 +73,10 @@ class update_context : public context_base {
 
     virtual void set_mouse_ray(vec3_param_t ray) = 0;
 
-    virtual void register_hit(unsigned long id, real_t distance) = 0;
+    virtual void register_hit(
+        const std::string &category, unsigned long id, real_t distance) = 0;
 
-    virtual unsigned long get_hit_id() const = 0;
+    virtual unsigned long get_hit_id(const std::string &category) const = 0;
 
     virtual vec3 get_drag_plane_intercept() const = 0;
 };
