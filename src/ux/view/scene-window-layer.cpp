@@ -54,7 +54,7 @@ class update_context_impl : public update_context {
         return it != this->hit_map_.end() ? it->second.id_ : 0;
     }
 
-    inline vec3 get_drag_plane_intercept() const override {
+    inline vec3 get_drag_plane_offset() const override {
         real_t distance;
         this->drag_plane_.hit_test(
             this->scene()->cam()->position(), this->get_mouse_ray(), distance);

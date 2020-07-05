@@ -2,6 +2,8 @@
 
 #include "types.h"
 
+#include <stack>
+
 namespace kekw {
 
 class transform {
@@ -37,6 +39,16 @@ class transform {
         this->make_dirty();
     }
 
+    inline void push_scale(vec3_param_t value) {
+        this->scale_stack_.push(this->scale());
+        this->set_scale(value);
+    }
+
+    inline void pop_scale() {
+        this->set_scale(this->scale_stack_.top());
+        this->scale_stack_.pop();
+    }
+
    protected:
     virtual void on_recalculate() {}
     void recalculate_if_dirty();
@@ -47,6 +59,8 @@ class transform {
     quat rotation_;
     vec3 scale_;
     mat4 matrix_;
+
+    std::stack<vec3> scale_stack_;
 
     bool dirty_;
 

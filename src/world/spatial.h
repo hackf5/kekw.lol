@@ -19,6 +19,10 @@ class spatial : public transform {
 
     mat4 abs_matrix() const;
 
+    void push_scale_all(vec3_param_t value);
+
+    void pop_scale_all();
+
    private:
     spatial* parent_;
 };

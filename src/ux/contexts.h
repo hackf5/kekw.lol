@@ -78,7 +78,7 @@ class update_context : public context_base {
 
     virtual entity_id_t get_hit_id(const std::string &category) const = 0;
 
-    virtual vec3 get_drag_plane_intercept() const = 0;
+    virtual vec3 get_drag_plane_offset() const = 0;
 };
 
 class render_context : public context_base {
