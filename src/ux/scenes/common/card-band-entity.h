@@ -14,7 +14,22 @@ namespace kekw {
 
 class card_band_entity : public entity {
    public:
-    card_band_entity() : entity(), cards_(), drops_() {}
+    card_band_entity()
+        : entity(),
+          cards_(),
+          drops_(),
+          l_spatial_(std::make_unique<spatial>(this)),
+          r_spatial_(std::make_unique<spatial>(this)),
+          l_collider_(std::make_unique<mesh_collider>(this->l_spatial_.get(), &L_MESH)),
+          r_collider_(std::make_unique<mesh_collider>(this->r_spatial_.get(), &R_MESH)) {
+        // put the left and right colliders slightly behind the drop layer so the drop
+        // layer always gets hit first.
+        this->l_spatial_->set_scale({1000, 1.f, 1.f});
+        this->l_spatial_->set_position({0, 0, -0.01f});
+
+        this->r_spatial_->set_scale({1000, 1.f, 1.f});
+        this->r_spatial_->set_position({0, 0, -0.01f});
+    }
 
     void on_initialize(initialize_context* context) override {
         for (int i = 0; i != 6; i++) {
@@ -53,6 +68,21 @@ class card_band_entity : public entity {
     }
 
     void on_update(update_context* context) override {
+        real_t distance;
+        if (this->l_collider_->hit_test(
+                context->scene()->cam()->position(),
+                context->get_mouse_ray(),
+                distance)) {
+            context->register_hit("d", this->l_id_, distance);
+        }
+
+        if (this->r_collider_->hit_test(
+                context->scene()->cam()->position(),
+                context->get_mouse_ray(),
+                distance)) {
+            context->register_hit("d", this->r_id_, distance);
+        }
+
         for (auto it = this->cards_.begin(); it != this->cards_.end(); ++it) {
             (*it)->on_update(context);
         }
@@ -73,8 +103,18 @@ class card_band_entity : public entity {
         entity_id_t id,
         int& index) const;
 
+    static const box_mesh_2d L_MESH;
+    static const box_mesh_2d R_MESH;
+
     std::vector<std::unique_ptr<card_entity>> cards_;
     std::vector<std::unique_ptr<card_drop_entity>> drops_;
+
+    entity_id_t l_id_ = entity_id::next();
+    entity_id_t r_id_ = entity_id::next();
+    std::unique_ptr<spatial> l_spatial_;
+    std::unique_ptr<spatial> r_spatial_;
+    std::unique_ptr<collider> l_collider_;
+    std::unique_ptr<collider> r_collider_;
 };
 
 }  // namespace kekw

@@ -5,7 +5,7 @@
 
 using namespace kekw;
 
-const box_mesh_2d card_entity::MESH = box_mesh_2d(1, 88.0f / 62.0f);
+const box_mesh_2d card_entity::MESH = box_mesh_2d(1, 88.0f / 62.0f, {0, 0});
 
 void card_entity::on_initialize(initialize_context* context) {
     this->renderer_ = context->locate_service("card_renderer");

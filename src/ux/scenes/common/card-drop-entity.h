@@ -18,6 +18,7 @@ class card_drop_entity : public entity {
     void on_update(update_context* context) override;
     void on_late_update(update_context* context) override;
     void on_render(render_context* context) override;
+    void force_hit() { this->is_hit_ = true; }
 
    private:
     static const box_mesh_2d MESH;
@@ -28,6 +29,7 @@ class card_drop_entity : public entity {
 
     std::unique_ptr<collider> collider_;
     std::shared_ptr<void> renderer_;
+    bool is_hit_ = false;
 };
 
 }  // namespace kekw

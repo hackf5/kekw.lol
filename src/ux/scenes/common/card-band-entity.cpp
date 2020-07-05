@@ -4,6 +4,9 @@
 
 using namespace kekw;
 
+const box_mesh_2d card_band_entity::L_MESH = box_mesh_2d(1, 88.0f / 62.0f, {-0.5f, 0});
+const box_mesh_2d card_band_entity::R_MESH = box_mesh_2d(1, 88.0f / 62.0f, {0.5f, 0});
+
 void card_band_entity::on_late_update(update_context* context) {
     for (auto it = this->cards_.begin(); it != this->cards_.end(); ++it) {
         (*it)->on_late_update(context);
@@ -11,6 +14,18 @@ void card_band_entity::on_late_update(update_context* context) {
 
     for (auto it = this->drops_.begin(); it != this->drops_.end(); ++it) {
         (*it)->on_late_update(context);
+    }
+
+    if (!context->window_ctx()->left_mouse_button()->is_dragging()) {
+        return;
+    }
+
+    if (context->get_hit_id("d") == this->l_id_) {
+        this->drops_.front()->force_hit();
+    }
+
+    if (context->get_hit_id("d") == this->r_id_) {
+        this->drops_.back()->force_hit();
     }
 }
 

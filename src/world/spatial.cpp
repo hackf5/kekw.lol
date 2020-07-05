@@ -3,6 +3,7 @@
 using namespace kekw;
 
 spatial::spatial() : transform(), parent_(nullptr) {}
+spatial::spatial(spatial* parent) : transform(), parent_(parent) {}
 
 spatial* spatial::root() const {
     if (this->parent_) {
