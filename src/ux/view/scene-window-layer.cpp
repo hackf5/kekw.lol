@@ -39,7 +39,7 @@ class update_context_impl : public update_context {
     inline void set_mouse_ray(vec3_param_t ray) override { this->mouse_ray_ = ray; };
 
     void register_hit(
-        const std::string &category, unsigned long id, real_t distance) override {
+        const std::string &category, entity_id_t id, real_t distance) override {
         auto it = this->hit_map_.find(category);
         if (it == this->hit_map_.end()) {
             this->hit_map_.insert(std::make_pair(category, hit_data(id, distance)));
@@ -49,7 +49,7 @@ class update_context_impl : public update_context {
         }
     }
 
-    inline unsigned long get_hit_id(const std::string &category) const override {
+    inline entity_id_t get_hit_id(const std::string &category) const override {
         auto it = this->hit_map_.find(category);
         return it != this->hit_map_.end() ? it->second.id_ : 0;
     }
@@ -65,8 +65,8 @@ class update_context_impl : public update_context {
 
    private:
     struct hit_data {
-        hit_data(unsigned long id, real_t distance) : id_(id), distance_(distance) {}
-        unsigned long id_ = 0;
+        hit_data(entity_id_t id, real_t distance) : id_(id), distance_(distance) {}
+        entity_id_t id_ = 0;
         real_t distance_ = std::numeric_limits<real_t>::max();
     };
 

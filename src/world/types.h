@@ -11,6 +11,7 @@
 namespace kekw {
 
 typedef float real_t;
+typedef unsigned int entity_id_t;
 
 typedef glm::vec2 vec2;
 typedef boost::call_traits<vec2>::param_type vec2_param_t;
@@ -48,6 +49,13 @@ struct triangle {
         };
 
         return triangle(tv(model, v0), tv(model, v1), tv(model, v2));
+    }
+};
+
+struct entity_id {
+    static entity_id_t next() {
+        static entity_id_t id = 0;
+        return ++id;
     }
 };
 

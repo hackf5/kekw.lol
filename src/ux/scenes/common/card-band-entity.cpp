@@ -39,7 +39,7 @@ void card_band_entity::on_render(render_context* context) {
 
 template <class T>
 bool card_band_entity::find_index_by_id(
-    const std::vector<std::unique_ptr<T>>& entities, unsigned long id, int& index) const {
+    const std::vector<std::unique_ptr<T>>& entities, entity_id_t id, int& index) const {
     auto it = std::find_if(
         entities.begin(), entities.end(), [id](const std::unique_ptr<T>& ptr) {
             return ptr->id() == id;

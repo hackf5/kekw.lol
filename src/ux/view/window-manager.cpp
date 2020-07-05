@@ -19,12 +19,12 @@ class mouse_button_state_impl : public mouse_button_state {
     inline bool is_click() const override { return this->is_click_; }
     inline bool is_click_release() const override { return this->is_click_release_; }
     inline bool is_dragging() const override { return this->is_dragging_; }
-    inline bool is_drag_release(unsigned long &id) override {
+    inline bool is_drag_release(entity_id_t &id) override {
         id = this->drag_id_;
         return this->is_drag_release_;
     }
 
-    inline void begin_drag(unsigned long id, vec3_param_t intersect) override {
+    inline void begin_drag(entity_id_t id, vec3_param_t intersect) override {
         if (this->is_dragging_) {
             throw std::runtime_error("already dragging");
         }
@@ -42,11 +42,11 @@ class mouse_button_state_impl : public mouse_button_state {
         this->drag_intersect_ = intersect;
     }
 
-    inline bool is_dragging(unsigned long id) const override {
+    inline bool is_dragging(entity_id_t id) const override {
         return this->is_dragging() && this->drag_id_ == id;
     }
 
-    inline unsigned long drag_id() const override { return this->drag_id_; }
+    inline entity_id_t drag_id() const override { return this->drag_id_; }
 
     inline vec3_ret_t get_drag_intersect() const override {
         return this->drag_intersect_;
@@ -83,7 +83,7 @@ class mouse_button_state_impl : public mouse_button_state {
     bool is_dragging_ = false;
     bool is_drag_release_ = false;
 
-    unsigned long drag_id_ = 0;
+    entity_id_t drag_id_ = 0;
     vec3 drag_intersect_;
 };
 

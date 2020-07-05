@@ -70,7 +70,7 @@ class card_band_entity : public entity {
     template <class T>
     bool find_index_by_id(
         const std::vector<std::unique_ptr<T>>& entities,
-        unsigned long id,
+        entity_id_t id,
         int& index) const;
 
     std::vector<std::unique_ptr<card_entity>> cards_;

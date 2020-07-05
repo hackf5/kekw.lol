@@ -15,11 +15,11 @@ class mouse_button_state {
     virtual bool is_click() const = 0;
     virtual bool is_click_release() const = 0;
     virtual bool is_dragging() const = 0;
-    virtual bool is_drag_release(unsigned long &id) = 0;
+    virtual bool is_drag_release(entity_id_t &id) = 0;
 
-    virtual void begin_drag(unsigned long id, vec3_param_t intersect) = 0;
-    virtual bool is_dragging(unsigned long id) const = 0;
-    virtual unsigned long drag_id() const = 0;
+    virtual void begin_drag(entity_id_t id, vec3_param_t intersect) = 0;
+    virtual bool is_dragging(entity_id_t id) const = 0;
+    virtual entity_id_t drag_id() const = 0;
 
     virtual vec3_ret_t get_drag_intersect() const = 0;
 };
@@ -76,9 +76,9 @@ class update_context : public context_base {
     virtual void set_mouse_ray(vec3_param_t ray) = 0;
 
     virtual void register_hit(
-        const std::string &category, unsigned long id, real_t distance) = 0;
+        const std::string &category, entity_id_t id, real_t distance) = 0;
 
-    virtual unsigned long get_hit_id(const std::string &category) const = 0;
+    virtual entity_id_t get_hit_id(const std::string &category) const = 0;
 
     virtual vec3 get_drag_plane_intercept() const = 0;
 };

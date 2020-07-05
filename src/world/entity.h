@@ -13,18 +13,17 @@ class render_context;
 
 class entity : public spatial {
    public:
-    entity() : spatial(), id_(++ID) {}
+    entity() : spatial(), id_(entity_id::next()) {}
 
     virtual void on_initialize(initialize_context* context){};
     virtual void on_update(update_context* context){};
     virtual void on_late_update(update_context* context){};
     virtual void on_render(render_context* context){};
 
-    inline unsigned long id() const { return this->id_; }
+    inline entity_id_t id() const { return this->id_; }
 
    private:
-    static unsigned long ID;
-    unsigned long id_;
+    entity_id_t id_;
 };
 
 }  // namespace kekw
