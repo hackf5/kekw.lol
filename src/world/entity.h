@@ -20,7 +20,7 @@ class entity : public spatial {
     virtual void on_late_update(update_context* context){};
     virtual void on_render(render_context* context){};
 
-    inline unsigned long id() { return this->id_; }
+    inline unsigned long id() const { return this->id_; }
 
    private:
     static unsigned long ID;

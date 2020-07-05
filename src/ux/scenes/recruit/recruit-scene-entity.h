@@ -18,13 +18,13 @@ class recruit_scene_entity : public entity {
 
         this->available_ = std::make_unique<card_band_entity>();
         this->available_->set_parent(this);
-        this->available_->set_position(vec3(0.25, 0.25, 0.25));
+        this->available_->set_position(vec3(0, 1, 0));
         this->available_->on_initialize(context);
 
         this->recruited_ = std::make_unique<card_band_entity>();
         this->recruited_->set_parent(this);
-        this->recruited_->set_position(vec3(0, -0.25, 0));
-        // this->recruited_->on_initialize(context);
+        this->recruited_->set_position(vec3(0, -1, 0));
+        this->recruited_->on_initialize(context);
     }
 
     void on_update(update_context* context) override {

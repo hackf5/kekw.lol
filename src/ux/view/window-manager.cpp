@@ -18,9 +18,17 @@ class mouse_button_state_impl : public mouse_button_state {
     inline bool is_down() const override { return this->is_down_; }
     inline bool is_click() const override { return this->is_click_; }
     inline bool is_click_release() const override { return this->is_click_release_; }
-    inline bool is_dragging() const override { return this->drag_id_ != 0; }
+    inline bool is_dragging() const override { return this->is_dragging_; }
+    inline bool is_drag_release(unsigned long &id) override {
+        id = this->drag_id_;
+        return this->is_drag_release_;
+    }
 
     inline void begin_drag(unsigned long id, vec3_param_t intersect) override {
+        if (this->is_dragging_) {
+            throw std::runtime_error("already dragging");
+        }
+
         if (id == 0) {
             throw std::invalid_argument("id cannot be 0");
         }
@@ -29,13 +37,16 @@ class mouse_button_state_impl : public mouse_button_state {
             throw std::runtime_error("can only begin drag on click");
         }
 
+        this->is_dragging_ = true;
         this->drag_id_ = id;
         this->drag_intersect_ = intersect;
     }
 
     inline bool is_dragging(unsigned long id) const override {
-        return this->drag_id_ == id;
+        return this->is_dragging() && this->drag_id_ == id;
     }
+
+    inline unsigned long drag_id() const override { return this->drag_id_; }
 
     inline vec3_ret_t get_drag_intersect() const override {
         return this->drag_intersect_;
@@ -44,6 +55,7 @@ class mouse_button_state_impl : public mouse_button_state {
     void before_poll_events() {
         this->is_click_ = false;
         this->is_click_release_ = false;
+        this->is_drag_release_ = false;
     }
 
     void update(bool is_down) {
@@ -55,7 +67,8 @@ class mouse_button_state_impl : public mouse_button_state {
         if (this->is_down_) {
             // then !is_down;
             this->is_click_release_ = true;
-            this->drag_id_ = 0;
+            this->is_drag_release_ = true;
+            this->is_dragging_ = false;
             this->is_down_ = false;
         } else {
             this->is_click_ = true;
@@ -64,11 +77,13 @@ class mouse_button_state_impl : public mouse_button_state {
     }
 
    private:
-    bool is_down_;
-    bool is_click_release_;
-    bool is_click_;
+    bool is_down_ = false;
+    bool is_click_release_ = false;
+    bool is_click_ = false;
+    bool is_dragging_ = false;
+    bool is_drag_release_ = false;
 
-    unsigned long drag_id_;
+    unsigned long drag_id_ = 0;
     vec3 drag_intersect_;
 };
 

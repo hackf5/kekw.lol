@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 namespace kekw {
 
@@ -61,27 +62,17 @@ class card_band_entity : public entity {
         }
     }
 
-    void on_late_update(update_context* context) override {
-        for (auto it = this->cards_.begin(); it != this->cards_.end(); ++it) {
-            (*it)->on_late_update(context);
-        }
+    void on_late_update(update_context* context) override;
 
-        for (auto it = this->drops_.begin(); it != this->drops_.end(); ++it) {
-            (*it)->on_late_update(context);
-        }
-    }
-
-    void on_render(render_context* context) override {
-        for (auto it = this->cards_.begin(); it != this->cards_.end(); ++it) {
-            (*it)->on_render(context);
-        }
-
-        for (auto it = this->drops_.begin(); it != this->drops_.end(); ++it) {
-            (*it)->on_render(context);
-        }
-    }
+    void on_render(render_context* context) override;
 
    private:
+    template <class T>
+    bool find_index_by_id(
+        const std::vector<std::unique_ptr<T>>& entities,
+        unsigned long id,
+        int& index) const;
+
     std::vector<std::unique_ptr<card_entity>> cards_;
     std::vector<std::unique_ptr<card_drop_entity>> drops_;
 };

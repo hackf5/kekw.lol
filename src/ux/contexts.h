@@ -15,9 +15,11 @@ class mouse_button_state {
     virtual bool is_click() const = 0;
     virtual bool is_click_release() const = 0;
     virtual bool is_dragging() const = 0;
+    virtual bool is_drag_release(unsigned long &id) = 0;
 
     virtual void begin_drag(unsigned long id, vec3_param_t intersect) = 0;
     virtual bool is_dragging(unsigned long id) const = 0;
+    virtual unsigned long drag_id() const = 0;
 
     virtual vec3_ret_t get_drag_intersect() const = 0;
 };
