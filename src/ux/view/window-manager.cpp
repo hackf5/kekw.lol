@@ -24,7 +24,7 @@ class mouse_button_state_impl : public mouse_button_state {
         return this->is_drag_release_;
     }
 
-    inline void begin_drag(entity_id_t id, vec3_param_t intersect) override {
+    inline void begin_drag(entity_id_t id, vec3_param_t offset) override {
         if (this->is_dragging_) {
             throw std::runtime_error("already dragging");
         }
@@ -39,18 +39,12 @@ class mouse_button_state_impl : public mouse_button_state {
 
         this->is_dragging_ = true;
         this->drag_id_ = id;
-        this->drag_intersect_ = intersect;
-    }
-
-    inline bool is_dragging(entity_id_t id) const override {
-        return this->is_dragging() && this->drag_id_ == id;
+        this->drag_offset_ = offset;
     }
 
     inline entity_id_t drag_id() const override { return this->drag_id_; }
 
-    inline vec3_ret_t get_drag_intersect() const override {
-        return this->drag_intersect_;
-    }
+    inline vec3_ret_t drag_offset() const override { return this->drag_offset_; }
 
     void before_poll_events() {
         this->is_click_ = false;
@@ -84,7 +78,7 @@ class mouse_button_state_impl : public mouse_button_state {
     bool is_drag_release_ = false;
 
     entity_id_t drag_id_ = 0;
-    vec3 drag_intersect_;
+    vec3 drag_offset_;
 };
 
 }  // namespace kekw

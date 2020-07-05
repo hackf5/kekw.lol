@@ -17,11 +17,9 @@ class mouse_button_state {
     virtual bool is_dragging() const = 0;
     virtual bool is_drag_release(entity_id_t &id) = 0;
 
-    virtual void begin_drag(entity_id_t id, vec3_param_t intersect) = 0;
-    virtual bool is_dragging(entity_id_t id) const = 0;
+    virtual void begin_drag(entity_id_t id, vec3_param_t offset) = 0;
     virtual entity_id_t drag_id() const = 0;
-
-    virtual vec3_ret_t get_drag_intersect() const = 0;
+    virtual vec3_ret_t drag_offset() const = 0;
 };
 
 class window_context {

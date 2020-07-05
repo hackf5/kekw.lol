@@ -38,7 +38,8 @@ void card_entity::on_late_update(update_context* context) {
 }
 
 void card_entity::on_render(render_context* context) {
-    if (context->window_ctx()->left_mouse_button()->is_dragging(this->id())) {
+    if (context->window_ctx()->left_mouse_button()->is_dragging() &&
+        context->window_ctx()->left_mouse_button()->drag_id() == this->id()) {
         this->render_drag(context);
     } else {
         this->render(context);
@@ -57,7 +58,7 @@ void card_entity::render_drag(render_context* context) {
     auto t = glm::translate(
         this->abs_matrix(),
         context->update_ctx()->get_drag_plane_intercept() -
-            context->window_ctx()->left_mouse_button()->get_drag_intersect());
+            context->window_ctx()->left_mouse_button()->drag_offset());
 
     shader->set("model", t);
     shader->set("color", vec4(vivid::Color("#B0F2B4").value(), .8f));
