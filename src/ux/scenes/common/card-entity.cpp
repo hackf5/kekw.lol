@@ -36,8 +36,13 @@ void card_entity::on_late_update(update_context* context) {
         auto centre_ns = (this->abs_matrix() * vec4(0, 0, 0, 1)).xyz();
         this->pop_scale_all();
 
+        auto start = offset - centre + centre_ns;
+        auto end = centre_ns;
+        auto tween =
+            tweeny::from(start.x, start.y, start.z).to(end.x, end.y, end.z).during(100);
+
         context->window_ctx()->left_mouse_button()->begin_drag(
-            this->id(), offset + (centre_ns - centre));
+            this->id(), std::make_unique<tween_drag_data>(tween));
     }
 }
 
@@ -59,8 +64,8 @@ void card_entity::render_drag(render_context* context) {
     auto shader = r->get_shader();
     shader->use();
 
-    auto drag_offset = context->window_ctx()->left_mouse_button()->drag_offset();
-    auto offset = context->update_ctx()->get_drag_plane_offset() - drag_offset;
+    auto data = context->window_ctx()->left_mouse_button()->drag_data();
+    auto offset = context->update_ctx()->get_drag_plane_offset() - data->offset();
 
     this->push_scale_all({1, 1, 1});
     auto t = glm::translate(this->abs_matrix(), offset);

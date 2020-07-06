@@ -24,7 +24,8 @@ class mouse_button_state_impl : public mouse_button_state {
         return this->is_drag_release_;
     }
 
-    inline void begin_drag(entity_id_t id, vec3_param_t offset) override {
+    inline void begin_drag(
+        entity_id_t id, std::unique_ptr<kekw::drag_data> data) override {
         if (this->is_dragging_) {
             throw std::runtime_error("already dragging");
         }
@@ -39,12 +40,12 @@ class mouse_button_state_impl : public mouse_button_state {
 
         this->is_dragging_ = true;
         this->drag_id_ = id;
-        this->drag_offset_ = offset;
+        std::swap(this->drag_data_, data);
     }
 
     inline entity_id_t drag_id() const override { return this->drag_id_; }
 
-    inline vec3_ret_t drag_offset() const override { return this->drag_offset_; }
+    inline kekw::drag_data *drag_data() const override { return this->drag_data_.get(); }
 
     void before_poll_events() {
         this->is_click_ = false;
@@ -78,7 +79,7 @@ class mouse_button_state_impl : public mouse_button_state {
     bool is_drag_release_ = false;
 
     entity_id_t drag_id_ = 0;
-    vec3 drag_offset_;
+    std::unique_ptr<kekw::drag_data> drag_data_;
 };
 
 }  // namespace kekw

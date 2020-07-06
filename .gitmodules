@@ -26,3 +26,6 @@
 [submodule "extern/vivid"]
 	path = extern/vivid
 	url = https://github.com/hackf5/vivid.git
+[submodule "extern/tweeny"]
+	path = extern/tweeny
+	url = https://github.com/mobius3/tweeny.git

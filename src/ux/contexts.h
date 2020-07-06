@@ -2,8 +2,10 @@
 
 #include <src/world/types.h>
 #include <src/world/scene.h>
+#include <src/ux/detail/drag-data.h>
 
 #include <string>
+#include <memory>
 
 namespace kekw {
 
@@ -17,9 +19,9 @@ class mouse_button_state {
     virtual bool is_dragging() const = 0;
     virtual bool is_drag_release(entity_id_t &id) = 0;
 
-    virtual void begin_drag(entity_id_t id, vec3_param_t offset) = 0;
+    virtual void begin_drag(entity_id_t id, std::unique_ptr<drag_data> data) = 0;
     virtual entity_id_t drag_id() const = 0;
-    virtual vec3_ret_t drag_offset() const = 0;
+    virtual drag_data *drag_data() const = 0;
 };
 
 class window_context {
