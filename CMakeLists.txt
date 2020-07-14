@@ -47,9 +47,9 @@ include_directories(${PROJECT_SOURCE_DIR}/extern/vivid/include)
 
 # external input paths - need converting to submodules
 
-include_directories($ENV{CXX_INCLUDE_DIR})
+#include_directories($ENV{CXX_INCLUDE_DIR})
 
-# include_directories(C:/dev/cpplibs/usr/include)
+include_directories(C:/dev/cpplibs/usr/include)
 
 # mod lib
 add_library(${MOD_LIB_TARGET} "")

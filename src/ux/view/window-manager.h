@@ -56,7 +56,6 @@ class window_context_impl : public window_context {
     inline bool has_focus() const override { return this->has_focus_; }
     inline vec2 window_dims() const override { return this->window_dims_; }
     inline vec2 content_scale() const override { return this->content_scale_; }
-    inline vec2 screen_resolution() const override { return this->screen_resolution_; }
     inline vec2 mouse_coords() const override { return this->mouse_coords_; }
 
     mouse_button_state *left_mouse_button() const override;
@@ -86,7 +85,6 @@ class window_context_impl : public window_context {
     vec2 window_dims_;
     vec2 mouse_coords_;
     vec2 content_scale_;
-    vec2 screen_resolution_;
 
     const std::unique_ptr<mouse_button_state_impl> left_mouse_button_state_;
     const std::unique_ptr<mouse_button_state_impl> right_mouse_button_state_;

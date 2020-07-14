@@ -88,12 +88,11 @@ window_context_impl::window_context_impl(GLFWwindow *window)
     : window_(window),
       left_mouse_button_state_(new mouse_button_state_impl()),
       right_mouse_button_state_(new mouse_button_state_impl()) {
+#ifdef __APPLE__
     // macos high dpi oddness...
     GLFWmonitor *monitor = glfwGetPrimaryMonitor();
     glfwGetMonitorContentScale(monitor, &this->content_scale_.x, &this->content_scale_.y);
-    int scr_x, scr_y;
-    glfwGetMonitorPhysicalSize(monitor, &scr_x, &scr_y);
-    this->screen_resolution_ = vec2(scr_x, scr_y);
+#endif
 }
 
 mouse_button_state *window_context_impl::left_mouse_button() const {
@@ -113,7 +112,10 @@ void window_context_impl::after_poll_events() {
     this->has_focus_ = glfwGetWindowAttrib(this->window_, GLFW_FOCUSED) != 0;
     double mouse_x, mouse_y;
     glfwGetCursorPos(this->window_, &mouse_x, &mouse_y);
-    this->mouse_coords_ = vec2(mouse_x, mouse_y) * this->content_scale_;
+    this->mouse_coords_ = vec2(mouse_x, mouse_y);
+#ifdef __APPLE__
+    this->mouse_coords_ *= this->content_scale_;
+#endif
 }
 
 window_layer::~window_layer() {}

@@ -33,7 +33,6 @@ class window_context {
     virtual bool has_focus() const = 0;
     virtual vec2 window_dims() const = 0;
     virtual vec2 content_scale() const = 0;
-    virtual vec2 screen_resolution() const = 0;
     virtual vec2 mouse_coords() const = 0;
 
     virtual mouse_button_state *left_mouse_button() const = 0;
