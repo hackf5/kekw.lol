@@ -87,7 +87,8 @@ class mouse_button_state_impl : public mouse_button_state {
 window_context_impl::window_context_impl(GLFWwindow *window)
     : window_(window),
       left_mouse_button_state_(new mouse_button_state_impl()),
-      right_mouse_button_state_(new mouse_button_state_impl()) {
+      right_mouse_button_state_(new mouse_button_state_impl()),
+      content_scale_(1, 1) {
 #ifdef __APPLE__
     // macos high dpi oddness...
     GLFWmonitor *monitor = glfwGetPrimaryMonitor();
