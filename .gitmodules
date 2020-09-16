@@ -29,3 +29,6 @@
 [submodule "extern/tweeny"]
 	path = extern/tweeny
 	url = https://github.com/mobius3/tweeny.git
+[submodule "extern/lua"]
+	path = extern/lua
+	url = https://github.com/hackf5/lua.git
