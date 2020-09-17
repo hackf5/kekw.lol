@@ -36,6 +36,35 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 
+# mod lib
+add_library(${MOD_LIB_TARGET} "")
+add_library(kekw::mod ALIAS ${MOD_LIB_TARGET})
+set_target_properties(${MOD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwmod")
+target_link_libraries(${MOD_LIB_TARGET} spdlog::spdlog)
+target_link_libraries(${MOD_LIB_TARGET} lua::lua)
+
+# wld lib
+add_library(${WLD_LIB_TARGET} "")
+add_library(kekw::wld ALIAS ${WLD_LIB_TARGET})
+set_target_properties(${WLD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwwld")
+target_link_libraries(${WLD_LIB_TARGET} spdlog::spdlog)
+
+# ux lib
+add_library(${UX_LIB_TARGET} "")
+add_library(kekw::ux ALIAS ${UX_LIB_TARGET})
+set_target_properties(${UX_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwux")
+target_link_libraries(${UX_LIB_TARGET} glfw)
+target_link_libraries(${UX_LIB_TARGET} vivid::vivid)
+target_link_libraries(${UX_LIB_TARGET} tweeny)
+target_link_libraries(${UX_LIB_TARGET} kekw::mod)
+target_link_libraries(${UX_LIB_TARGET} kekw::wld)
+
+# main executable
+add_executable(${MAIN_EXE_TARGET} "")
+add_executable(kekw::kekw ALIAS ${MAIN_EXE_TARGET})
+set_target_properties(${MAIN_EXE_TARGET} PROPERTIES OUTPUT_NAME "kekw")
+target_link_libraries(${MAIN_EXE_TARGET} kekw::ux)
+
 # local input paths
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/inc)
@@ -44,6 +73,7 @@ include_directories(${PROJECT_SOURCE_DIR}/extern)
 include_directories(${PROJECT_SOURCE_DIR}/extern/imgui)
 include_directories(${PROJECT_SOURCE_DIR}/extern/glm)
 include_directories(${PROJECT_SOURCE_DIR}/extern/vivid/include)
+include_directories(${PROJECT_SOURCE_DIR}/extern/lua/include)
 
 # external input paths - need converting to submodules
 
@@ -51,42 +81,10 @@ include_directories(${PROJECT_SOURCE_DIR}/extern/vivid/include)
 
 include_directories(C:/dev/cpplibs/usr/include)
 
-# mod lib
-add_library(${MOD_LIB_TARGET} "")
-set_target_properties(${MOD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwmod")
-target_link_libraries(${MOD_LIB_TARGET} spdlog::spdlog)
-
-# wld lib
-add_library(${WLD_LIB_TARGET} "")
-set_target_properties(${WLD_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwwld")
-target_link_libraries(${WLD_LIB_TARGET} spdlog::spdlog)
-
-# ux lib
-add_library(${UX_LIB_TARGET} "")
-set_target_properties(${UX_LIB_TARGET} PROPERTIES OUTPUT_NAME "kekwux")
-target_link_libraries(${UX_LIB_TARGET} glfw)
-target_link_libraries(${UX_LIB_TARGET} spdlog::spdlog)
-target_link_libraries(${UX_LIB_TARGET} vivid::vivid)
-target_link_libraries(${UX_LIB_TARGET} tweeny)
-target_link_libraries(${UX_LIB_TARGET} ${MOD_LIB_TARGET})
-target_link_libraries(${UX_LIB_TARGET} ${WLD_LIB_TARGET})
-
-
-# main executable
-add_executable(${MAIN_EXE_TARGET} "")
-set_target_properties(${MAIN_EXE_TARGET} PROPERTIES OUTPUT_NAME "kekw")
-target_link_libraries(${MAIN_EXE_TARGET} glfw)
-target_link_libraries(${MAIN_EXE_TARGET} spdlog::spdlog)
-target_link_libraries(${MAIN_EXE_TARGET} vivid::vivid)
-target_link_libraries(${MAIN_EXE_TARGET} tweeny)
-target_link_libraries(${MAIN_EXE_TARGET} ${UX_LIB_TARGET})
-target_link_libraries(${MAIN_EXE_TARGET} ${MOD_LIB_TARGET})
-target_link_libraries(${MAIN_EXE_TARGET} ${WLD_LIB_TARGET})
-
 # look for more CMake files.
+add_subdirectory(extern)
 add_subdirectory(src)
 add_subdirectory(inc)
-add_subdirectory(extern)
 
 enable_testing()
 include(GoogleTest)

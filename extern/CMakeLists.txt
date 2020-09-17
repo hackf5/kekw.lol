@@ -37,3 +37,5 @@ target_sources(${UX_LIB_TARGET}
         ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imstb_rectpack.h
         ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imstb_textedit.h
 )
+
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/lua")

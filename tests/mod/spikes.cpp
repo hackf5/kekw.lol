@@ -1,6 +1,12 @@
 #include <src/mod/recruit-env.h>
 #include <tests/extensions.h>
 
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lualib.h>
+#include <lua/lauxlib.h>
+}
+
 using namespace kekw::mod;
 
 template <class T>
@@ -44,4 +50,22 @@ TEST(spikes, spike1) {
     for (int i = 1; i <= 10; ++i) {
         create_target(1);
     }
+}
+
+TEST(spikes, spike2) {
+    auto *L = luaL_newstate();
+    luaL_openlibs(L);
+
+    const char *code = "print('Hello, World')";
+
+    // Here we load the string and use lua_pcall for run the code
+    if (luaL_loadstring(L, code) == LUA_OK) {
+        if (lua_pcall(L, 0, 1, 0) == LUA_OK) {
+            // If it was executed successfuly we
+            // remove the code from the stack
+            lua_pop(L, lua_gettop(L));
+        }
+    }
+
+    lua_close(L);
 }
