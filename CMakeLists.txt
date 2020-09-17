@@ -78,8 +78,20 @@ include_directories(${PROJECT_SOURCE_DIR}/extern/lua/include)
 # external input paths - need converting to submodules
 
 #include_directories($ENV{CXX_INCLUDE_DIR})
-
 include_directories(C:/dev/cpplibs/usr/include)
+
+# utility macros
+macro(mirror_directory desc src_dir dest_dir)
+  set (remove_target kekw_removedir_${desc})
+  add_custom_target(
+      ${remove_target} ALL
+      COMMAND ${CMAKE_COMMAND} -E remove_directory ${dest_dir})
+
+  add_custom_target(
+      kekw_copydir_${desc} ALL
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${src_dir} ${dest_dir}
+      DEPENDS ${remove_target})
+endmacro(mirror_directory)
 
 # look for more CMake files.
 add_subdirectory(extern)

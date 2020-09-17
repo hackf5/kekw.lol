@@ -56,10 +56,8 @@ TEST(spikes, spike2) {
     auto *L = luaL_newstate();
     luaL_openlibs(L);
 
-    const char *code = "print('Hello, World')";
-
     // Here we load the string and use lua_pcall for run the code
-    if (luaL_loadstring(L, code) == LUA_OK) {
+    if (luaL_loadfile(L, "lua/core/test.lua") == LUA_OK) {
         if (lua_pcall(L, 0, 1, 0) == LUA_OK) {
             // If it was executed successfuly we
             // remove the code from the stack

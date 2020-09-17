@@ -12,3 +12,8 @@ target_sources(${MOD_LIB_TARGET}
         ${CMAKE_CURRENT_SOURCE_DIR}/owned-card.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/owned-card-collection.cpp
 )
+
+mirror_directory(
+    mod_lua
+    ${CMAKE_CURRENT_SOURCE_DIR}/lua 
+    ${OUTPUT_DIRECTORY}/lua/core)
