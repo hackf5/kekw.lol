@@ -41,7 +41,7 @@ void ux_window_layer::initialize(window_context *context) {
         auto SCALE = 2.0f;
         ImFontConfig cfg;
         cfg.SizePixels = 13 * SCALE;
-        ImGui::GetIO().Fonts->AddFontDefault(&cfg)->DisplayOffset.y = SCALE;
+        ImGui::GetIO().Fonts->AddFontDefault(&cfg);
         ImGui::GetStyle().ScaleAllSizes(SCALE);
         ImGui::GetIO().FontGlobalScale = SCALE / 2;
     }

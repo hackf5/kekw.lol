@@ -62,7 +62,11 @@ TEST(spikes, spike2) {
             // If it was executed successfuly we
             // remove the code from the stack
             lua_pop(L, lua_gettop(L));
+        } else {
+            FAIL() << "execution failed: " << lua_tostring(L, -1);
         }
+    } else {
+        FAIL() << "parsing failed: " << lua_tostring(L, -1);
     }
 
     lua_close(L);

@@ -124,4 +124,10 @@
         "inc/": true,
         ".git/": true,
     },
+    "cSpell.words": [
+        "kekw"
+    ],
+    "Lua.diagnostics.disable": [
+        "undefined-global"
+    ],
 }
